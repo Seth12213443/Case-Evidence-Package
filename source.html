@@ -1,0 +1,2900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>Gilmer High School - Case Evidence Package</title>
+ <style>
+ /* Global Styles */
+ body {
+ font-family: "Times New Roman", Times, serif;
+ margin: 0;
+ padding: 0;
+ color: #000;
+ background-color: #f0f0f0;
+ }
+ 
+ /* Interactive Input Styling */
+ input[type="text"], textarea {
+ font-family: "Times New Roman", Times, serif;
+ font-size: 14px;
+ border: none;
+ background: transparent;
+ width: 100%;
+ box-sizing: border-box;
+ outline: none;
+ padding: 4px 0;
+ resize: none;
+ }
+ 
+ textarea {
+ height: calc(100% - 20px);
+ line-height: 1.5;
+ }
+
+ /* Printable Page Setup */
+ .page {
+ background-color: #fff;
+ width: 8.5in;
+ height: 11in;
+ margin: 20px auto;
+ padding: 0.5in;
+ box-sizing: border-box;
+ position: relative;
+ box-shadow: 0 0 10px rgba(0,0,0,0.1);
+ page-break-after: always;
+ display: flex;
+ flex-direction: column;
+ }
+
+ /* Universal Header */
+ .header-title {
+ text-align: center;
+ font-size: 20px;
+ font-weight: bold;
+ text-decoration: underline;
+ margin-bottom: 15px;
+ text-transform: uppercase;
+ }
+
+ .header-meta {
+ display: flex;
+ justify-content: space-between;
+ font-size: 14px;
+ line-height: 1.3;
+ margin-bottom: 20px;
+ }
+ 
+ .header-meta table {
+ width: 100%;
+ border-collapse: collapse;
+ }
+ 
+ .header-meta td {
+ border: none;
+ padding: 2px 0;
+ }
+
+ /* Tables & Grids */
+ table.grid-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin-bottom: 15px;
+ }
+
+ table.grid-table td {
+ border: 1.5px solid #000;
+ padding: 8px;
+ vertical-align: top;
+ font-size: 13px;
+ }
+
+ /* Fillable Blocks */
+ .block-box {
+ border: 1.5px solid #000;
+ margin-bottom: 12px;
+ padding: 8px;
+ box-sizing: border-box;
+ font-size: 13px;
+ flex-grow: 1;
+ display: flex;
+ flex-direction: column;
+ }
+ 
+ .block-box label {
+ font-weight: bold;
+ display: block;
+ margin-bottom: 4px;
+ }
+
+ .row-container {
+ display: flex;
+ gap: 12px;
+ width: 100%;
+ }
+ 
+ .row-container .block-box {
+ flex: 1;
+ }
+
+ /* Specific Elements */
+ .photo-space {
+ border: 1.5px solid #000;
+ flex-grow: 1;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-weight: bold;
+ color: #555;
+ margin-bottom: 15px;
+ background: #fafafa;
+ border-style: dashed;
+ cursor: pointer;
+ position: relative;
+}
+
+/* Make sure images fit inside the box */
+.photo-space img {
+ max-width: 100%;
+ max-height: 100%;
+ object-fit: contain;
+ display: block;
+}
+
+/* Hide the placeholder text when an image is present */
+.upload-text.hidden {
+ display: none;
+}
+ 
+ .sketch-space {
+ border: 1.5px solid #000;
+ flex-grow: 1;
+ margin-bottom: 15px;
+ background: #fff;
+ }
+
+ /* Footer */
+ .page-footer {
+ font-size: 13px;
+ text-align: right;
+ margin-top: auto;
+ padding-top: 10px;
+ }
+
+ /* Print Override */
+ @media print {
+ body {
+ background-color: #fff;
+ }
+ .page {
+ margin: 0;
+ box-shadow: none;
+ page-break-after: always;
+ width: 8.5in;
+ height: 11in;
+ }
+ }
+ </style>
+</head>
+<body>
+
+<!-- MACRO DEFINITIONS APPLIED PER PAGE -->
+
+<!-- PAGE 1: CSI Report -->
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr>
+ <td style="font-weight:bold">Gilmer High School</td>
+ <td style="text-align:right; font-weight:bold">Criminal Investigations Class</td>
+ </tr>
+ <tr>
+ <td>Law & Public Safety Pathway</td>
+ <td style="text-align:right">Block #: <input type="text" style="width:120px; border-bottom:1px solid #000;"></td>
+ </tr>
+ </table>
+ </div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td style="width: 50%;"><strong>Agency Name:</strong> <input type="text"></td>
+ <td style="width: 25%;"><strong>Case #:</strong> <input type="text"></td>
+ <td style="width: 25%;"><strong>Page:</strong> 1 of 33</td>
+ </tr>
+ <tr>
+ <td colspan="2"><strong>Offence:</strong> <input type="text"></td>
+ <td><strong>Date:</strong> <input type="text"></td>
+ </tr>
+ <tr>
+ <td><strong>Location:</strong> <input type="text"></td>
+ <td><strong>Time Called Out:</strong> <input type="text"></td>
+ <td><strong>Time on Scene:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Team Members on Scene:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Legal Authority:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:1;"><label>Perimeter Assessment:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:1;"><label>Transient Evidence Evaluation:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:1;"><label>Briefing From First Responding Officer:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Temperature, Lighting, & Weather Data:</label><textarea></textarea></div>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr>
+ <td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td>
+ <td><strong>Date:</strong> <input type="text"></td>
+ </tr>
+ <tr>
+ <td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td>
+ </tr>
+ </table>
+ <div class="page-footer">1</div>
+</div>
+
+<!-- PAGE 2: Scene Prep & Hazards -->
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 2 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="block-box" style="flex-grow:1;"><label>Team Preparation:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:1;"><label>Health & Safety Hazards:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:2;"><label>Scene Description:</label><textarea></textarea></div>
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">2</div>
+</div>
+
+<!-- PAGE 3: Scene Description Continued -->
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 3 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="block-box" style="flex-grow:3;"><label>Scene Description Continued:</label><textarea></textarea></div>
+ <div class="block-box" style="flex-grow:1;"><label>Contamination Control Procedures:</label><textarea></textarea></div>
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">3</div>
+</div>
+
+<!-- PAGE 4: First Responding Briefing -->
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 4 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="block-box" style="flex-grow:1;"><label>Briefing From the First Responding Officer(s):</label><textarea></textarea></div>
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">4</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 5 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">5</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 6 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">6</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 7 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">7</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 8 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">8</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 9 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">9</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 10 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">10</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 11 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">11</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 12 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">12</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 13 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">13</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 14 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">14</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 15 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">15</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 16 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">16</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 17 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">17</div>
+</div>
+
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 18 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">18</div>
+
+</div>
+<div class="page">
+ <div class="header-title">Case Evidence Package</div>
+ <div class="header-meta">
+ <table style="width:100%">
+ <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+ </table>
+ </div>
+ <table class="grid-table">
+ <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 19 of 33</td></tr>
+ <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ </table>
+ 
+ <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+<label class="photo-space" style="cursor: pointer;">
+ <!-- Hidden file picker -->
+ <input type="file" accept="image/*" class="imageUpload" style="display: none;">
+ 
+ <!-- Container that switches between text and the preview image -->
+ <div class="previewContainer">
+ <span class="uploadText">[ Click to Upload Photo ]</span>
+ </div>
+</label>
+ 
+ <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+ 
+ <table class="grid-table">
+ <tr>
+ <td><strong>Evidence ID #:</strong> <input type="text"></td>
+ <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+ <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+ </tr>
+ <tr>
+ <td><strong>Name of Photographer:</strong> <input type="text"></td>
+ <td><strong>Badge #:</strong> <input type="text"></td>
+ <td><strong>Date of Photo:</strong> <input type="text"></td>
+ </tr>
+ </table>
+
+ <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+ <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+ <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+ </table>
+ <div class="page-footer">19</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 20 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Entry Log Sheet</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:25%;">Name & Title</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Agency</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Date/Time In</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Date/Time Out</th>
+                <th style="border:1.5px solid #000; padding:6px; width:30%;">Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">20</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 21 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Entry Log Sheet</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:25%;">Name & Title</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Agency</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Date/Time In</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Date/Time Out</th>
+                <th style="border:1.5px solid #000; padding:6px; width:30%;">Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">21</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 22 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Evidence Recovery Log</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:8%;">Item #</th>
+                <th style="border:1.5px solid #000; padding:6px; width:27%;">Description of Item</th>
+                <th style="border:1.5px solid #000; padding:6px; width:25%;">Specific Location (Within the Scene)</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Collected By</th>
+                <th style="border:1.5px solid #000; padding:6px; width:13%;">Packing Method</th>
+                <th style="border:1.5px solid #000; padding:6px; width:12%;">Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">22</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 23 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Evidence Recovery Log</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:8%;">Item #</th>
+                <th style="border:1.5px solid #000; padding:6px; width:27%;">Description of Item</th>
+                <th style="border:1.5px solid #000; padding:6px; width:25%;">Specific Location (Within the Scene)</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Collected By</th>
+                <th style="border:1.5px solid #000; padding:6px; width:13%;">Packing Method</th>
+                <th style="border:1.5px solid #000; padding:6px; width:12%;">Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">23</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 24 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Evidence Recovery Log</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:8%;">Item #</th>
+                <th style="border:1.5px solid #000; padding:6px; width:27%;">Description of Item</th>
+                <th style="border:1.5px solid #000; padding:6px; width:25%;">Specific Location (Within the Scene)</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Collected By</th>
+                <th style="border:1.5px solid #000; padding:6px; width:13%;">Packing Method</th>
+                <th style="border:1.5px solid #000; padding:6px; width:12%;">Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">24</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 25 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Evidence Recovery Log</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:8%;">Item #</th>
+                <th style="border:1.5px solid #000; padding:6px; width:27%;">Description of Item</th>
+                <th style="border:1.5px solid #000; padding:6px; width:25%;">Specific Location (Within the Scene)</th>
+                <th style="border:1.5px solid #000; padding:6px; width:15%;">Collected By</th>
+                <th style="border:1.5px solid #000; padding:6px; width:13%;">Packing Method</th>
+                <th style="border:1.5px solid #000; padding:6px; width:12%;">Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">
+      25</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 26 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Triangulation Method Example</div>
+    <div class="photo-space" style="border-style:solid; background:#fff; flex-direction:column; justify-content:space-between; padding:15px; font-weight:normal; color:#000;">
+        <div style="display:flex; justify-content:space-between; width:100%; font-size:11px; font-weight:bold;">
+            <div>Point #1: Northwest Corner</div>
+            <div>Point #2: Northeast Corner</div>
+        </div>
+        <div style="text-align:center; margin:40px 0;">
+            <p style="font-weight:bold; color:#777;">[ Diagram Example Visualization Area ]</p>
+        </div>
+        <div style="display:flex; justify-content:space-between; width:100%; font-size:11px; font-weight:bold;">
+            <div>Point #3: Southwest Corner</div>
+            <div>Point #4: Southeast Corner</div>
+        </div>
+    </div>
+    
+    <table class="grid-table">
+        <tr style="background:#eee; font-weight:bold; text-align:center;">
+            <td>Item Number</td><td>Description</td><td>Distance from Point 1</td><td>Distance from Point 2</td><td>Distance from Point 3</td><td>Distance from Point 4</td>
+        </tr>
+        <tr><td>1-A</td><td>Top Center of Cell Phone</td><td>5ft 7in</td><td>4ft 11in</td><td></td><td></td></tr>
+        <tr><td>1-B</td><td>Bottom Center of Cell Phone</td><td></td><td>6ft 1in</td><td></td><td>5ft 2in</td></tr>
+        <tr><td>2</td><td>Center of Letterman Jacket</td><td></td><td>4ft 3in</td><td></td><td>4ft 10in</td></tr>
+    </table>
+    <div style="text-align:center; font-weight:bold; margin-top:20px; font-size:14px; letter-spacing:1px;">EXAMPLE MEASUREMENT PAGE - NOT PART OF THE EVIDENCE PACKAGE</div>
+    <div class="page-footer">26</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 27 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Measurement Record</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:10%;">Item Number</th>
+                <th style="border:1.5px solid #000; padding:6px; width:34%;">Description</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 1</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 2</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 3</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">27</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 28 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Measurement Record</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:10%;">Item Number</th>
+                <th style="border:1.5px solid #000; padding:6px; width:34%;">Description</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 1</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 2</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 3</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">28</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 29 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Measurement Record</div>
+    <table class="grid-table">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="border:1.5px solid #000; padding:6px; width:10%;">Item Number</th>
+                <th style="border:1.5px solid #000; padding:6px; width:34%;">Description</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 1</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 2</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 3</th>
+                <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+        </tbody>
+    </table>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">29</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <table class="grid-table">
+        <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> 30 of 33</td></tr>
+        <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+    </table>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:15px; text-decoration:underline;">CRIME LABORATORY CHAIN OF CUSTODY REPORT</div>
+    
+    <table class="grid-table">
+        <tr>
+            <td style="width:20%;"><strong>Item Number:</strong><br><input type="text"></td>
+            <td><strong>Description of Property (one item only):</strong><br><input type="text"></td>
+        </tr>
+    </table>
+    
+    <table class="grid-table" style="font-size:11px;">
+        <thead>
+            <tr style="background:#eee; text-align:center; font-weight:bold;">
+                <td>Date Out</td>
+                <td>Time Out</td>
+                <td>Release By Name/ID #</td>
+                <td>Property Received By Name/ID#</td>
+                <td>Property Received Signature</td>
+                <td>Destination (court, lab, prosecutor)</td>
+                <td>Return By Name/ID #</td>
+                <td>Date Returned</td>
+                <td>Time Returned</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+            </tr>
+            <tr>
+                <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="grid-table" style="margin-top:20px;">
+        <tr>
+            <td style="width:50%;"><strong>Property Room Personnel Name (Printed)</strong><br><input type="text"></td>
+            <td><strong>Property Room Personnel Name (Signature)</strong><br><input type="text"></td>
+        </tr>
+    </table>
+    <div class="page-footer">30</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    
+    <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Rough Sketch</div>
+    
+    <!-- UPDATED SKETCH UPLOAD AREA -->
+    <div class="photo-space sketch-upload-area" style="border: 2px dashed #ccc; padding: 20px; min-height: 500px; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: #f9f9f9; position: relative; overflow: hidden;">
+        <input type="file" accept="image/*" id="sketch-file-input" style="display: none;">
+        <div class="upload-placeholder" style="text-align: center; color: #888;">
+            <div style="font-size: 24px; margin-bottom: 10px;">📷</div>
+            <div>Click to Upload Sketch Photo</div>
+            <div style="font-size: 12px; margin-top: 5px;">(JPG, PNG)</div>
+        </div>
+        <img id="sketch-preview" style="max-width: 100%; max-height: 480px; display: none; object-fit: contain;" />
+    </div>
+
+    <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+        <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+    </table>
+    <div class="page-footer">31</div>
+</div>
+
+<!-- JAVASCRIPT FOR THE SKETCH UPLOADER -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.querySelector('.sketch-upload-area');
+    const fileInput = document.getElementById('sketch-file-input');
+    const placeholder = document.querySelector('.upload-placeholder');
+    const preview = document.getElementById('sketch-preview');
+
+    // Click anywhere on the box to trigger the file input
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Handle file selection
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                placeholder.style.display = 'none';
+                // Optional: Remove border/dashed look once image is loaded for a cleaner look
+                uploadArea.style.borderStyle = 'solid';
+                uploadArea.style.borderColor = '#ddd';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    <div style="flex-grow:1; border:1px dashed #ccc; display:flex; align-items:center; justify-content:center; color:#999;">
+        [ Additional Notes / Blank Supplemental Field ]
+    </div>
+    <div class="page-footer">32</div>
+</div>
+
+<div class="page">
+    <div class="header-title">Case Evidence Package</div>
+    <div class="header-meta">
+        <table style="width:100%">
+            <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+        </table>
+    </div>
+    
+    <div style="font-weight:bold; font-size:15px; margin-bottom:5px;">Case Narrative:</div>
+    <div style="flex-grow:1; display:flex; flex-direction:column;">
+        <textarea style="height:100%; border:none; background-image: linear-gradient(transparent, transparent 23px, #ccc 23px, #ccc 24px, transparent 24px); background-size: 100% 24px; line-height: 24px; padding: 0 4px;"></textarea>
+    </div>
+    <div class="page-footer">33</div>
+</div>
+
+<script>
+    // Add event listeners to all file inputs
+    document.querySelectorAll('.imageUpload').forEach(input => {
+        input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Find the parent label (.photo-space)
+                const label = this.closest('.photo-space');
+                const preview = label.querySelector('.previewContainer');
+                const text = label.querySelector('.uploadText');
+                
+                // Clear previous content
+                preview.innerHTML = '';
+                
+                // Create new image element
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                
+                // Append image to the preview container
+                preview.appendChild(img);
+                
+                // Hide the original text
+                if(text) text.classList.add('hidden');
+            }
+        });
+    });
+</script>
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+<!-- START COLLAPSIBLE SIDEBAR MENU -->
+<div class="no-print">
+  <sidebar-menu></sidebar-menu>
+</div>
+
+<style>
+  /* Hides the entire sidebar menu when printing the page */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+  
+  /* Ensure main content doesn't overlap sidebar */
+  #main-content {
+    margin-left: 250px; /* Match --sidebar-width */
+    padding: 20px;
+  }
+</style>
+
+<script>
+  class SidebarMenu extends HTMLElement {
+    constructor() {
+      super();
+      // Attach a shadow DOM to encapsulate all styles and functionality
+      this.attachShadow({ mode: 'open' });
+      
+      this.shadowRoot.innerHTML = `
+        <style>
+          :host {
+            --sidebar-width: 250px;
+            --toggle-btn-size: 40px;
+            font-family: Arial, sans-serif;
+          }
+
+          /* Main wrapper pinned to the far left */
+          .sidebar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            z-index: 99999; /* Keeps it above other content */
+            transition: transform 0.3s ease;
+          }
+
+          /* Collapsed state shifts the panel off-screen */
+          .sidebar-container.collapsed {
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+          }
+
+          /* The content box */
+          .sidebar-panel {
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: #222;
+            color: #fff;
+            box-sizing: border-box;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+          }
+
+          /* The toggle handle that sits on the edge */
+          .toggle-btn {
+            width: var(--toggle-btn-size);
+            height: var(--toggle-btn-size);
+            background-color: #222;
+            color: #fff;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            font-size: 18px;
+          }
+
+          /* App styling inside your box */
+          h3 { margin: 0 0 10px 0; color: #00bcd4; }
+          button.menu-action {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          button.menu-action:hover { background: #555; }
+        </style>
+
+        <div class="sidebar-container" id="container">
+          <div class="sidebar-panel">
+            <h3>Tool Box</h3>
+            
+            <!-- ADD YOUR CUSTOM HTML & CODE HERE -->
+            <button class="menu-action" id="btn1">🖨️ Print PDF</button>
+            <button class="menu-action" id="btn2">💾 Download/Save </button>
+            <button class="menu-action" id="btn3"> Help </button>
+	    <button class="menu-action" id="btn4">➕ Add Photo Page</button>
+	    <button class="menu-action" id="btn5">➕ Add Narrative Page</button>
+
+          </div>
+          <button class="toggle-btn" id="toggleBtn">❯</button>
+        </div>
+      `;
+    }
+
+    connectedCallback() {
+      const container = this.shadowRoot.getElementById('container');
+      const toggleBtn = this.shadowRoot.getElementById('toggleBtn');
+      const btn1 = this.shadowRoot.getElementById('btn1');
+      const btn2 = this.shadowRoot.getElementById('btn2');
+      const btn3 = this.shadowRoot.getElementById('btn3');
+      const btn4 = this.shadowRoot.getElementById('btn4');
+      const btn5 = this.shadowRoot.getElementById('btn5');
+
+
+      // Expand/Collapse logic
+      toggleBtn.addEventListener('click', () => {
+        const isCollapsed = container.classList.toggle('collapsed');
+        toggleBtn.textContent = isCollapsed ? '❯' : '❮';
+      });
+
+      // ADD YOUR ISOLATED JAVASCRIPT FUNCTIONS HERE
+      btn1.addEventListener('click', () => {
+        window.print();
+      });
+      
+if (btn4) {
+        btn4.addEventListener('click', () => {
+          // 1. Get the template
+          const template = document.getElementById('photo-template');
+          if (!template) {
+            alert("Error: Could not find 'photo-template' in the main document.");
+            return;
+          }
+
+          // 2. Clone the content
+          const clone = template.content.cloneNode(true);
+          const newPage = clone.querySelector('.page');
+
+          // 3. Calculate Page Numbering
+          const existingPages = document.querySelectorAll('.page').length;
+          const nextPageNum = existingPages + 1;
+
+          // 4. Update the Page Header Number
+          const pageNumSpan = newPage.querySelector('.dynamic-page-num');
+          if (pageNumSpan) {
+            pageNumSpan.textContent = `${nextPageNum} of Additional Pages`;
+          }
+
+          // 5. Update the Footer Number
+          const footerSpan = newPage.querySelector('.footer-page-num');
+          if (footerSpan) {
+            footerSpan.textContent = nextPageNum;
+          }
+
+          // 6. Clear all inputs in the new page so it starts fresh
+          const inputs = newPage.querySelectorAll('input, textarea');
+          inputs.forEach(input => input.value = '');
+
+          // 7. Append to body
+          document.body.appendChild(clone);
+
+          // 8. Scroll smoothly to the new page
+          newPage.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+
+if (btn5) {
+        btn5.addEventListener('click', () => {
+          // 1. Get the template
+          const template = document.getElementById('narrative-page-template');
+          if (!template) {
+            alert("Error: Could not find 'photo-template' in the main document.");
+            return;
+          }
+
+          // 2. Clone the content
+          const clone = template.content.cloneNode(true);
+          const newPage = clone.querySelector('.page');
+
+          // 3. Calculate Page Numbering
+          const existingPages = document.querySelectorAll('.page').length;
+          const nextPageNum = existingPages + 1;
+
+          // 4. Update the Page Header Number
+          const pageNumSpan = newPage.querySelector('.dynamic-page-num');
+          if (pageNumSpan) {
+            pageNumSpan.textContent = `${nextPageNum} of Additional Pages`;
+          }
+
+          // 5. Update the Footer Number
+          const footerSpan = newPage.querySelector('.footer-page-num');
+          if (footerSpan) {
+            footerSpan.textContent = nextPageNum;
+          }
+
+          // 6. Clear all inputs in the new page so it starts fresh
+          const inputs = newPage.querySelectorAll('input, textarea');
+          inputs.forEach(input => input.value = '');
+
+          // 7. Append to body
+          document.body.appendChild(clone);
+
+          // 8. Scroll smoothly to the new page
+          newPage.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+
+      btn3.addEventListener('click', () => {
+	window.open('https://classroom.google.com/c/ODcxMTUxNTc2NjE5/m/ODg4ODE5MDc5NTc0/details', '_blank');
+      });
+
+
+      // COMPILING ENGINE: Permanently bakes form inputs into full source code download
+      btn2.addEventListener('click', () => {
+        // 1. Target text inputs outside the Shadow DOM and hardcode their value attributes
+        document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"]').forEach(input => {
+          input.setAttribute('value', input.value);
+        });
+
+        // 2. Take care of radio inputs and checkboxes
+        document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+          if (input.checked) {
+            input.setAttribute('checked', 'checked');
+          } else {
+            input.removeAttribute('checked');
+          }
+        });
+
+        // 3. Keep long form textarea text strings persistent
+        document.querySelectorAll('textarea').forEach(textarea => {
+          textarea.textContent = textarea.value;
+        });
+
+        // 4. Ensure drop-down selections are saved
+        document.querySelectorAll('select').forEach(select => {
+          const options = select.querySelectorAll('option');
+          options.forEach(opt => {
+            if (opt.value === select.value) {
+              opt.setAttribute('selected', 'selected');
+            } else {
+              opt.removeAttribute('selected');
+            }
+          });
+        });
+
+        // 5. Ensure preview image sources are locked down permanently
+        document.querySelectorAll('.preview-img').forEach(img => {
+          if (img.hasAttribute('data-saved-src')) {
+            img.setAttribute('src', img.getAttribute('data-saved-src'));
+          }
+        });
+
+        // 6. Gather up the final modified DOM document structure
+        const fullSourceCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+        // 7. Process download trigger
+        const blob = new Blob([fullSourceCode], { type: "text/html" });
+        const link = document.createElement("a");
+        
+        // Dynamic Naming Context: Attempts to fetch an element with id="case-num" to name your file
+        const caseIdField = document.getElementById('case-num');
+        const filename = caseIdField && caseIdField.value.trim() !== "" 
+          ? `Case_Evidence_${caseIdField.value.replace(/[^a-z0-9]/gi, '_')}.html` 
+          : 'Case_Evidence_Package_Save.html';
+
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        
+        link.click();
+      });
+    }
+  }
+
+  // Register the element
+  customElements.define('sidebar-menu', SidebarMenu);
+</script>
+<!-- END COLLAPSIBLE SIDEBAR MENU -->
+
+
+
+
+
+
+
+
+<!---- Page Tempalates ------>
+
+<template id="photo-template">
+    <style>
+        /* Scoped CSS for the template */
+        .csi-container {
+            position: relative;
+            width: 100%;
+            min-height: 250px;
+            border: 2px dashed #aaa;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .csi-upload-text {
+            text-align: center;
+            color: #666;
+            font-family: sans-serif;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .csi-preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            display: block;
+            z-index: 2;
+        }
+
+        .csi-hidden-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 3;
+        }
+        
+        /* Helper to hide the placeholder when an image is present */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+
+    <div class="page">
+        <!-- Header -->
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr>
+                    <td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td>
+                    <td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Case Info Table -->
+        <table class="grid-table">
+            <tr>
+                <td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td>
+                <td style="width:25%"><strong>Case #:</strong> <input type="text"></td>
+                <td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Offence:</strong> <input type="text"></td>
+                <td><strong>Date:</strong> <input type="text"></td>
+            </tr>
+        </table>
+        
+        <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Photograph</div>
+        
+        <!-- SELF-CONTAINED PHOTO SECTION -->
+        <div class="csi-container" data-type="photo">
+            <input type="file" accept="image/*" class="csi-hidden-input" />
+            
+            <div class="previewContainer">
+                <span class="uploadText csi-upload-text">[ Click to Upload Photo ]</span>
+            </div>
+        </div>
+        
+        <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Photo Description:</label><textarea></textarea></div>
+        
+        <!-- Bottom Table -->
+        <table class="grid-table">
+            <tr>
+                <td><strong>Evidence ID #:</strong> <input type="text"></td>
+                <td><strong>Photo Digital ID #:</strong> <input type="text"></td>
+                <td><strong>Photo #</strong> <input type="text" style="width:40px; display:inline;"> of <input type="text" style="width:40px; display:inline;"></td>
+            </tr>
+            <tr>
+                <td><strong>Name of Photographer:</strong> <input type="text"></td>
+                <td><strong>Badge #:</strong> <input type="text"></td>
+                <td><strong>Date of Photo:</strong> <input type="text"></td>
+            </tr>
+        </table>
+
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr>
+                <td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td>
+                <td><strong>Date:</strong> <input type="text"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height:45px;"><strong>Report</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ISOLATED JAVASCRIPT FOR THIS TEMPLATE ONLY -->
+        <script>
+        (function() {
+            // Use querySelectorAll to find EVERY container in this specific template instance
+            const containers = document.querySelectorAll('.csi-container');
+            
+            containers.forEach(container => {
+                const fileInput = container.querySelector('.csi-hidden-input');
+                const previewContainer = container.querySelector('.previewContainer');
+                const uploadText = container.querySelector('.uploadText');
+
+                if (!fileInput || !previewContainer) return;
+
+                // Click handler: Trigger the hidden file input
+                container.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                // Change handler: Read and display the image
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = (event) => {
+                            // Remove any previous images in THIS specific container
+                            const oldImg = previewContainer.querySelector('img');
+                            if (oldImg) oldImg.remove();
+
+                            // Create new image
+                            const img = document.createElement('img');
+                            img.src = event.target.result;
+                            img.className = 'csi-preview-img';
+                            
+                            // Append image
+                            previewContainer.appendChild(img);
+                            
+                            // Hide the placeholder text for THIS specific container
+                            if (uploadText) {
+                                uploadText.classList.add('hidden');
+                            }
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+        })();
+    </script>
+</template>
+
+<template id="narrative-page-template">
+    <style>
+        /* Scoped CSS for Narrative Page */
+        .narrative-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .narrative-label {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 5px;
+            color: #000;
+        }
+
+        .narrative-textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: transparent;
+            /* Lined Paper Effect */
+            background-image: linear-gradient(transparent, transparent 23px, #ccc 23px, #ccc 24px, transparent 24px);
+            background-size: 100% 24px;
+            line-height: 24px;
+            padding: 0 4px;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* Optional: Add a subtle left margin line for realism */
+        .narrative-textarea::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #ff9999; /* Faint red margin line */
+            pointer-events: none;
+        }
+        
+        .narrative-textarea:focus {
+            background-color: #fff; /* Ensure background stays white when typing */
+        }
+    </style>
+
+    <div class="page">
+        <!-- Header -->
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr>
+                    <td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td>
+                    <td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Narrative Section -->
+        <div class="narrative-label">Extended Case Narrative:</div>
+        <div class="narrative-container">
+            <textarea class="narrative-textarea" placeholder="Continue your narrative here..."></textarea>
+        </div>
+        
+        <!-- Footer -->
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ========================================== -->
+<!-- SELF-CONTAINED DEV TOOLS MODULE (v3 - Proxy)    -->
+<!-- ========================================== -->
+
+<style>
+/* --- DEV TOOLS CORE STYLES --- */
+
+/* 1. Trigger Input & Floating Icon */
+#dev-trigger-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+}
+
+#dev-input {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#dev-trigger-container:hover #dev-input,
+#dev-input:focus {
+    width: 120px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 122, 204, 0.4);
+}
+
+/* Fallback Icon if user doesn't type */
+#dev-fallback-icon {
+    position: absolute;
+    right: -40px;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    background: #2c3e50;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#dev-trigger-container:hover #dev-fallback-icon,
+#dev-input:focus + #dev-fallback-icon {
+    opacity: 1;
+}
+
+/* 2. Password Modal Overlay */
+#dev-password-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100000;
+    opacity: 1;
+    transition: opacity 0.2s;
+    backdrop-filter: blur(2px);
+}
+
+#dev-password-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dt-modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: scale(0.9);
+    transition: transform 0.2s;
+}
+
+#dev-password-modal:not(.hidden) .dt-modal-content {
+    transform: scale(1);
+}
+
+.dt-modal-content h3 { margin-top: 0; color: #333; }
+.dt-modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.dt-modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.dt-modal-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.dt-btn-confirm { background: #007acc; color: white; }
+.dt-btn-confirm:hover { background: #005fa3; }
+.dt-btn-cancel { background: #eee; color: #333; }
+.dt-btn-cancel:hover { background: #ddd; }
+
+.dt-error-msg {
+    color: #d32f2f;
+    font-size: 12px;
+    margin-top: 10px;
+    min-height: 18px;
+    font-weight: bold;
+}
+
+/* 3. Sidebar Panel Structure */
+#dev-tools-sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Hidden off-screen */
+    width: 320px;
+    height: 100vh;
+    background: #1e1e1e; /* VS Code Dark Theme */
+    color: #d4d4d4;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.6);
+    z-index: 99998;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 1px solid #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#dev-tools-sidebar.active {
+    right: 0;
+}
+
+/* Header */
+.dt-header {
+    padding: 15px 20px;
+    background: #252526;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dt-header span { font-size: 14px; font-weight: 600; color: #fff; letter-spacing: 0.5px; }
+#dt-close-btn { 
+    background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; line-height: 1; 
+}
+#dt-close-btn:hover { color: #fff; }
+
+/* Tabs */
+.dt-tabs {
+    display: flex;
+    background: #2d2d2d;
+    border-bottom: 1px solid #333;
+}
+
+.dt-tab-btn {
+    flex: 1;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.dt-tab-btn:hover { color: #fff; background: #3a3a3a; }
+.dt-tab-btn.active { 
+    color: #fff; 
+    border-bottom: 2px solid #007acc; 
+    background: #1e1e1e; 
+}
+
+/* Tab Content Areas */
+.dt-tab-content {
+    display: none;
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.dt-tab-content.active { display: block; }
+
+/* Scrollbar Styling for Sidebar */
+.dt-tab-content::-webkit-scrollbar { width: 8px; }
+.dt-tab-content::-webkit-scrollbar-track { background: #1e1e1e; }
+.dt-tab-content::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+.dt-tab-content::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Section Titles */
+.dt-section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #999;
+    margin: 15px 0 10px 0;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.dt-section-title:first-child { margin-top: 0; }
+
+/* Page Grid */
+#page-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+}
+
+.dt-page-btn {
+    padding: 8px 0;
+    background: #333;
+    border: 1px solid #444;
+    color: #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+}
+
+.dt-page-btn:hover { background: #007acc; color: #fff; border-color: #007acc; }
+.dt-page-btn.active { background: #007acc; color: #fff; border-color: #007acc; box-shadow: 0 0 5px rgba(0,122,204,0.5); }
+
+/* Asset List */
+#asset-list { list-style: none; padding: 0; margin: 0; }
+.asset-item {
+    display: flex;
+    align-items: center;
+    background: #2d2d2d;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    transition: background 0.2s;
+}
+.asset-item:hover { background: #383838; }
+
+.asset-thumb {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 3px;
+    margin-right: 12px;
+    background: #555;
+    border: 1px solid #666;
+}
+
+.asset-info { flex: 1; font-size: 12px; color: #ccc; word-break: break-all; line-height: 1.4; }
+.asset-name { display: block; margin-bottom: 2px; color: #fff; }
+.asset-meta { font-size: 10px; color: #888; }
+
+.asset-delete-btn {
+    background: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.asset-delete-btn:hover { background: #a93226; }
+
+.empty-state {
+    text-align: center;
+    color: #777;
+    padding: 20px 0;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* Debug Console */
+#debug-log {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 10px;
+    height: 200px;
+    overflow-y: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 11px;
+    color: #bbb;
+}
+.log-entry { margin-bottom: 4px; border-bottom: 1px solid #222; padding-bottom: 4px; }
+.log-time { color: #666; margin-right: 8px; }
+.log-type-info { color: #4fc1ff; }
+.log-type-warn { color: #ffcc00; }
+.log-type-error { color: #ff5555; }
+
+/* Footer Buttons */
+.dt-footer-actions {
+    padding: 15px;
+    background: #252526;
+    border-top: 1px solid #333;
+    display: flex;
+    gap: 10px;
+}
+
+.dt-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.dt-btn-primary { background: #007acc; color: white; }
+.dt-btn-primary:hover { background: #005fa3; }
+
+.dt-btn-danger { background: #c0392b; color: white; }
+.dt-btn-danger:hover { background: #a93226; }
+
+.dt-btn-secondary { background: #444; color: #fff; }
+.dt-btn-secondary:hover { background: #555; }
+
+/* Proxy Browser Styles */
+.proxy-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 40px);
+    gap: 10px;
+}
+
+.proxy-controls {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.proxy-ip-group {
+    display: flex;
+    gap: 5px;
+    flex: 1;
+}
+
+.proxy-ip-input, .proxy-port-input {
+    background: #2d2d2d;
+    border: 1px solid #444;
+    color: #ccc;
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    outline: none;
+    font-family: 'Consolas', monospace;
+}
+
+.proxy-ip-input { flex: 2; }
+.proxy-port-input { flex: 1; }
+
+.proxy-ip-input:focus, .proxy-port-input:focus, .proxy-connect-btn:focus {
+    border-color: #007acc;
+}
+
+.proxy-connect-btn {
+    padding: 6px 12px;
+    background: #007acc;
+    border: none;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+}
+.proxy-connect-btn:hover { background: #005fa3; }
+
+.proxy-status {
+    font-size: 10px;
+    color: #888;
+    margin-left: 5px;
+    min-width: 60px;
+    text-align: right;
+}
+.proxy-status.connected { color: #4caf50; }
+.proxy-status.error { color: #f44336; }
+
+.iframe-wrapper {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.iframe-fullscreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    border: none;
+}
+
+.iframe-normal {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Print Styles: Hide Dev Tools when printing */
+@media print {
+    #dev-trigger-container,
+    #dev-password-modal,
+    #dev-tools-sidebar {
+        display: none !important;
+    }
+}
+</style>
+
+<!-- HTML STRUCTURE -->
+
+<!-- 1. Trigger Input -->
+<div id="dev-trigger-container">
+    <input type="text" id="dev-input" placeholder="Type 'DEV'" autocomplete="off" />
+    <div id="dev-fallback-icon" title="Open Dev Tools">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+    </div>
+</div>
+
+<!-- 2. Password Modal -->
+<div id="dev-password-modal" class="hidden">
+    <div class="dt-modal-content">
+        <h3>Dev Access</h3>
+        <p style="margin-bottom: 15px; color: #666; font-size: 13px;">Enter Password to Unlock</p>
+        <input type="password" id="dev-password-input" placeholder="Password" autocomplete="off" />
+        <div class="dt-modal-actions">
+            <button id="dev-confirm-btn" class="dt-btn-confirm">Unlock</button>
+            <button id="dev-cancel-btn" class="dt-btn-cancel">Cancel</button>
+        </div>
+        <p id="dev-error-msg" class="dt-error-msg"></p>
+    </div>
+</div>
+
+<!-- 3. Sidebar Panel -->
+<div id="dev-tools-sidebar" class="hidden">
+    <div class="dt-header">
+        <span><strong>Dev Tools</strong> <small>v3.0</small></span>
+        <button id="dt-close-btn">&times;</button>
+    </div>
+    
+    <div class="dt-tabs">
+        <button class="dt-tab-btn active" data-tab="pages">Pages</button>
+        <button class="dt-tab-btn" data-tab="assets">Assets</button>
+        <button class="dt-tab-btn" data-tab="proxy">Proxy</button>
+        <button class="dt-tab-btn" data-tab="debug">Debug</button>
+    </div>
+
+    <!-- TAB: PAGES -->
+    <div id="tab-pages" class="dt-tab-content active">
+        <div class="dt-section-title">Case Pages (Total: 33)</div>
+        <div id="page-nav-grid">
+            <!-- JS Populated -->
+        </div>
+        
+        <div class="dt-section-title" style="margin-top: 20px;">Actions</div>
+        <div class="dt-footer-actions" style="background: transparent; border: none; padding: 0;">
+            <button id="btn-print" class="dt-btn dt-btn-primary">🖨️ Print Report</button>
+            <button id="btn-clear" class="dt-btn dt-btn-danger">Clear Data</button>
+        </div>
+    </div>
+
+    <!-- TAB: ASSETS -->
+    <div id="tab-assets" class="dt-tab-content">
+        <div class="dt-section-title">Evidence Photos</div>
+        <ul id="asset-list">
+            <li class="empty-state">No assets uploaded yet.</li>
+        </ul>
+    </div>
+
+    <!-- TAB: PROXY BROWSER -->
+    <div id="tab-proxy" class="dt-tab-content">
+        <div class="dt-section-title">Proxy Browser</div>
+        <div class="proxy-container">
+            <div class="proxy-controls">
+                <div class="proxy-ip-group">
+                    <input type="text" id="proxy-ip" class="proxy-ip-input" value="198.199.86.11" />
+                    <input type="number" id="proxy-port" class="proxy-port-input" value="8080" />
+                </div>
+                <button id="btn-connect-proxy" class="proxy-connect-btn">Connect</button>
+            </div>
+            <div class="iframe-wrapper">
+                <iframe id="proxy-frame" src="" class="iframe-normal" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: DEBUG -->
+    <div id="tab-debug" class="dt-tab-content">
+        <div class="dt-section-title">Console Log</div>
+        <div id="debug-log"></div>
+        <div class="dt-footer-actions" style="background: transparent; border: none; padding: 0; margin-top: 10px;">
+            <button id="btn-clear-log" class="dt-btn dt-btn-secondary">Clear Log</button>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT LOGIC -->
+<script>
+(function() {
+    // --- Configuration ---
+    const CONFIG = {
+        password: '1221',
+        totalPages: 33,
+        storageKey: 'case_builder_assets'
+    };
+
+    // --- DOM Elements ---
+    const devInput = document.getElementById('dev-input');
+    const fallbackIcon = document.getElementById('dev-fallback-icon');
+    const passwordModal = document.getElementById('dev-password-modal');
+    const passwordInput = document.getElementById('dev-password-input');
+    const confirmBtn = document.getElementById('dev-confirm-btn');
+    const cancelBtn = document.getElementById('dev-cancel-btn');
+    const errorMsg = document.getElementById('dev-error-msg');
+    const sidebar = document.getElementById('dev-tools-sidebar');
+    const closeBtn = document.getElementById('dt-close-btn');
+    const tabs = document.querySelectorAll('.dt-tab-btn');
+    const tabContents = document.querySelectorAll('.dt-tab-content');
+    const pageGrid = document.getElementById('page-nav-grid');
+    const assetList = document.getElementById('asset-list');
+    const debugLog = document.getElementById('debug-log');
+    const btnPrint = document.getElementById('btn-print');
+    const btnClear = document.getElementById('btn-clear');
+    const btnClearLog = document.getElementById('btn-clear-log');
+
+    // Proxy Elements
+    const proxyIpInput = document.getElementById('proxy-ip');
+    const proxyPortInput = document.getElementById('proxy-port');
+    const proxyFrame = document.getElementById('proxy-frame');
+    const btnConnectProxy = document.getElementById('btn-connect-proxy');
+    const proxyStatus = document.createElement('span');
+    proxyStatus.className = 'proxy-status';
+
+    // --- State ---
+    let assets = JSON.parse(localStorage.getItem(CONFIG.storageKey)) || [];
+    let currentPage = 1;
+
+    // --- Initialization ---
+    function init() {
+        logDebug('System initialized', 'info');
+        renderPageGrid();
+        renderAssetList();
+        setupEventListeners();
+        logDebug(`Loaded ${assets.length} assets from storage`, 'info');
+        
+        // Add status indicator next to connect button
+        btnConnectProxy.parentNode.insertBefore(proxyStatus, btnConnectProxy.nextSibling);
+    }
+
+    // --- Event Listeners ---
+    function setupEventListeners() {
+        // Trigger Input
+        devInput.addEventListener('focus', () => {
+            devInput.value = '';
+        });
+        
+        devInput.addEventListener('input', (e) => {
+            if (e.target.value.toUpperCase() === 'DEV') {
+                openPasswordModal();
+            }
+        });
+
+        // Fallback Icon Click
+        fallbackIcon.addEventListener('click', () => {
+            openPasswordModal();
+        });
+
+        // Password Modal
+        cancelBtn.addEventListener('click', closePasswordModal);
+        confirmBtn.addEventListener('click', checkPassword);
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') checkPassword();
+            if (e.key === 'Escape') closePasswordModal();
+        });
+
+        // Sidebar Controls
+        closeBtn.addEventListener('click', toggleSidebar);
+        
+        // Tabs
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+        });
+
+        // Page Navigation
+        pageGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('dt-page-btn')) {
+                navigateToPage(parseInt(e.target.dataset.page));
+            }
+        });
+
+        // Actions
+        btnPrint.addEventListener('click', () => window.print());
+        btnClear.addEventListener('click', clearAllData);
+        btnClearLog.addEventListener('click', () => debugLog.innerHTML = '');
+
+        // Proxy Controls
+        btnConnectProxy.addEventListener('click', connectProxy);
+        
+        // Allow Enter key in IP/Port fields to connect
+        [proxyIpInput, proxyPortInput].forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') connectProxy();
+            });
+        });
+    }
+
+    // --- Core Functions ---
+
+    function openPasswordModal() {
+        passwordModal.classList.remove('hidden');
+        passwordInput.value = '';
+        errorMsg.textContent = '';
+        setTimeout(() => passwordInput.focus(), 100);
+    }
+
+    function closePasswordModal() {
+        passwordModal.classList.add('hidden');
+        devInput.blur();
+    }
+
+    function checkPassword() {
+        if (passwordInput.value === CONFIG.password) {
+            closePasswordModal();
+            toggleSidebar(true); // Force open
+            logDebug('Access granted', 'info');
+        } else {
+            errorMsg.textContent = 'Incorrect Password';
+            passwordInput.value = '';
+            passwordInput.focus();
+            // Shake animation
+            passwordInput.style.transform = 'translateX(5px)';
+            setTimeout(() => passwordInput.style.transform = 'translateX(-5px)', 50);
+            setTimeout(() => passwordInput.style.transform = 'translateX(0)', 100);
+        }
+    }
+
+    function toggleSidebar(forceState) {
+        const isActive = sidebar.classList.contains('active');
+        const shouldShow = forceState !== undefined ? forceState : !isActive;
+        
+        if (shouldShow) {
+            sidebar.classList.add('active');
+            logDebug('Dev Tools opened', 'info');
+        } else {
+            sidebar.classList.remove('active');
+            logDebug('Dev Tools closed', 'info');
+        }
+    }
+
+    function switchTab(tabId) {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+        
+        logDebug(`Switched to tab: ${tabId}`, 'info');
+    }
+
+    function renderPageGrid() {
+        pageGrid.innerHTML = '';
+        for (let i = 1; i <= CONFIG.totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'dt-page-btn';
+            btn.textContent = i;
+            btn.dataset.page = i;
+            if (i === currentPage) btn.classList.add('active-page');
+            pageGrid.appendChild(btn);
+        }
+    }
+
+    function navigateToPage(pageNum) {
+        currentPage = pageNum;
+        
+        // Update grid visual
+        document.querySelectorAll('.dt-page-btn').forEach(btn => {
+            btn.classList.toggle('active-page', parseInt(btn.dataset.page) === pageNum);
+        });
+
+        // Scroll to element with ID "page-" + pageNum or similar
+        // Assuming your pages have IDs like "page-1", "page-2" etc.
+        const target = document.getElementById(`page-${pageNum}`) || document.querySelector(`.page[data-page="${pageNum}"]`);
+        
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            logDebug(`Navigated to Page ${pageNum}`, 'info');
+        } else {
+            logDebug(`Target element for Page ${pageNum} not found`, 'warn');
+        }
+    }
+
+    function renderAssetList() {
+        assetList.innerHTML = '';
+        if (assets.length === 0) {
+            assetList.innerHTML = '<li class="empty-state">No assets uploaded yet.</li>';
+            return;
+        }
+
+        assets.forEach((asset, index) => {
+            const li = document.createElement('li');
+            li.className = 'asset-item';
+            
+            li.innerHTML = `
+                <img src="${asset.url}" alt="Thumb" class="asset-thumb">
+                <div class="asset-info">
+                    <span class="asset-name">${asset.name}</span>
+                    <span class="asset-meta">${asset.size} • ${asset.type}</span>
+                </div>
+                <button class="asset-delete-btn" data-index="${index}">Del</button>
+            `;
+            
+            // Delete handler
+            li.querySelector('.asset-delete-btn').addEventListener('click', (e) => {
+                deleteAsset(index);
+            });
+
+            assetList.appendChild(li);
+        });
+    }
+
+    function deleteAsset(index) {
+        const asset = assets[index];
+        assets.splice(index, 1);
+        localStorage.setItem(CONFIG.storageKey, JSON.stringify(assets));
+        renderAssetList();
+        logDebug(`Deleted asset: ${asset.name}`, 'warn');
+    }
+
+    function clearAllData() {
+        if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+            localStorage.clear();
+            assets = [];
+            renderAssetList();
+            logDebug('All data cleared', 'error');
+            alert('All data cleared.');
+        }
+    }
+
+    // Proxy Browser Functions
+    function connectProxy() {
+        const ip = proxyIpInput.value.trim();
+        const port = proxyPortInput.value.trim();
+        
+        if (!ip) {
+            updateProxyStatus('Missing IP', 'error');
+            return;
+        }
+        
+        const url = `http://${ip}:${port}`;
+        proxyFrame.src = url;
+        logDebug(`Connecting to proxy: ${url}`, 'info');
+        updateProxyStatus('Connected', 'connected');
+    }
+
+    function updateProxyStatus(text, state) {
+        proxyStatus.textContent = text;
+        proxyStatus.className = `proxy-status ${state}`;
+    }
+
+    function logDebug(message, type = 'info') {
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        const time = new Date().toLocaleTimeString();
+        const typeClass = `log-type-${type}`;
+        entry.innerHTML = `<span class="log-time">[${time}]</span><span class="${typeClass}">[${type.toUpperCase()}]</span> ${message}`;
+        debugLog.prepend(entry);
+    }
+
+    // --- Global Exposure for External Scripts ---
+    window.DevTools = {
+        log: logDebug,
+        addAsset: (name, url, size, type) => {
+            assets.push({ name, url, size, type });
+            localStorage.setItem(CONFIG.storageKey, JSON.stringify(assets));
+            renderAssetList();
+            logDebug(`Added asset: ${name}`, 'info');
+        },
+        navigate: navigateToPage,
+        connectProxy: connectProxy
+    };
+
+    // Start
+    init();
+
+})();
+</script>
+
+</body>
+</html>
