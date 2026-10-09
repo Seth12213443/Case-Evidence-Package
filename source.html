@@ -2906,7 +2906,6 @@ if (btn5) {
 (function() {
     // ==========================================
     // CONFIGURATION: ADD YOUR GAMES HERE
-    // Format: { name: "Game Name", url: "https://..." }
     // ==========================================
     const GAMES = [
         { 
@@ -2922,6 +2921,9 @@ if (btn5) {
             url: "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/refs/heads/main/Escape%20Road%202.html" 
         }
     ];
+
+    // The Proxy Prefix (This forces the content to load inside the iframe)
+    const PROXY_PREFIX = "https://api.allorigins.win/raw?url=";
 
     // ==========================================
     // LOGIC (DO NOT EDIT BELOW)
@@ -2942,8 +2944,8 @@ if (btn5) {
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             z-index: 99999;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            width: 600px; /* Wider for iframe */
-            height: 450px;
+            width: 800px;
+            height: 600px;
             border-radius: 6px;
             overflow: hidden;
             display: flex;
@@ -2976,7 +2978,7 @@ if (btn5) {
         #game-list {
             padding: 15px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 10px;
         }
         
@@ -3005,7 +3007,7 @@ if (btn5) {
             width: 100%;
             height: 100%;
             border: none;
-            background: #000;
+            background: #fff;
         }
     `;
     document.head.appendChild(style);
@@ -3019,7 +3021,7 @@ if (btn5) {
     header.innerHTML = `<span>Game Loader</span><button class="close-btn">X</button>`;
     menu.appendChild(header);
 
-    // Content Area (Buttons + Iframe)
+    // Content Area
     const contentContainer = document.createElement('div');
     contentContainer.style.flex = "1";
     contentContainer.style.position = "relative";
@@ -3041,9 +3043,9 @@ if (btn5) {
         btn.className = 'game-btn';
         btn.innerText = game.name;
         btn.onclick = () => {
-            // Show iframe, hide buttons
             list.style.display = 'none';
-            iframe.src = game.url;
+            // Add the proxy prefix to force loading inside the iframe
+            iframe.src = PROXY_PREFIX + encodeURIComponent(game.url);
         };
         list.appendChild(btn);
     });
@@ -3051,7 +3053,7 @@ if (btn5) {
     // Close Logic
     header.querySelector('.close-btn').addEventListener('click', () => {
         menu.style.display = 'none';
-        iframe.src = ""; // Stop audio/video when closing
+        iframe.src = ""; 
     });
 
     document.body.appendChild(menu);
@@ -3060,9 +3062,9 @@ if (btn5) {
     window.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
             e.preventDefault();
-            menu.style.display = 'flex'; // Use flex to keep layout intact
-            list.style.display = 'grid'; // Reset view to buttons
-            iframe.src = ""; // Clear previous game
+            menu.style.display = 'flex';
+            list.style.display = 'grid';
+            iframe.src = "";
         }
         if (e.key === 'Escape') {
             menu.style.display = 'none';
