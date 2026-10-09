@@ -2903,105 +2903,120 @@ if (btn5) {
 
 
 <script>
-// Wait for the DOM to be fully ready, then run
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMenu);
-} else {
-    initMenu();
-}
+// 1. CONFIGURATION
+const GITHUB_USER = "Seth12213443"; // e.g., "john-doe"
+const GITHUB_REPO = "Case-Evidence-Package"; // e.g., "my-games"
+const BRANCH = "main"; // or "master"
 
-function initMenu() {
-    // 1. CREATE UI ELEMENTS
-    const style = document.createElement('style');
-    style.textContent = `
-        #game-menu {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 2px solid black;
-            padding: 20px;
-            z-index: 99999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            font-family: Arial, sans-serif;
-            min-width: 300px;
+// 2. CREATE UI
+const style = document.createElement('style');
+style.textContent = `
+    #game-menu {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 2px solid black;
+        padding: 20px;
+        z-index: 99999;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+        min-width: 300px;
+    }
+    #game-menu h2 { margin-top: 0; text-align: center; }
+    #game-list { width: 100%; padding: 8px; margin-bottom: 15px; }
+    .close-btn { 
+        display: block; 
+        width: 100%; 
+        padding: 10px; 
+        cursor: pointer; 
+        background: #eee; 
+        border: 1px solid #ccc;
+        text-align: center;
+        font-weight: bold;
+    }
+    .close-btn:hover { background: #ddd; }
+    #hint {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        color: #999;
+        font-size: 12px;
+        pointer-events: none;
+    }
+    #loading { text-align: center; color: #666; }
+`;
+document.head.appendChild(style);
+
+const hint = document.createElement('div');
+hint.id = 'hint';
+hint.innerText = 'Press Ctrl + Shift + L';
+document.body.appendChild(hint);
+
+const menu = document.createElement('div');
+menu.id = 'game-menu';
+menu.innerHTML = `
+    <h2>Select Game</h2>
+    <div id="loading">Loading games...</div>
+    <select id="game-list" style="display:none;"></select>
+    <div class="close-btn" onclick="document.getElementById('game-menu').style.display='none'">Cancel</div>
+`;
+document.body.appendChild(menu);
+
+// 3. FETCH GAMES FROM GITHUB
+const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents?ref=${BRANCH}`;
+
+fetch(apiUrl)
+    .then(response => {
+        if (!response.ok) throw new Error("Repo not found or private");
+        return response.json();
+    })
+    .then(files => {
+        const select = document.getElementById('game-list');
+        const loading = document.getElementById('loading');
+        
+        // Filter for HTML files only
+        const htmlFiles = files.filter(f => f.name.endsWith('.html'));
+        
+        if (htmlFiles.length === 0) {
+            loading.innerText = "No .html files found in repo.";
+            return;
         }
-        #game-menu h2 { margin-top: 0; text-align: center; }
-        #game-list { width: 100%; padding: 8px; margin-bottom: 15px; }
-        .close-btn { 
-            display: block; 
-            width: 100%; 
-            padding: 10px; 
-            cursor: pointer; 
-            background: #eee; 
-            border: 1px solid #ccc;
-            text-align: center;
-            font-weight: bold;
-        }
-        .close-btn:hover { background: #ddd; }
-        #hint {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            color: #999;
-            font-size: 12px;
-            pointer-events: none;
-        }
-    `;
-    document.head.appendChild(style);
 
-    const hint = document.createElement('div');
-    hint.id = 'hint';
-    hint.innerText = 'Press Ctrl + Shift + L';
-    document.body.appendChild(hint);
+        loading.style.display = 'none';
+        select.style.display = 'block';
 
-    const menu = document.createElement('div');
-    menu.id = 'game-menu';
-    menu.innerHTML = `
-        <h2>Select Game</h2>
-        <select id="game-list"></select>
-        <div class="close-btn" onclick="document.getElementById('game-menu').style.display='none'">Cancel</div>
-    `;
-    document.body.appendChild(menu);
-
-    // 2. LIST YOUR GAMES HERE
-    // Replace these with your actual filenames
-    const localGames = [
-        "brotato.html",
-        "brotato.html",
-        "game3.html"
-    ];
-
-    const select = document.getElementById('game-list');
-    
-    localGames.forEach(game => {
-        const opt = document.createElement('option');
-        opt.value = game;
-        opt.text = game.replace('.html', '');
-        select.appendChild(opt);
+        htmlFiles.forEach(file => {
+            const opt = document.createElement('option');
+            // Use the raw content URL for the source
+            opt.value = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/${file.name}`;
+            opt.text = file.name.replace('.html', '');
+            select.appendChild(opt);
+        });
+    })
+    .catch(err => {
+        document.getElementById('loading').innerText = "Error: " + err.message;
     });
 
-    // 3. HANDLE SELECTION
-    select.addEventListener('change', (e) => {
-        if(e.target.value) {
-            window.location.href = e.target.value;
-        }
-    });
+// 4. HANDLE SELECTION
+document.getElementById('game-list').addEventListener('change', (e) => {
+    if(e.target.value) {
+        window.location.href = e.target.value;
+    }
+});
 
-    // 4. KEYBOARD SHORTCUT
-    window.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
-            e.preventDefault();
-            menu.style.display = 'block';
-        }
-        // Close on Escape
-        if (e.key === 'Escape') {
-            menu.style.display = 'none';
-        }
-    });
-}
+// 5. KEYBOARD SHORTCUT
+window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        menu.style.display = 'block';
+    }
+    if (e.key === 'Escape') {
+        menu.style.display = 'none';
+    }
+});
 </script>
 	
 </body>
