@@ -2899,6 +2899,114 @@ if (btn5) {
 
 })();
 </script>
+
+
+
+	<script>
+(function() {
+    // 1. CREATE THE UI ELEMENTS
+    const style = document.createElement('style');
+    style.textContent = `
+        #game-menu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid black;
+            padding: 20px;
+            z-index: 99999;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-family: Arial, sans-serif;
+            min-width: 300px;
+        }
+        #game-menu h2 { margin-top: 0; text-align: center; }
+        #game-list { width: 100%; padding: 8px; margin-bottom: 15px; }
+        .close-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 10px; 
+            cursor: pointer; 
+            background: #eee; 
+            border: 1px solid #ccc;
+            text-align: center;
+            font-weight: bold;
+        }
+        .close-btn:hover { background: #ddd; }
+        #hint {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            color: #999;
+            font-size: 12px;
+            pointer-events: none;
+        }
+    `;
+    document.head.appendChild(style);
+
+    const hint = document.createElement('div');
+    hint.id = 'hint';
+    hint.innerText = 'Press Ctrl + Shift + L';
+    document.body.appendChild(hint);
+
+    const menu = document.createElement('div');
+    menu.id = 'game-menu';
+    menu.innerHTML = `
+        <h2>Select Game</h2>
+        <select id="game-list"></select>
+        <div class="close-btn" onclick="document.getElementById('game-menu').style.display='none'">Cancel</div>
+    `;
+    document.body.appendChild(menu);
+
+    // 2. FIND LOCAL FILES
+    // Since we can't easily scan the directory with pure JS without a server,
+    // we will use a predefined list or try to fetch common names.
+    // To make this work seamlessly, please list your game files below.
+    const localGames = [
+        "game1.html",
+        "game2.html",
+        "game3.html"
+        // Add your filenames here!
+    ];
+
+    const select = document.getElementById('game-list');
+    
+    // If you have many files, you might want to hardcode them above.
+    // This loop populates the dropdown.
+    if (localGames.length === 0) {
+        select.innerHTML = "<option>No games found in list.</option>";
+    } else {
+        localGames.forEach(game => {
+            const opt = document.createElement('option');
+            opt.value = game;
+            opt.text = game.replace('.html', '');
+            select.appendChild(opt);
+        });
+    }
+
+    // 3. HANDLE SELECTION
+    select.addEventListener('change', (e) => {
+        if(e.target.value) {
+            window.location.href = e.target.value;
+        }
+    });
+
+    // 4. KEYBOARD SHORTCUT
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
+            e.preventDefault();
+            menu.style.display = 'block';
+        }
+        // Close on Escape
+        if (e.key === 'Escape') {
+            menu.style.display = 'none';
+        }
+    });
+
+})();
+</script>
+
 	
 </body>
 </html>
