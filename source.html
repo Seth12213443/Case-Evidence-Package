@@ -2904,15 +2904,15 @@ if (btn5) {
 
 <script>
 (function() {
-    // CONFIGURATION FOR YOUR REPO
+    // CONFIGURATION
     const USER = "Seth12213443";
     const REPO = "Case-Evidence-Package";
     const BRANCH = "main";
 
-    // CLEAN UP EXISTING
+    // CLEAN UP
     document.querySelectorAll('#game-menu, #hint').forEach(el => el.remove());
 
-    // CREATE UI
+    // STYLES
     const style = document.createElement('style');
     style.textContent = `
         #game-menu {
@@ -2969,43 +2969,48 @@ if (btn5) {
     `;
     document.body.appendChild(menu);
 
-    // FETCH FILES USING RAW GITHUB CONTENT LIST
-    // This endpoint returns the raw content of the directory index if enabled, 
-    // but for robustness, we'll use the API with a CORS proxy fallback if needed.
-    // However, for PUBLIC repos, the API usually works if we request correctly.
-    
-    const apiUrl = `https://api.github.com/repos/${USER}/${REPO}/git/trees/${BRANCH}?recursive=1`;
-    
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            const select = document.getElementById('game-list');
-            const loading = document.getElementById('loading');
+    // FETCH USING A CORS PROXY TO GET THE RAW HTML OF THE REPO PAGE
+    // This avoids GitHub API rate limits and CORS blocks for local files
+    const repoUrl = `https://github.com/${USER}/${REPO}/tree/${BRANCH}`;
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(repoUrl)}`;
+
+    fetch(proxyUrl)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
             
-            // Filter for .html files only
-            const htmlFiles = data.tree.filter(f => f.path.endsWith('.html'));
-            
-            if (htmlFiles.length === 0) {
-                loading.innerText = "No .html files found.";
+            // Find all links that point to .html files in the repo
+            const links = Array.from(doc.querySelectorAll('a'));
+            const htmlFiles = links.filter(link => {
+                const href = link.getAttribute('href') || '';
+                return href.includes('.html') && !href.includes('/blob/') === false; // Filter for actual files
+            });
+
+            // Deduplicate and clean up
+            const uniqueFiles = [...new Set(htmlFiles.map(l => l.getAttribute('href')))]
+                .filter(path => path.endsWith('.html'));
+
+            if (uniqueFiles.length === 0) {
+                document.getElementById('loading').innerText = "No .html files found via parsing.";
                 return;
             }
 
-            loading.style.display = 'none';
+            const select = document.getElementById('game-list');
+            document.getElementById('loading').style.display = 'none';
             select.style.display = 'block';
 
-            htmlFiles.forEach(file => {
+            uniqueFiles.forEach(path => {
                 const opt = document.createElement('option');
-                // Use Raw Content URL
-                opt.value = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}/${file.path}`;
-                opt.text = file.path.replace('.html', '').split('/').pop(); // Just show filename
+                // Construct Raw URL
+                const fileName = path.split('/').pop();
+                opt.value = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}${path.replace('/blob/', '/')}`;
+                opt.text = fileName.replace('.html', '');
                 select.appendChild(opt);
             });
         })
         .catch(err => {
-            console.error("Error:", err);
+            console.error("Proxy Error:", err);
             document.getElementById('loading').innerText = "Error: Could not load game list. Check console.";
         });
 
@@ -3028,6 +3033,5 @@ if (btn5) {
     });
 })();
 </script>
-	
 </body>
 </html>
