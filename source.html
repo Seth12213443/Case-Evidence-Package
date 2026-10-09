@@ -2898,104 +2898,162 @@ if (btn5) {
  init();
 
 })();
-</script>
 
+
+
+
+
+
+	
 <script>
 (function() {
-    // Configuration
-    const API_KEY = "sk-notrack-7dbb6d646e907305e971e8713d534cb9dd2a41e6598d000b";
-    const API_URL = "https://api.ntrack.ai/v1/chat/completions";
+    // --- CONFIGURATION ---
+    const NOTRACK_KEY = "sk-notrack-7dbb6d646e907305e971e8713d534cb9dd2a41e6598d000b";
+    const NOTRACK_URL = "https://api.ntrack.ai/v1/chat/completions";
     
-    // We use allorigins.win to bypass CORS issues when calling from local files or different domains
-    const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+    // Hugging Face Key - Replace with yours if you have one, otherwise it might fail auth
+    const HF_KEY = ""; 
+    const HF_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2";
 
-    // Helper to add messages to a chat log (assuming you have an element with id='chat-log')
-    function addMessage(role, text) {
+    // Universal CORS Proxy to bypass browser restrictions
+    const PROXY_BASE = "https://api.allorigins.win/raw?url=";
+
+    function log(message, type = 'info') {
         let container = document.getElementById('chat-log');
         if (!container) {
-            // Fallback: create a div if it doesn't exist
             container = document.createElement('div');
             container.id = 'chat-log';
-            container.style.border = '1px solid #ccc';
             container.style.padding = '10px';
+            container.style.border = '1px solid #ccc';
             container.style.marginBottom = '10px';
             container.style.height = '300px';
             container.style.overflowY = 'auto';
-            container.style.background = '#fff';
+            container.style.background = '#f9f9f9';
             document.body.appendChild(container);
         }
         
-        const msgDiv = document.createElement('div');
-        msgDiv.style.marginBottom = '8px';
-        msgDiv.style.fontFamily = 'monospace';
+        const div = document.createElement('div');
+        div.style.padding = '5px';
+        div.style.borderBottom = '1px solid #eee';
         
-        const label = document.createElement('strong');
-        label.textContent = role + ': ';
-        msgDiv.appendChild(label);
-        msgDiv.appendChild(document.createTextNode(text));
+        if (type === 'error') div.style.color = 'red';
+        else if (type === 'success') div.style.color = 'green';
         
-        container.appendChild(msgDiv);
+        div.textContent = `[${type.toUpperCase()}] ${message}`;
+        container.appendChild(div);
         container.scrollTop = container.scrollHeight;
     }
 
-    // Function to send a message
-    async function sendMessage(prompt) {
-        addMessage('User', prompt);
-
+    async function fetchWithProxy(url, options) {
+        // Encode the target URL for the proxy
+        const encodedUrl = encodeURIComponent(url);
+        const proxyUrl = `${PROXY_BASE}${encodedUrl}`;
+        
         try {
-            // Encode the URL for the proxy
-            const encodedUrl = encodeURIComponent(API_URL);
-            const proxyUrl = `${CORS_PROXY}${encodedUrl}`;
-
             const response = await fetch(proxyUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model: "notrack-latest", // Or whatever specific model ID Notrack supports, often 'default' or empty string works
-                    messages: [
-                        { role: "user", content: prompt }
-                    ],
-                    max_tokens: 500
-                })
+                body: options.body
             });
-
-            if (!response.ok) {
-                const errText = await response.text();
-                throw new Error(`API Error ${response.status}: ${errText}`);
-            }
-
-            const data = await response.json();
             
-            // Parse the response from the proxy
-            // allorigins returns { contents: "..." }, so we need to parse that inner string
-            let assistantMsg = "";
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            // allorigins returns { contents: "..." }, we need to parse that inner string
+            const data = await response.json();
             if (data && data.contents) {
-                const innerData = JSON.parse(data.contents);
-                assistantMsg = innerData.choices?.[0]?.message?.content || "No content returned.";
-            } else {
-                assistantMsg = JSON.stringify(data); // Fallback for debugging
+                return JSON.parse(data.contents);
             }
-
-            addMessage('Assistant', assistantMsg);
-
-        } catch (error) {
-            console.error("Fetch error:", error);
-            addMessage('System', `Error: ${error.message}`);
+            return data;
+        } catch (err) {
+            throw err;
         }
     }
 
-    // --- Demo Usage ---
-    // If you want to test it immediately, uncomment the line below:
-    // sendMessage("Hello, this is a test.");
+    async function askNotrack(prompt) {
+        try {
+            const res = await fetchWithProxy(NOTRACK_URL, {
+                body: JSON.stringify({
+                    model: "notrack-latest", // Try generic model name
+                    messages: [{ role: "user", content: prompt }],
+                    max_tokens: 500
+                })
+            });
+            
+            // Extract text from Notrack response structure
+            if (res.choices && res.choices[0] && res.choices[0].message) {
+                return res.choices[0].message.content;
+            }
+            throw new Error("Invalid response structure");
+        } catch (e) {
+            throw new Error(`Notrack failed: ${e.message}`);
+        }
+    }
 
-    // Expose the function globally so you can call it from the console or other scripts
+    async function askHF(prompt) {
+        if (!HF_KEY) throw new Error("No HF Key provided");
+        
+        try {
+            const res = await fetchWithProxy(HF_URL, {
+                body: JSON.stringify({
+                    inputs: `User: ${prompt}\nAssistant:`,
+                    parameters: { max_new_tokens: 500 }
+                })
+            });
+            
+            // HF Inference API returns an array like [{ generated_text: "..." }]
+            if (Array.isArray(res) && res.length > 0 && res[0].generated_text) {
+                // Clean up the output to remove the input prefix
+                let text = res[0].generated_text;
+                const index = text.indexOf(prompt);
+                if (index !== -1) {
+                    return text.substring(index + prompt.length).trim();
+                }
+                return text;
+            }
+            throw new Error("Invalid HF response");
+        } catch (e) {
+            throw new Error(`HF failed: ${e.message}`);
+        }
+    }
+
     window.notrackChat = {
-        send: sendMessage,
-        addMessage: addMessage
+        send: async function(prompt) {
+            log(`Sending: "${prompt}"`, 'info');
+            
+            let success = false;
+            let result = null;
+            let errors = [];
+
+            // Try Notrack first
+            try {
+                result = await askNotrack(prompt);
+                success = true;
+            } catch (e) {
+                errors.push(e.message);
+            }
+
+            // If Notrack fails, try HF
+            if (!success && HF_KEY) {
+                try {
+                    result = await askHF(prompt);
+                    success = true;
+                } catch (e) {
+                    errors.push(e.message);
+                }
+            }
+
+            if (success) {
+                log(`Response: ${result}`, 'success');
+            } else {
+                log(`Both APIs failed. Errors: ${errors.join(', ')}`, 'error');
+            }
+        }
     };
 
+    // Auto-test on load if you want
+    // notrackChat.send("Hello world");
 })();
 </script>
 	
