@@ -2903,12 +2903,15 @@ if (btn5) {
 
 
 <script>
-// 1. CONFIGURATION
-const GITHUB_USER = "Seth12213443"; // e.g., "john-doe"
-const GITHUB_REPO = "Case-Evidence-Package"; // e.g., "my-games"
-const BRANCH = "main"; // or "master"
+// CONFIGURATION - REPLACE THESE!
+const GITHUB_USER = "YOUR_GITHUB_USERNAME"; // e.g., "john-doe"
+const GITHUB_REPO = "YOUR_REPO_NAME";      // e.g., "my-games"
+const BRANCH = "main";                     // or "master"
 
-// 2. CREATE UI
+// CLEAN UP ANY EXISTING MENU ELEMENTS TO AVOID DUPLICATES
+document.querySelectorAll('#game-menu, #hint').forEach(el => el.remove());
+
+// CREATE UI
 const style = document.createElement('style');
 style.textContent = `
     #game-menu {
@@ -2965,23 +2968,23 @@ menu.innerHTML = `
 `;
 document.body.appendChild(menu);
 
-// 3. FETCH GAMES FROM GITHUB
+// FETCH FROM GITHUB API
 const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents?ref=${BRANCH}`;
 
 fetch(apiUrl)
     .then(response => {
-        if (!response.ok) throw new Error("Repo not found or private");
+        if (!response.ok) throw new Error(`HTTP ${response.status}: Check username/repo/branch`);
         return response.json();
     })
     .then(files => {
         const select = document.getElementById('game-list');
         const loading = document.getElementById('loading');
         
-        // Filter for HTML files only
+        // Filter for .html files only
         const htmlFiles = files.filter(f => f.name.endsWith('.html'));
         
         if (htmlFiles.length === 0) {
-            loading.innerText = "No .html files found in repo.";
+            loading.innerText = "No .html files found.";
             return;
         }
 
@@ -2990,7 +2993,7 @@ fetch(apiUrl)
 
         htmlFiles.forEach(file => {
             const opt = document.createElement('option');
-            // Use the raw content URL for the source
+            // Use Raw Content URL
             opt.value = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/${file.name}`;
             opt.text = file.name.replace('.html', '');
             select.appendChild(opt);
@@ -2998,16 +3001,18 @@ fetch(apiUrl)
     })
     .catch(err => {
         document.getElementById('loading').innerText = "Error: " + err.message;
+        console.error("GitHub Fetch Error:", err);
     });
 
-// 4. HANDLE SELECTION
+// HANDLE SELECTION
 document.getElementById('game-list').addEventListener('change', (e) => {
     if(e.target.value) {
-        window.location.href = e.target.value;
+        // Open in new tab to preserve your main page, or remove '.open()' to open in same window
+        window.open(e.target.value, '_blank');
     }
 });
 
-// 5. KEYBOARD SHORTCUT
+// KEYBOARD SHORTCUT
 window.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
         e.preventDefault();
