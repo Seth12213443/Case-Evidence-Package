@@ -2905,22 +2905,30 @@ if (btn5) {
 <script>
 (function() {
     // ==========================================
-    // CONFIGURATION: PASTE YOUR LINKS HERE
+    // CONFIGURATION: ADD YOUR GAMES HERE
+    // Format: { name: "Game Name", url: "https://..." }
     // ==========================================
-    const GAME_LINKS = [
-        "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/None.html" 
-        "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/brotato.html" 
-        "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/third-game.html" 
+    const GAMES = [
+        { 
+            name: "Brotato", 
+            url: "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/brotato.html" 
+        },
+        { 
+            name: "Geomatry Dash", 
+            url: "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/pico-school.html" 
+        },
+        { 
+            name: "FNF", 
+            url: "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/fnf.html" 
+        }
     ];
 
     // ==========================================
-    // LOGIC (DO NOT EDIT BELOW UNLESS YOU KNOW JS)
+    // LOGIC (DO NOT EDIT BELOW)
     // ==========================================
 
-    // Clean up previous runs
     document.querySelectorAll('#mod-menu, #hint').forEach(el => el.remove());
 
-    // Styles
     const style = document.createElement('style');
     style.textContent = `
         #mod-menu {
@@ -2929,95 +2937,101 @@ if (btn5) {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #fff;
-            border: 2px solid #000;
-            padding: 20px;
+            background: #f0f0f0;
+            border: 1px solid #999;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             z-index: 99999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            font-family: Arial, sans-serif;
-            min-width: 300px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 300px;
+            min-height: 200px;
+            border-radius: 6px;
+            overflow: hidden;
         }
-        #mod-menu h2 { margin-top: 0; text-align: center; }
-        #game-list { width: 100%; padding: 8px; margin-bottom: 15px; font-size: 16px; }
-        .close-btn { 
-            display: block; 
-            width: 100%; 
-            padding: 10px; 
-            cursor: pointer; 
-            background: #eee; 
+        .menu-header {
+            background: linear-gradient(to bottom, #4a90e2, #0056b3);
+            color: white;
+            padding: 8px 12px;
+            cursor: move; /* Indicates draggable */
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .close-btn {
+            background: #ff4d4d;
+            border: 1px solid #cc0000;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 2px 8px;
+            font-size: 12px;
+            line-height: 1;
+        }
+        .close-btn:hover { background: #cc0000; }
+        
+        #game-list {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .game-btn {
+            padding: 12px;
+            background: #fff;
             border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
             text-align: center;
             font-weight: bold;
+            transition: all 0.2s;
+            color: #333;
         }
-        .close-btn:hover { background: #ddd; }
-        #hint {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            color: #999;
-            font-size: 12px;
-            pointer-events: none;
+        .game-btn:hover {
+            background: #e6f7ff;
+            border-color: #4a90e2;
+            color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .game-btn:active {
+            transform: translateY(0);
         }
     `;
     document.head.appendChild(style);
 
-    // Create UI Elements
-    const hint = document.createElement('div');
-    hint.id = 'hint';
-    hint.innerText = 'Press Ctrl + Shift + L';
-    document.body.appendChild(hint);
-
     const menu = document.createElement('div');
     menu.id = 'mod-menu';
-    menu.innerHTML = `
-        <h2>Select Game</h2>
-        <select id="game-list"></select>
-        <div class="close-btn" onclick="document.getElementById('mod-menu').style.display='none'">Cancel</div>
-    `;
-    document.body.appendChild(menu);
-
-    // Process Links
-    const select = document.getElementById('game-list');
     
-    GAME_LINKS.forEach(link => {
-        let rawUrl = link;
-        let displayName = "Unknown Game";
+    // Header
+    const header = document.createElement('div');
+    header.className = 'menu-header';
+    header.innerHTML = `<span>Game Loader</span><button class="close-btn">X</button>`;
+    menu.appendChild(header);
 
-        // Logic to extract Raw URL from GitHub Blob or Raw links
-        if (link.includes('github.com') && link.includes('/blob/')) {
-            // Convert blob link to raw link
-            const parts = link.split('/');
-            // parts[3] = user, parts[4] = repo, parts[6] = branch, parts[7+] = path
-            if (parts.length > 7) {
-                const user = parts[3];
-                const repo = parts[4];
-                const branch = parts[6];
-                const filePath = parts.slice(7).join('/');
-                rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${filePath}`;
-                
-                // Get filename for display
-                displayName = filePath.split('/').pop().replace('.html', '');
-            }
-        } else if (link.startsWith('https://raw.githubusercontent.com/')) {
-            // It's already a raw link
-            displayName = link.split('/').pop().replace('.html', '');
-        } else {
-            // Fallback: just use the link as-is
-            displayName = link.split('/').pop();
-        }
+    // Content
+    const list = document.createElement('div');
+    list.id = 'game-list';
+    menu.appendChild(list);
 
-        const opt = document.createElement('option');
-        opt.value = rawUrl;
-        opt.text = displayName;
-        select.appendChild(opt);
+    // Create Buttons
+    GAMES.forEach(game => {
+        const btn = document.createElement('div');
+        btn.className = 'game-btn';
+        btn.innerText = game.name;
+        btn.onclick = () => {
+            window.location.href = game.url;
+        };
+        list.appendChild(btn);
     });
 
-    // Handle Selection
-    select.addEventListener('change', (e) => {
-        if(e.target.value) {
-            window.location.href = e.target.value;
-        }
+    // Close Logic
+    header.querySelector('.close-btn').addEventListener('click', () => {
+        menu.style.display = 'none';
     });
+
+    document.body.appendChild(menu);
 
     // Keyboard Shortcut
     window.addEventListener('keydown', (e) => {
