@@ -2942,16 +2942,18 @@ if (btn5) {
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             z-index: 99999;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            width: 300px;
-            min-height: 200px;
+            width: 600px; /* Wider for iframe */
+            height: 450px;
             border-radius: 6px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         .menu-header {
             background: linear-gradient(to bottom, #4a90e2, #0056b3);
             color: white;
             padding: 8px 12px;
-            cursor: move; /* Indicates draggable */
+            cursor: move;
             user-select: none;
             display: flex;
             justify-content: space-between;
@@ -2974,7 +2976,7 @@ if (btn5) {
         #game-list {
             padding: 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 10px;
         }
         
@@ -2998,6 +3000,13 @@ if (btn5) {
         .game-btn:active {
             transform: translateY(0);
         }
+
+        #game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
     `;
     document.head.appendChild(style);
 
@@ -3010,10 +3019,21 @@ if (btn5) {
     header.innerHTML = `<span>Game Loader</span><button class="close-btn">X</button>`;
     menu.appendChild(header);
 
-    // Content
+    // Content Area (Buttons + Iframe)
+    const contentContainer = document.createElement('div');
+    contentContainer.style.flex = "1";
+    contentContainer.style.position = "relative";
+    contentContainer.style.overflow = "hidden";
+
     const list = document.createElement('div');
     list.id = 'game-list';
-    menu.appendChild(list);
+    contentContainer.appendChild(list);
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'game-frame';
+    contentContainer.appendChild(iframe);
+
+    menu.appendChild(contentContainer);
 
     // Create Buttons
     GAMES.forEach(game => {
@@ -3021,7 +3041,9 @@ if (btn5) {
         btn.className = 'game-btn';
         btn.innerText = game.name;
         btn.onclick = () => {
-            window.location.href = game.url;
+            // Show iframe, hide buttons
+            list.style.display = 'none';
+            iframe.src = game.url;
         };
         list.appendChild(btn);
     });
@@ -3029,6 +3051,7 @@ if (btn5) {
     // Close Logic
     header.querySelector('.close-btn').addEventListener('click', () => {
         menu.style.display = 'none';
+        iframe.src = ""; // Stop audio/video when closing
     });
 
     document.body.appendChild(menu);
@@ -3037,10 +3060,13 @@ if (btn5) {
     window.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
             e.preventDefault();
-            menu.style.display = 'block';
+            menu.style.display = 'flex'; // Use flex to keep layout intact
+            list.style.display = 'grid'; // Reset view to buttons
+            iframe.src = ""; // Clear previous game
         }
         if (e.key === 'Escape') {
             menu.style.display = 'none';
+            iframe.src = "";
         }
     });
 })();
