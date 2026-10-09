@@ -2903,7 +2903,14 @@ if (btn5) {
 
 
 <script>
-(function() {
+// Wait for the DOM to be fully ready, then run
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMenu);
+} else {
+    initMenu();
+}
+
+function initMenu() {
     // 1. CREATE UI ELEMENTS
     const style = document.createElement('style');
     style.textContent = `
@@ -2983,8 +2990,8 @@ if (btn5) {
         }
     });
 
-    // 4. KEYBOARD SHORTCUT (Attached to Document, not Window/DOMContentLoaded)
-    document.addEventListener('keydown', (e) => {
+    // 4. KEYBOARD SHORTCUT
+    window.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
             e.preventDefault();
             menu.style.display = 'block';
@@ -2994,10 +3001,8 @@ if (btn5) {
             menu.style.display = 'none';
         }
     });
-
-})();
+}
 </script>
-
 	
 </body>
 </html>
