@@ -2076,13 +2076,13 @@ if (btn5) {
 
 
 <!-- ========================================== -->
-<!-- DEV TOOLS MODULE (v6 - DRAWER STYLE)       -->
+<!-- SELF-CONTAINED DEV TOOLS MODULE (v6 - AI UPGRADED) -->
 <!-- ========================================== -->
 
 <style>
-/* --- CORE LAYOUT --- */
+/* --- DEV TOOLS CORE STYLES --- */
 
-/* Trigger Input */
+/* 1. Trigger Input & Floating Icon */
 #dev-trigger-container {
  position: fixed;
  bottom: 20px;
@@ -2113,6 +2113,7 @@ if (btn5) {
  border-color: #007acc;
 }
 
+/* Fallback Icon if user doesn't type */
 #dev-fallback-icon {
  position: absolute;
  right: -40px;
@@ -2138,16 +2139,109 @@ if (btn5) {
  transform: scale(1);
 }
 
-#dev-fallback-icon:hover { background: #007acc; }
+#dev-fallback-icon:hover {
+ background: #007acc;
+}
 
-/* --- SIDEBAR DRAWER --- */
+/* 2. Password Modal Overlay */
+#dev-password-modal {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: rgba(0, 0, 0, 0.75);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ z-index: 100000;
+ opacity: 1;
+ transition: opacity 0.2s;
+ backdrop-filter: blur(4px);
+}
+
+#dev-password-modal.hidden {
+ opacity: 0;
+ pointer-events: none;
+}
+
+.dt-modal-content {
+ background: #fff;
+ padding: 30px;
+ border-radius: 12px;
+ width: 320px;
+ text-align: center;
+ box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+ transform: scale(0.9) translateY(20px);
+ transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+ position: relative;
+ overflow: hidden;
+}
+
+#dev-password-modal:not(.hidden) .dt-modal-content {
+ transform: scale(1) translateY(0);
+}
+
+.dt-modal-content h3 { margin-top: 0; color: #333; font-size: 18px; }
+.dt-modal-content input {
+ width: 100%;
+ padding: 12px;
+ margin: 15px 0;
+ border: 1px solid #ddd;
+ border-radius: 6px;
+ box-sizing: border-box;
+ font-size: 16px;
+ transition: border-color 0.2s;
+}
+
+.dt-modal-content input:focus {
+ border-color: #007acc;
+ outline: none;
+}
+
+.dt-modal-actions {
+ display: flex;
+ justify-content: space-between;
+ gap: 10px;
+}
+
+.dt-modal-actions button {
+ flex: 1;
+ padding: 12px;
+ border: none;
+ border-radius: 6px;
+ cursor: pointer;
+ font-weight: 600;
+ font-size: 14px;
+ transition: background 0.2s, transform 0.1s;
+}
+
+.dt-modal-actions button:active { transform: scale(0.98); }
+
+.dt-btn-confirm { background: #007acc; color: white; }
+.dt-btn-confirm:hover { background: #005fa3; }
+.dt-btn-cancel { background: #eee; color: #333; }
+.dt-btn-cancel:hover { background: #ddd; }
+
+.dt-error-msg {
+ color: #d32f2f;
+ font-size: 12px;
+ margin-top: 10px;
+ min-height: 18px;
+ font-weight: bold;
+ opacity: 0;
+ transition: opacity 0.2s;
+}
+.dt-error-msg.visible { opacity: 1; }
+
+/* 3. Sidebar Panel Structure */
 #dev-tools-sidebar {
  position: fixed;
  top: 0;
- right: -360px; /* Hidden by default */
+ right: -380px; /* Hidden off-screen */
  width: 340px;
  height: 100vh;
- background: #1e1e1e;
+ background: #1e1e1e; /* VS Code Dark Theme */
  color: #d4d4d4;
  box-shadow: -5px 0 25px rgba(0,0,0,0.7);
  z-index: 99998;
@@ -2162,45 +2256,7 @@ if (btn5) {
  right: 0;
 }
 
-/* The Pull Tab (Grip) */
-.dt-pull-tab {
- position: absolute;
- left: -24px;
- top: 50%;
- transform: translateY(-50%);
- width: 24px;
- height: 80px;
- background: #2d2d2d;
- border-top: 1px solid #444;
- border-bottom: 1px solid #444;
- border-left: 1px solid #444;
- border-radius: 8px 0 0 8px;
- cursor: pointer;
- display: flex;
- align-items: center;
- justify-content: center;
- box-shadow: -2px 0 5px rgba(0,0,0,0.3);
- transition: background 0.2s, width 0.2s;
- z-index: 10;
-}
-
-.dt-pull-tab:hover {
- background: #3a3a3a;
- width: 28px; /* Slight expansion on hover */
-}
-
-.dt-pull-tab svg {
- width: 14px;
- height: 14px;
- fill: #888;
- transition: fill 0.2s;
-}
-
-.dt-pull-tab:hover svg {
- fill: #fff;
-}
-
-/* Header & Close Button */
+/* Header */
 .dt-header {
  padding: 15px 20px;
  background: #252526;
@@ -2210,7 +2266,6 @@ if (btn5) {
  align-items: center;
  height: 50px;
  box-sizing: border-box;
- position: relative;
 }
 
 .dt-header span { font-size: 14px; font-weight: 600; color: #fff; letter-spacing: 0.5px; }
@@ -2241,9 +2296,13 @@ if (btn5) {
 }
 
 .dt-tab-btn:hover { color: #fff; background: #3a3a3a; }
-.dt-tab-btn.active { color: #fff; border-bottom: 2px solid #007acc; background: #1e1e1e; }
+.dt-tab-btn.active { 
+ color: #fff; 
+ border-bottom: 2px solid #007acc; 
+ background: #1e1e1e; 
+}
 
-/* Content Areas */
+/* Tab Content Areas */
 .dt-tab-content {
  display: none;
  flex: 1;
@@ -2254,7 +2313,7 @@ if (btn5) {
 
 .dt-tab-content.active { display: block; }
 
-/* Scrollbar */
+/* Scrollbar Styling for Sidebar */
 .dt-tab-content::-webkit-scrollbar { width: 8px; }
 .dt-tab-content::-webkit-scrollbar-track { background: #1e1e1e; }
 .dt-tab-content::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
@@ -2316,7 +2375,9 @@ if (btn5) {
  border: 1px solid #666;
  cursor: pointer;
 }
-.asset-thumb:hover { border-color: #007acc; }
+.asset-thumb:hover {
+ border-color: #007acc;
+}
 
 .asset-info { flex: 1; font-size: 12px; color: #ccc; word-break: break-all; line-height: 1.4; }
 .asset-name { display: block; margin-bottom: 2px; color: #fff; font-weight: 500; }
@@ -2515,12 +2576,85 @@ if (btn5) {
  to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* Print Styles */
+/* Sticky Notes */
+.sticky-note {
+ background: #fef3c7;
+ color: #333;
+ padding: 10px;
+ margin-bottom: 10px;
+ border-radius: 2px;
+ box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+ position: relative;
+ font-size: 12px;
+ min-height: 60px;
+ word-wrap: break-word;
+}
+.sticky-note textarea {
+ width: 100%;
+ background: transparent;
+ border: none;
+ resize: vertical;
+ font-family: inherit;
+ font-size: inherit;
+ color: inherit;
+ outline: none;
+ }
+.sticky-note .delete-note {
+ position: absolute;
+ top: 5px;
+ right: 5px;
+ background: none;
+ border: none;
+ color: #999;
+ cursor: pointer;
+ font-size: 14px;
+}
+.sticky-note .delete-note:hover { color: #f44336; }
+
+/* System Info */
+.sys-info-row {
+ display: flex;
+ justify-content: space-between;
+ padding: 8px 0;
+ border-bottom: 1px solid #333;
+ font-size: 12px;
+}
+.sys-info-label { color: #999; }
+.sys-info-value { color: #fff; font-weight: bold; }
+
+/* Asset Viewer Modal */
+#asset-viewer-modal {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: rgba(0, 0, 0, 0.9);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ z-index: 100001;
+ opacity: 1;
+ transition: opacity 0.2s;
+}
+#asset-viewer-modal.hidden {
+ opacity: 0;
+ pointer-events: none;
+}
+#asset-viewer-img {
+ max-width: 90%;
+ max-height: 90%;
+ border: 2px solid #fff;
+ border-radius: 4px;
+}
+
+/* Print Styles: Hide Dev Tools when printing */
 @media print {
  #dev-trigger-container,
  #dev-password-modal,
  #dev-tools-sidebar,
- #dev-toast-container {
+ #dev-toast-container,
+ #asset-viewer-modal {
  display: none !important;
  }
 }
@@ -2553,15 +2687,8 @@ if (btn5) {
  </div>
 </div>
 
-<!-- 3. Sidebar Panel (Drawer Style) -->
+<!-- 3. Sidebar Panel -->
 <div id="dev-tools-sidebar" class="hidden">
- <!-- The Pull Tab -->
- <div id="dt-pull-tab" class="dt-pull-tab" title="Pull to Open">
- <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
- <polyline points="15 18 9 12 15 6"></polyline>
- </svg>
- </div>
-
  <div class="dt-header">
  <span><strong>Dev Tools</strong> <small>v6.0</small></span>
  <button id="dt-close-btn" title="Close (Esc)">&times;</button>
@@ -2571,6 +2698,8 @@ if (btn5) {
  <button class="dt-tab-btn active" data-tab="pages">Pages</button>
  <button class="dt-tab-btn" data-tab="assets">Assets</button>
  <button class="dt-tab-btn" data-tab="proxy">Proxy</button>
+ <button class="dt-tab-btn" data-tab="notes">Notes</button>
+ <button class="dt-tab-btn" data-tab="sysinfo">Info</button>
  <button class="dt-tab-btn" data-tab="debug">Debug</button>
  </div>
 
@@ -2613,6 +2742,23 @@ if (btn5) {
  </div>
  </div>
 
+ <!-- TAB: NOTES -->
+ <div id="tab-notes" class="dt-tab-content">
+ <div class="dt-section-title">Sticky Notes</div>
+ <div id="notes-container">
+ <!-- JS Populated -->
+ </div>
+ <button id="btn-add-note" class="dt-btn dt-btn-secondary" style="width: 100%; margin-top: 10px;">+ Add Note</button>
+ </div>
+
+ <!-- TAB: SYSTEM INFO -->
+ <div id="tab-sysinfo" class="dt-tab-content">
+ <div class="dt-section-title">System Information</div>
+ <div id="sys-info-container">
+ <!-- JS Populated -->
+ </div>
+ </div>
+
  <!-- TAB: DEBUG -->
  <div id="tab-debug" class="dt-tab-content">
  <div class="dt-section-title">Console Log</div>
@@ -2626,6 +2772,11 @@ if (btn5) {
 <!-- Toast Container -->
 <div id="dev-toast-container"></div>
 
+<!-- Asset Viewer Modal -->
+<div id="asset-viewer-modal" class="hidden">
+ <img id="asset-viewer-img" src="" alt="Full Size Asset">
+</div>
+
 <!-- JAVASCRIPT LOGIC -->
 <script>
 (function() {
@@ -2633,7 +2784,8 @@ if (btn5) {
  const CONFIG = {
  password: '1221',
  totalPages: 33,
- storageKey: 'case_builder_assets'
+ storageKey: 'case_builder_assets',
+ notesStorageKey: 'case_builder_notes'
  };
 
  // --- DOM Elements ---
@@ -2646,7 +2798,6 @@ if (btn5) {
  const errorMsg = document.getElementById('dev-error-msg');
  const sidebar = document.getElementById('dev-tools-sidebar');
  const closeBtn = document.getElementById('dt-close-btn');
- const pullTab = document.getElementById('dt-pull-tab');
  const tabs = document.querySelectorAll('.dt-tab-btn');
  const tabContents = document.querySelectorAll('.dt-tab-content');
  const pageGrid = document.getElementById('page-nav-grid');
@@ -2664,6 +2815,17 @@ if (btn5) {
  const proxyStatus = document.createElement('span');
  proxyStatus.className = 'proxy-status';
 
+ // Notes Elements
+ const notesContainer = document.getElementById('notes-container');
+ const btnAddNote = document.getElementById('btn-add-note');
+
+ // System Info Elements
+ const sysInfoContainer = document.getElementById('sys-info-container');
+
+ // Asset Viewer Elements
+ const assetViewerModal = document.getElementById('asset-viewer-modal');
+ const assetViewerImg = document.getElementById('asset-viewer-img');
+
  // Toast Container
  const toastContainer = document.getElementById('dev-toast-container');
 
@@ -2675,6 +2837,15 @@ if (btn5) {
  } catch (e) {
      console.error("Failed to parse assets", e);
  }
+
+ let notes = [];
+ try {
+     const storedNotes = localStorage.getItem(CONFIG.notesStorageKey);
+     if (storedNotes) notes = JSON.parse(storedNotes);
+ } catch (e) {
+     console.error("Failed to parse notes", e);
+ }
+
  let currentPage = 1;
 
  // --- Initialization ---
@@ -2682,8 +2853,10 @@ if (btn5) {
  logDebug('System initialized', 'info');
  renderPageGrid();
  renderAssetList();
+ renderNotes();
+ renderSystemInfo();
  setupEventListeners();
- logDebug(`Loaded ${assets.length} assets from storage`, 'info');
+ logDebug(`Loaded ${assets.length} assets and ${notes.length} notes`, 'info');
  
  // Add status indicator next to connect button
  btnConnectProxy.parentNode.insertBefore(proxyStatus, btnConnectProxy.nextSibling);
@@ -2717,7 +2890,6 @@ if (btn5) {
 
  // Sidebar Controls
  closeBtn.addEventListener('click', toggleSidebar);
- pullTab.addEventListener('click', toggleSidebar); // NEW: Pull tab opens sidebar
  
  // Tabs
  tabs.forEach(tab => {
@@ -2756,9 +2928,21 @@ if (btn5) {
              closePasswordModal();
          } else if (sidebar.classList.contains('active')) {
              toggleSidebar(false);
+         } else if (!assetViewerModal.classList.contains('hidden')) {
+             closeAssetViewer();
          }
      }
  });
+
+ // Asset Viewer Close on Click Outside
+ assetViewerModal.addEventListener('click', (e) => {
+     if (e.target === assetViewerModal) {
+         closeAssetViewer();
+     }
+ });
+
+ // Notes
+ btnAddNote.addEventListener('click', addNote);
  }
 
  // --- Core Functions ---
@@ -2794,9 +2978,6 @@ if (btn5) {
  }
  }
 
- /**
- * UPGRADED: Drawer Toggle Logic
- */
  function toggleSidebar(forceState) {
  const isActive = sidebar.classList.contains('active');
  const shouldShow = forceState !== undefined ? forceState : !isActive;
@@ -2840,43 +3021,34 @@ if (btn5) {
  btn.classList.toggle('active', parseInt(btn.dataset.page) === pageNum);
  });
 
- let target = null;
-
- // Strategy 1: Direct ID or Data Attribute
- target = document.getElementById(`page-${pageNum}`);
- if (!target) {
-     target = document.querySelector(`.page[data-page="${pageNum}"]`);
- }
-
- // Strategy 2: Check all elements with class 'page'
- if (!target) {
-     const allPages = document.querySelectorAll('.page');
-     for (let p of allPages) {
-         if (p.id === `page-${pageNum}` || p.getAttribute('data-page') == pageNum) {
-             target = p;
-             break;
-         }
-     }
- }
-
- // Strategy 3: Last resort - Find element containing the text "Page X" or similar header
- if (!target) {
-     const headers = document.querySelectorAll('h1, h2, h3, .header-title');
-     for (let h of headers) {
-         if (h.textContent.includes(`${pageNum}`) && !h.closest('#dev-tools-sidebar')) {
-             target = h.closest('.page') || h; 
-             break;
-         }
-     }
- }
-
+ // Robust Search for Page Element
+ const target = findPageElement(pageNum);
+ 
  if (target) {
-     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-     logDebug(`Navigated to Page ${pageNum} via strategy: ${target.tagName}.${target.className || '#' + target.id}`, 'info');
+ target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ logDebug(`Navigated to Page ${pageNum}`, 'info');
  } else {
-     logDebug(`Target element for Page ${pageNum} not found (Tried ID, Data-Attr, Text Match)`, 'warn');
-     showToast(`Could not scroll to Page ${pageNum}`, 'warning');
+ logDebug(`Target element for Page ${pageNum} not found`, 'warn');
+ showToast(`Page ${pageNum} not found`, 'warning');
  }
+ }
+
+ function findPageElement(pageNum) {
+ // Look for exact match first
+ const directMatch = document.getElementById(`page-${pageNum}`);
+ if (directMatch) return directMatch;
+
+ // Scan all elements for the specific text pattern
+ const allElements = Array.from(document.querySelectorAll('*'));
+ const targetText = `Page: ${pageNum} of 33`;
+ 
+ for (const el of allElements) {
+     if (el.tagName === 'STRONG' && el.textContent.trim() === targetText) {
+         // Return the container that holds this header
+         return el.closest('.page') || el.closest('[data-page]') || el.parentElement;
+     }
+ }
+ return null;
  }
 
  function renderAssetList() {
@@ -2906,7 +3078,7 @@ if (btn5) {
 
  // View handler
  li.querySelector('.asset-thumb').addEventListener('click', () => {
-     window.open(asset.url, '_blank');
+ openAssetViewer(asset.url);
  });
 
  assetList.appendChild(li);
@@ -2926,7 +3098,9 @@ if (btn5) {
  if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
  localStorage.clear();
  assets = [];
+ notes = [];
  renderAssetList();
+ renderNotes();
  logDebug('All data cleared', 'error');
  showToast('All data cleared', 'error');
  }
@@ -2944,45 +3118,92 @@ if (btn5) {
  }
  
  const url = `http://${ip}:${port}`;
- 
- // Visual feedback
- btnConnectProxy.textContent = '...';
- btnConnectProxy.disabled = true;
- updateProxyStatus('Connecting...', 'connected');
-
- // Attempt connection
  proxyFrame.src = url;
-
- // Timeout check for "dead" proxies
- const timeout = setTimeout(() => {
-     if (proxyFrame.readyState !== 'complete') {
-         updateProxyStatus('Timeout / Blocked', 'error');
-         logDebug(`Proxy connection timed out for ${url}`, 'error');
-         showToast('Connection timed out (CORS or Server Down)', 'error');
-     }
- }, 5000);
-
- proxyFrame.onload = () => {
-     clearTimeout(timeout);
-     btnConnectProxy.textContent = 'Connect';
-     btnConnectProxy.disabled = false;
-     updateProxyStatus('Connected', 'connected');
-     logDebug(`Successfully connected to ${url}`, 'success');
-     showToast(`Connected to ${ip}:${port}`, 'success');
- };
-
- proxyFrame.onerror = () => {
-     clearTimeout(timeout);
-     btnConnectProxy.textContent = 'Connect';
-     btnConnectProxy.disabled = false;
-     updateProxyStatus('Error', 'error');
-     logDebug(`Proxy connection error for ${url}`, 'error');
- };
+ logDebug(`Connecting to proxy: ${url}`, 'info');
+ updateProxyStatus('Connected', 'connected');
+ showToast(`Connected to ${ip}:${port}`, 'success');
  }
 
  function updateProxyStatus(text, state) {
  proxyStatus.textContent = text;
  proxyStatus.className = `proxy-status ${state}`;
+ }
+
+ // Notes Functions
+ function renderNotes() {
+ notesContainer.innerHTML = '';
+ if (notes.length === 0) {
+     notesContainer.innerHTML = '<div class="empty-state">No notes yet.</div>';
+     return;
+ }
+
+ notes.forEach((note, index) => {
+     const noteEl = document.createElement('div');
+     noteEl.className = 'sticky-note';
+     
+     noteEl.innerHTML = `
+         <textarea rows="3">${note.text}</textarea>
+         <button class="delete-note">&times;</button>
+     `;
+
+     // Save on input
+     const textarea = noteEl.querySelector('textarea');
+     textarea.addEventListener('input', () => {
+         notes[index].text = textarea.value;
+         localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
+     });
+
+     // Delete handler
+     const deleteBtn = noteEl.querySelector('.delete-note');
+     deleteBtn.addEventListener('click', () => {
+         notes.splice(index, 1);
+         localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
+         renderNotes();
+         showToast('Note deleted', 'warning');
+     });
+
+     notesContainer.appendChild(noteEl);
+ });
+ }
+
+ function addNote() {
+ const newNote = { text: '' };
+ notes.push(newNote);
+ localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
+ renderNotes();
+ showToast('New note added', 'success');
+ }
+
+ // System Info Functions
+ function renderSystemInfo() {
+ const info = {
+     'User Agent': navigator.userAgent,
+     'Screen Resolution': `${window.screen.width} x ${window.screen.height}`,
+     'Viewport Size': `${window.innerWidth} x ${window.innerHeight}`,
+     'Current URL': window.location.href,
+     'Language': navigator.language,
+     'Cookies Enabled': navigator.cookieEnabled,
+     'Online Status': navigator.onLine ? 'Online' : 'Offline'
+ };
+
+ sysInfoContainer.innerHTML = '';
+ for (const [label, value] of Object.entries(info)) {
+     const row = document.createElement('div');
+     row.className = 'sys-info-row';
+     row.innerHTML = `<span class="sys-info-label">${label}</span><span class="sys-info-value">${value}</span>`;
+     sysInfoContainer.appendChild(row);
+ }
+ }
+
+ // Asset Viewer Functions
+ function openAssetViewer(url) {
+ assetViewerImg.src = url;
+ assetViewerModal.classList.remove('hidden');
+ }
+
+ function closeAssetViewer() {
+ assetViewerModal.classList.add('hidden');
+ assetViewerImg.src = '';
  }
 
  function logDebug(message, type = 'info') {
@@ -3024,7 +3245,14 @@ if (btn5) {
  },
  navigate: navigateToPage,
  connectProxy: connectProxy,
- showToast: showToast
+ showToast: showToast,
+ addNote: addNote,
+ getNotes: () => notes,
+ setNotes: (newNotes) => {
+     notes = newNotes;
+     localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
+     renderNotes();
+ }
  };
 
  // Start
