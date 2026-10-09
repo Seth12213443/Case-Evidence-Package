@@ -2076,13 +2076,13 @@ if (btn5) {
 
 
 <!-- ========================================== -->
-<!-- SELF-CONTAINED DEV TOOLS MODULE (v5 - AI UPGRADED) -->
+<!-- DEV TOOLS MODULE (v6 - DRAWER STYLE)       -->
 <!-- ========================================== -->
 
 <style>
-/* --- DEV TOOLS CORE STYLES --- */
+/* --- CORE LAYOUT --- */
 
-/* 1. Trigger Input & Floating Icon */
+/* Trigger Input */
 #dev-trigger-container {
  position: fixed;
  bottom: 20px;
@@ -2107,13 +2107,12 @@ if (btn5) {
 
 #dev-trigger-container:hover #dev-input,
 #dev-input:focus {
- width: 140px; /* Slightly wider for better UX */
+ width: 140px;
  border-radius: 8px;
  box-shadow: 0 0 15px rgba(0, 122, 204, 0.6);
  border-color: #007acc;
 }
 
-/* Fallback Icon if user doesn't type */
 #dev-fallback-icon {
  position: absolute;
  right: -40px;
@@ -2139,109 +2138,16 @@ if (btn5) {
  transform: scale(1);
 }
 
-#dev-fallback-icon:hover {
- background: #007acc;
-}
+#dev-fallback-icon:hover { background: #007acc; }
 
-/* 2. Password Modal Overlay */
-#dev-password-modal {
- position: fixed;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- background: rgba(0, 0, 0, 0.75);
- display: flex;
- justify-content: center;
- align-items: center;
- z-index: 100000;
- opacity: 1;
- transition: opacity 0.2s;
- backdrop-filter: blur(4px);
-}
-
-#dev-password-modal.hidden {
- opacity: 0;
- pointer-events: none;
-}
-
-.dt-modal-content {
- background: #fff;
- padding: 30px;
- border-radius: 12px;
- width: 320px;
- text-align: center;
- box-shadow: 0 15px 40px rgba(0,0,0,0.6);
- transform: scale(0.9) translateY(20px);
- transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
- position: relative;
- overflow: hidden;
-}
-
-#dev-password-modal:not(.hidden) .dt-modal-content {
- transform: scale(1) translateY(0);
-}
-
-.dt-modal-content h3 { margin-top: 0; color: #333; font-size: 18px; }
-.dt-modal-content input {
- width: 100%;
- padding: 12px;
- margin: 15px 0;
- border: 1px solid #ddd;
- border-radius: 6px;
- box-sizing: border-box;
- font-size: 16px;
- transition: border-color 0.2s;
-}
-
-.dt-modal-content input:focus {
- border-color: #007acc;
- outline: none;
-}
-
-.dt-modal-actions {
- display: flex;
- justify-content: space-between;
- gap: 10px;
-}
-
-.dt-modal-actions button {
- flex: 1;
- padding: 12px;
- border: none;
- border-radius: 6px;
- cursor: pointer;
- font-weight: 600;
- font-size: 14px;
- transition: background 0.2s, transform 0.1s;
-}
-
-.dt-modal-actions button:active { transform: scale(0.98); }
-
-.dt-btn-confirm { background: #007acc; color: white; }
-.dt-btn-confirm:hover { background: #005fa3; }
-.dt-btn-cancel { background: #eee; color: #333; }
-.dt-btn-cancel:hover { background: #ddd; }
-
-.dt-error-msg {
- color: #d32f2f;
- font-size: 12px;
- margin-top: 10px;
- min-height: 18px;
- font-weight: bold;
- opacity: 0;
- transition: opacity 0.2s;
-}
-.dt-error-msg.visible { opacity: 1; }
-
-/* 3. Sidebar Panel Structure */
+/* --- SIDEBAR DRAWER --- */
 #dev-tools-sidebar {
  position: fixed;
  top: 0;
- right: -380px; /* Hidden off-screen */
+ right: -360px; /* Hidden by default */
  width: 340px;
  height: 100vh;
- background: #1e1e1e; /* VS Code Dark Theme */
+ background: #1e1e1e;
  color: #d4d4d4;
  box-shadow: -5px 0 25px rgba(0,0,0,0.7);
  z-index: 99998;
@@ -2256,7 +2162,45 @@ if (btn5) {
  right: 0;
 }
 
-/* Header */
+/* The Pull Tab (Grip) */
+.dt-pull-tab {
+ position: absolute;
+ left: -24px;
+ top: 50%;
+ transform: translateY(-50%);
+ width: 24px;
+ height: 80px;
+ background: #2d2d2d;
+ border-top: 1px solid #444;
+ border-bottom: 1px solid #444;
+ border-left: 1px solid #444;
+ border-radius: 8px 0 0 8px;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+ transition: background 0.2s, width 0.2s;
+ z-index: 10;
+}
+
+.dt-pull-tab:hover {
+ background: #3a3a3a;
+ width: 28px; /* Slight expansion on hover */
+}
+
+.dt-pull-tab svg {
+ width: 14px;
+ height: 14px;
+ fill: #888;
+ transition: fill 0.2s;
+}
+
+.dt-pull-tab:hover svg {
+ fill: #fff;
+}
+
+/* Header & Close Button */
 .dt-header {
  padding: 15px 20px;
  background: #252526;
@@ -2266,6 +2210,7 @@ if (btn5) {
  align-items: center;
  height: 50px;
  box-sizing: border-box;
+ position: relative;
 }
 
 .dt-header span { font-size: 14px; font-weight: 600; color: #fff; letter-spacing: 0.5px; }
@@ -2296,13 +2241,9 @@ if (btn5) {
 }
 
 .dt-tab-btn:hover { color: #fff; background: #3a3a3a; }
-.dt-tab-btn.active { 
- color: #fff; 
- border-bottom: 2px solid #007acc; 
- background: #1e1e1e; 
-}
+.dt-tab-btn.active { color: #fff; border-bottom: 2px solid #007acc; background: #1e1e1e; }
 
-/* Tab Content Areas */
+/* Content Areas */
 .dt-tab-content {
  display: none;
  flex: 1;
@@ -2313,7 +2254,7 @@ if (btn5) {
 
 .dt-tab-content.active { display: block; }
 
-/* Scrollbar Styling for Sidebar */
+/* Scrollbar */
 .dt-tab-content::-webkit-scrollbar { width: 8px; }
 .dt-tab-content::-webkit-scrollbar-track { background: #1e1e1e; }
 .dt-tab-content::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
@@ -2375,9 +2316,7 @@ if (btn5) {
  border: 1px solid #666;
  cursor: pointer;
 }
-.asset-thumb:hover {
- border-color: #007acc;
-}
+.asset-thumb:hover { border-color: #007acc; }
 
 .asset-info { flex: 1; font-size: 12px; color: #ccc; word-break: break-all; line-height: 1.4; }
 .asset-name { display: block; margin-bottom: 2px; color: #fff; font-weight: 500; }
@@ -2576,7 +2515,7 @@ if (btn5) {
  to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* Print Styles: Hide Dev Tools when printing */
+/* Print Styles */
 @media print {
  #dev-trigger-container,
  #dev-password-modal,
@@ -2614,10 +2553,17 @@ if (btn5) {
  </div>
 </div>
 
-<!-- 3. Sidebar Panel -->
+<!-- 3. Sidebar Panel (Drawer Style) -->
 <div id="dev-tools-sidebar" class="hidden">
+ <!-- The Pull Tab -->
+ <div id="dt-pull-tab" class="dt-pull-tab" title="Pull to Open">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+ <polyline points="15 18 9 12 15 6"></polyline>
+ </svg>
+ </div>
+
  <div class="dt-header">
- <span><strong>Dev Tools</strong> <small>v5.0</small></span>
+ <span><strong>Dev Tools</strong> <small>v6.0</small></span>
  <button id="dt-close-btn" title="Close (Esc)">&times;</button>
  </div>
  
@@ -2700,6 +2646,7 @@ if (btn5) {
  const errorMsg = document.getElementById('dev-error-msg');
  const sidebar = document.getElementById('dev-tools-sidebar');
  const closeBtn = document.getElementById('dt-close-btn');
+ const pullTab = document.getElementById('dt-pull-tab');
  const tabs = document.querySelectorAll('.dt-tab-btn');
  const tabContents = document.querySelectorAll('.dt-tab-content');
  const pageGrid = document.getElementById('page-nav-grid');
@@ -2770,6 +2717,7 @@ if (btn5) {
 
  // Sidebar Controls
  closeBtn.addEventListener('click', toggleSidebar);
+ pullTab.addEventListener('click', toggleSidebar); // NEW: Pull tab opens sidebar
  
  // Tabs
  tabs.forEach(tab => {
@@ -2846,6 +2794,9 @@ if (btn5) {
  }
  }
 
+ /**
+ * UPGRADED: Drawer Toggle Logic
+ */
  function toggleSidebar(forceState) {
  const isActive = sidebar.classList.contains('active');
  const shouldShow = forceState !== undefined ? forceState : !isActive;
@@ -2889,15 +2840,42 @@ if (btn5) {
  btn.classList.toggle('active', parseInt(btn.dataset.page) === pageNum);
  });
 
- // Scroll to element with ID "page-" + pageNum or similar
- // Assuming your pages have IDs like "page-1", "page-2" etc.
- const target = document.getElementById(`page-${pageNum}`) || document.querySelector(`.page[data-page="${pageNum}"]`);
- 
+ let target = null;
+
+ // Strategy 1: Direct ID or Data Attribute
+ target = document.getElementById(`page-${pageNum}`);
+ if (!target) {
+     target = document.querySelector(`.page[data-page="${pageNum}"]`);
+ }
+
+ // Strategy 2: Check all elements with class 'page'
+ if (!target) {
+     const allPages = document.querySelectorAll('.page');
+     for (let p of allPages) {
+         if (p.id === `page-${pageNum}` || p.getAttribute('data-page') == pageNum) {
+             target = p;
+             break;
+         }
+     }
+ }
+
+ // Strategy 3: Last resort - Find element containing the text "Page X" or similar header
+ if (!target) {
+     const headers = document.querySelectorAll('h1, h2, h3, .header-title');
+     for (let h of headers) {
+         if (h.textContent.includes(`${pageNum}`) && !h.closest('#dev-tools-sidebar')) {
+             target = h.closest('.page') || h; 
+             break;
+         }
+     }
+ }
+
  if (target) {
- target.scrollIntoView({ behavior: 'smooth', block: 'start' });
- logDebug(`Navigated to Page ${pageNum}`, 'info');
+     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+     logDebug(`Navigated to Page ${pageNum} via strategy: ${target.tagName}.${target.className || '#' + target.id}`, 'info');
  } else {
- logDebug(`Target element for Page ${pageNum} not found`, 'warn');
+     logDebug(`Target element for Page ${pageNum} not found (Tried ID, Data-Attr, Text Match)`, 'warn');
+     showToast(`Could not scroll to Page ${pageNum}`, 'warning');
  }
  }
 
@@ -2966,10 +2944,40 @@ if (btn5) {
  }
  
  const url = `http://${ip}:${port}`;
+ 
+ // Visual feedback
+ btnConnectProxy.textContent = '...';
+ btnConnectProxy.disabled = true;
+ updateProxyStatus('Connecting...', 'connected');
+
+ // Attempt connection
  proxyFrame.src = url;
- logDebug(`Connecting to proxy: ${url}`, 'info');
- updateProxyStatus('Connected', 'connected');
- showToast(`Connected to ${ip}:${port}`, 'success');
+
+ // Timeout check for "dead" proxies
+ const timeout = setTimeout(() => {
+     if (proxyFrame.readyState !== 'complete') {
+         updateProxyStatus('Timeout / Blocked', 'error');
+         logDebug(`Proxy connection timed out for ${url}`, 'error');
+         showToast('Connection timed out (CORS or Server Down)', 'error');
+     }
+ }, 5000);
+
+ proxyFrame.onload = () => {
+     clearTimeout(timeout);
+     btnConnectProxy.textContent = 'Connect';
+     btnConnectProxy.disabled = false;
+     updateProxyStatus('Connected', 'connected');
+     logDebug(`Successfully connected to ${url}`, 'success');
+     showToast(`Connected to ${ip}:${port}`, 'success');
+ };
+
+ proxyFrame.onerror = () => {
+     clearTimeout(timeout);
+     btnConnectProxy.textContent = 'Connect';
+     btnConnectProxy.disabled = false;
+     updateProxyStatus('Error', 'error');
+     logDebug(`Proxy connection error for ${url}`, 'error');
+ };
  }
 
  function updateProxyStatus(text, state) {
@@ -3024,7 +3032,6 @@ if (btn5) {
 
 })();
 </script>
-
 	
 </body>
 </html>
