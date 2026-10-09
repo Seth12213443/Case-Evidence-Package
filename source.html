@@ -2902,9 +2902,9 @@ if (btn5) {
 
 
 
-	<script>
+<script>
 (function() {
-    // 1. CREATE THE UI ELEMENTS
+    // 1. CREATE UI ELEMENTS
     const style = document.createElement('style');
     style.textContent = `
         #game-menu {
@@ -2959,31 +2959,22 @@ if (btn5) {
     `;
     document.body.appendChild(menu);
 
-    // 2. FIND LOCAL FILES
-    // Since we can't easily scan the directory with pure JS without a server,
-    // we will use a predefined list or try to fetch common names.
-    // To make this work seamlessly, please list your game files below.
+    // 2. LIST YOUR GAMES HERE
+    // Replace these with your actual filenames
     const localGames = [
         "game1.html",
         "game2.html",
         "game3.html"
-        // Add your filenames here!
     ];
 
     const select = document.getElementById('game-list');
     
-    // If you have many files, you might want to hardcode them above.
-    // This loop populates the dropdown.
-    if (localGames.length === 0) {
-        select.innerHTML = "<option>No games found in list.</option>";
-    } else {
-        localGames.forEach(game => {
-            const opt = document.createElement('option');
-            opt.value = game;
-            opt.text = game.replace('.html', '');
-            select.appendChild(opt);
-        });
-    }
+    localGames.forEach(game => {
+        const opt = document.createElement('option');
+        opt.value = game;
+        opt.text = game.replace('.html', '');
+        select.appendChild(opt);
+    });
 
     // 3. HANDLE SELECTION
     select.addEventListener('change', (e) => {
@@ -2992,7 +2983,7 @@ if (btn5) {
         }
     });
 
-    // 4. KEYBOARD SHORTCUT
+    // 4. KEYBOARD SHORTCUT (Attached to Document, not Window/DOMContentLoaded)
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
             e.preventDefault();
