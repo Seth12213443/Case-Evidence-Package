@@ -4808,5 +4808,132 @@ document.addEventListener('DOMContentLoaded', function() {
     }, true);
 })();
 </script>
+
+	
+<!-- DARK MODE TOGGLE -->
+<style id="dark-mode-styles">
+  #dark-mode-toggle {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 100001;
+    padding: 10px 16px;
+    border: 1px solid #777;
+    border-radius: 8px;
+    background: #222;
+    color: #fff;
+    font: 14px Arial, sans-serif;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.2);
+  }
+
+  #dark-mode-toggle:hover {
+    opacity: .85;
+  }
+
+  /* Dark workspace */
+  body.dark-mode {
+    background-color: #15171a !important;
+    color: #e5e7eb;
+  }
+
+  /* Paper pages */
+  body.dark-mode .page {
+    background-color: #24272b !important;
+    color: #e5e7eb !important;
+    box-shadow: 0 0 12px rgba(0,0,0,.5) !important;
+  }
+
+  /* Text, labels, headings, and table borders */
+  body.dark-mode .page,
+  body.dark-mode .page * {
+    color: #e5e7eb;
+    border-color: #62676e;
+  }
+
+  /* Input fields */
+  body.dark-mode .page input,
+  body.dark-mode .page textarea,
+  body.dark-mode .page select {
+    color: #f3f4f6 !important;
+    caret-color: white;
+  }
+
+  /* Tables and writing areas */
+  body.dark-mode .page .block-box,
+  body.dark-mode .page .grid-table td,
+  body.dark-mode .page .grid-table th,
+  body.dark-mode .page .sketch-space,
+  body.dark-mode .page .photo-space,
+  body.dark-mode .page .csi-container {
+    background-color: #2d3137 !important;
+  }
+
+  /* Keep uploaded evidence visible */
+  body.dark-mode .page img {
+    filter: none !important;
+  }
+
+  /* Restore the normal paper appearance when printing */
+  @media print {
+    #dark-mode-toggle {
+      display: none !important;
+    }
+
+    body.dark-mode {
+      background: white !important;
+      color: black !important;
+    }
+
+    body.dark-mode .page {
+      background: white !important;
+      color: black !important;
+      box-shadow: none !important;
+    }
+
+    body.dark-mode .page,
+    body.dark-mode .page * {
+      color: black !important;
+      border-color: black !important;
+    }
+
+    body.dark-mode .page input,
+    body.dark-mode .page textarea,
+    body.dark-mode .page select,
+    body.dark-mode .page .block-box,
+    body.dark-mode .page .grid-table td,
+    body.dark-mode .page .grid-table th,
+    body.dark-mode .page .sketch-space,
+    body.dark-mode .page .photo-space,
+    body.dark-mode .page .csi-container {
+      background: white !important;
+    }
+  }
+</style>
+
+<button id="dark-mode-toggle" type="button">
+  🌙 Dark Mode
+</button>
+
+<script>
+(() => {
+  const button = document.getElementById("dark-mode-toggle");
+
+  if (!button || button.dataset.initialized) return;
+  button.dataset.initialized = "true";
+
+  button.addEventListener("click", () => {
+    const isDark = document.body.classList.toggle("dark-mode");
+
+    button.textContent = isDark
+      ? "☀️ Light Mode"
+      : "🌙 Dark Mode";
+
+    button.setAttribute("aria-pressed", String(isDark));
+  });
+})();
+</script>
+<!-- END DARK MODE TOGGLE -->
+
 </body>
 </html>
