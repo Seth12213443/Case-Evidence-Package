@@ -2076,7 +2076,7 @@ if (btn5) {
 
 
 <!-- ========================================== -->
-<!-- SELF-CONTAINED DEV TOOLS MODULE (v4 - AI)    -->
+<!-- SELF-CONTAINED DEV TOOLS MODULE (v5 - AI UPGRADED) -->
 <!-- ========================================== -->
 
 <style>
@@ -2084,119 +2084,139 @@ if (btn5) {
 
 /* 1. Trigger Input & Floating Icon */
 #dev-trigger-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 99999;
-    display: flex;
-    align-items: center;
+ position: fixed;
+ bottom: 20px;
+ right: 20px;
+ z-index: 99999;
+ display: flex;
+ align-items: center;
 }
 
 #dev-input {
-    width: 60px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px 0 0 4px;
-    font-size: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    outline: none;
-    transition: all 0.3s ease;
+ width: 60px;
+ padding: 8px;
+ border: 1px solid #ccc;
+ border-radius: 4px 0 0 4px;
+ font-size: 12px;
+ background: rgba(255, 255, 255, 0.9);
+ outline: none;
+ transition: all 0.3s ease;
+ font-weight: bold;
+ color: #333;
 }
 
 #dev-trigger-container:hover #dev-input,
 #dev-input:focus {
-    width: 120px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 122, 204, 0.4);
+ width: 140px; /* Slightly wider for better UX */
+ border-radius: 8px;
+ box-shadow: 0 0 15px rgba(0, 122, 204, 0.6);
+ border-color: #007acc;
 }
 
 /* Fallback Icon if user doesn't type */
 #dev-fallback-icon {
-    position: absolute;
-    right: -40px;
-    top: 0;
-    width: 40px;
-    height: 40px;
-    background: #2c3e50;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    opacity: 0;
-    transition: opacity 0.3s;
+ position: absolute;
+ right: -40px;
+ top: 0;
+ width: 40px;
+ height: 40px;
+ background: #2c3e50;
+ color: white;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ cursor: pointer;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+ opacity: 0;
+ transition: opacity 0.3s, transform 0.2s;
+ transform: scale(0.8);
 }
 
 #dev-trigger-container:hover #dev-fallback-icon,
 #dev-input:focus + #dev-fallback-icon {
-    opacity: 1;
+ opacity: 1;
+ transform: scale(1);
+}
+
+#dev-fallback-icon:hover {
+ background: #007acc;
 }
 
 /* 2. Password Modal Overlay */
 #dev-password-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100000;
-    opacity: 1;
-    transition: opacity 0.2s;
-    backdrop-filter: blur(2px);
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: rgba(0, 0, 0, 0.75);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ z-index: 100000;
+ opacity: 1;
+ transition: opacity 0.2s;
+ backdrop-filter: blur(4px);
 }
 
 #dev-password-modal.hidden {
-    opacity: 0;
-    pointer-events: none;
+ opacity: 0;
+ pointer-events: none;
 }
 
 .dt-modal-content {
-    background: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    width: 320px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transform: scale(0.9);
-    transition: transform 0.2s;
+ background: #fff;
+ padding: 30px;
+ border-radius: 12px;
+ width: 320px;
+ text-align: center;
+ box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+ transform: scale(0.9) translateY(20px);
+ transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+ position: relative;
+ overflow: hidden;
 }
 
 #dev-password-modal:not(.hidden) .dt-modal-content {
-    transform: scale(1);
+ transform: scale(1) translateY(0);
 }
 
-.dt-modal-content h3 { margin-top: 0; color: #333; }
+.dt-modal-content h3 { margin-top: 0; color: #333; font-size: 18px; }
 .dt-modal-content input {
-    width: 100%;
-    padding: 12px;
-    margin: 15px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 16px;
+ width: 100%;
+ padding: 12px;
+ margin: 15px 0;
+ border: 1px solid #ddd;
+ border-radius: 6px;
+ box-sizing: border-box;
+ font-size: 16px;
+ transition: border-color 0.2s;
+}
+
+.dt-modal-content input:focus {
+ border-color: #007acc;
+ outline: none;
 }
 
 .dt-modal-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+ display: flex;
+ justify-content: space-between;
+ gap: 10px;
 }
 
 .dt-modal-actions button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
+ flex: 1;
+ padding: 12px;
+ border: none;
+ border-radius: 6px;
+ cursor: pointer;
+ font-weight: 600;
+ font-size: 14px;
+ transition: background 0.2s, transform 0.1s;
 }
+
+.dt-modal-actions button:active { transform: scale(0.98); }
 
 .dt-btn-confirm { background: #007acc; color: white; }
 .dt-btn-confirm:hover { background: #005fa3; }
@@ -2204,84 +2224,91 @@ if (btn5) {
 .dt-btn-cancel:hover { background: #ddd; }
 
 .dt-error-msg {
-    color: #d32f2f;
-    font-size: 12px;
-    margin-top: 10px;
-    min-height: 18px;
-    font-weight: bold;
+ color: #d32f2f;
+ font-size: 12px;
+ margin-top: 10px;
+ min-height: 18px;
+ font-weight: bold;
+ opacity: 0;
+ transition: opacity 0.2s;
 }
+.dt-error-msg.visible { opacity: 1; }
 
 /* 3. Sidebar Panel Structure */
 #dev-tools-sidebar {
-    position: fixed;
-    top: 0;
-    right: -350px; /* Hidden off-screen */
-    width: 320px;
-    height: 100vh;
-    background: #1e1e1e; /* VS Code Dark Theme */
-    color: #d4d4d4;
-    box-shadow: -5px 0 20px rgba(0,0,0,0.6);
-    z-index: 99998;
-    display: flex;
-    flex-direction: column;
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-left: 1px solid #333;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ position: fixed;
+ top: 0;
+ right: -380px; /* Hidden off-screen */
+ width: 340px;
+ height: 100vh;
+ background: #1e1e1e; /* VS Code Dark Theme */
+ color: #d4d4d4;
+ box-shadow: -5px 0 25px rgba(0,0,0,0.7);
+ z-index: 99998;
+ display: flex;
+ flex-direction: column;
+ transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ border-left: 1px solid #333;
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #dev-tools-sidebar.active {
-    right: 0;
+ right: 0;
 }
 
 /* Header */
 .dt-header {
-    padding: 15px 20px;
-    background: #252526;
-    border-bottom: 1px solid #333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+ padding: 15px 20px;
+ background: #252526;
+ border-bottom: 1px solid #333;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ height: 50px;
+ box-sizing: border-box;
 }
 
 .dt-header span { font-size: 14px; font-weight: 600; color: #fff; letter-spacing: 0.5px; }
 #dt-close-btn { 
-    background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; line-height: 1; 
+ background: none; border: none; color: #aaa; font-size: 24px; cursor: pointer; line-height: 1; 
+ padding: 0 5px;
 }
-#dt-close-btn:hover { color: #fff; }
+#dt-close-btn:hover { color: #fff; background: #333; border-radius: 4px; }
 
 /* Tabs */
 .dt-tabs {
-    display: flex;
-    background: #2d2d2d;
-    border-bottom: 1px solid #333;
+ display: flex;
+ background: #2d2d2d;
+ border-bottom: 1px solid #333;
 }
 
 .dt-tab-btn {
-    flex: 1;
-    padding: 12px 0;
-    background: none;
-    border: none;
-    color: #aaa;
-    cursor: pointer;
-    font-size: 13px;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    font-weight: 500;
+ flex: 1;
+ padding: 12px 0;
+ background: none;
+ border: none;
+ color: #aaa;
+ cursor: pointer;
+ font-size: 13px;
+ border-bottom: 2px solid transparent;
+ transition: all 0.2s;
+ font-weight: 500;
 }
 
 .dt-tab-btn:hover { color: #fff; background: #3a3a3a; }
 .dt-tab-btn.active { 
-    color: #fff; 
-    border-bottom: 2px solid #007acc; 
-    background: #1e1e1e; 
+ color: #fff; 
+ border-bottom: 2px solid #007acc; 
+ background: #1e1e1e; 
 }
 
 /* Tab Content Areas */
 .dt-tab-content {
-    display: none;
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
+ display: none;
+ flex: 1;
+ overflow-y: auto;
+ padding: 15px;
+ box-sizing: border-box;
 }
 
 .dt-tab-content.active { display: block; }
@@ -2294,31 +2321,31 @@ if (btn5) {
 
 /* Section Titles */
 .dt-section-title {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: #999;
-    margin: 15px 0 10px 0;
-    font-weight: bold;
-    letter-spacing: 1px;
+ font-size: 11px;
+ text-transform: uppercase;
+ color: #999;
+ margin: 15px 0 10px 0;
+ font-weight: bold;
+ letter-spacing: 1px;
 }
 .dt-section-title:first-child { margin-top: 0; }
 
 /* Page Grid */
 #page-nav-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
+ display: grid;
+ grid-template-columns: repeat(5, 1fr);
+ gap: 6px;
 }
 
 .dt-page-btn {
-    padding: 8px 0;
-    background: #333;
-    border: 1px solid #444;
-    color: #ccc;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.15s;
+ padding: 8px 0;
+ background: #333;
+ border: 1px solid #444;
+ color: #ccc;
+ border-radius: 3px;
+ cursor: pointer;
+ font-size: 12px;
+ transition: all 0.15s;
 }
 
 .dt-page-btn:hover { background: #007acc; color: #fff; border-color: #007acc; }
@@ -2327,89 +2354,95 @@ if (btn5) {
 /* Asset List */
 #asset-list { list-style: none; padding: 0; margin: 0; }
 .asset-item {
-    display: flex;
-    align-items: center;
-    background: #2d2d2d;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    border: 1px solid #444;
-    transition: background 0.2s;
+ display: flex;
+ align-items: center;
+ background: #2d2d2d;
+ padding: 10px;
+ margin-bottom: 8px;
+ border-radius: 4px;
+ border: 1px solid #444;
+ transition: background 0.2s;
 }
 .asset-item:hover { background: #383838; }
 
 .asset-thumb {
-    width: 45px;
-    height: 45px;
-    object-fit: cover;
-    border-radius: 3px;
-    margin-right: 12px;
-    background: #555;
-    border: 1px solid #666;
+ width: 45px;
+ height: 45px;
+ object-fit: cover;
+ border-radius: 3px;
+ margin-right: 12px;
+ background: #555;
+ border: 1px solid #666;
+ cursor: pointer;
+}
+.asset-thumb:hover {
+ border-color: #007acc;
 }
 
 .asset-info { flex: 1; font-size: 12px; color: #ccc; word-break: break-all; line-height: 1.4; }
-.asset-name { display: block; margin-bottom: 2px; color: #fff; }
+.asset-name { display: block; margin-bottom: 2px; color: #fff; font-weight: 500; }
 .asset-meta { font-size: 10px; color: #888; }
 
 .asset-delete-btn {
-    background: #c0392b;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    padding: 6px 10px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    transition: background 0.2s;
+ background: #c0392b;
+ color: white;
+ border: none;
+ border-radius: 3px;
+ padding: 6px 10px;
+ cursor: pointer;
+ font-size: 11px;
+ font-weight: bold;
+ transition: background 0.2s;
 }
 .asset-delete-btn:hover { background: #a93226; }
 
 .empty-state {
-    text-align: center;
-    color: #777;
-    padding: 20px 0;
-    font-style: italic;
-    font-size: 13px;
+ text-align: center;
+ color: #777;
+ padding: 20px 0;
+ font-style: italic;
+ font-size: 13px;
 }
 
 /* Debug Console */
 #debug-log {
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 10px;
-    height: 200px;
-    overflow-y: auto;
-    font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 11px;
-    color: #bbb;
+ background: #0d0d0d;
+ border: 1px solid #333;
+ border-radius: 4px;
+ padding: 10px;
+ height: 200px;
+ overflow-y: auto;
+ font-family: 'Consolas', 'Monaco', monospace;
+ font-size: 11px;
+ color: #bbb;
 }
-.log-entry { margin-bottom: 4px; border-bottom: 1px solid #222; padding-bottom: 4px; }
-.log-time { color: #666; margin-right: 8px; }
+.log-entry { margin-bottom: 6px; border-bottom: 1px solid #222; padding-bottom: 4px; word-break: break-word; }
+.log-time { color: #666; margin-right: 8px; font-size: 10px; }
 .log-type-info { color: #4fc1ff; }
 .log-type-warn { color: #ffcc00; }
 .log-type-error { color: #ff5555; }
+.log-type-success { color: #4caf50; }
 
 /* Footer Buttons */
 .dt-footer-actions {
-    padding: 15px;
-    background: #252526;
-    border-top: 1px solid #333;
-    display: flex;
-    gap: 10px;
+ padding: 15px;
+ background: #252526;
+ border-top: 1px solid #333;
+ display: flex;
+ gap: 10px;
 }
 
 .dt-btn {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 12px;
-    transition: background 0.2s;
+ flex: 1;
+ padding: 10px;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ font-weight: bold;
+ font-size: 12px;
+ transition: background 0.2s, transform 0.1s;
 }
+.dt-btn:active { transform: scale(0.98); }
 
 .dt-btn-primary { background: #007acc; color: white; }
 .dt-btn-primary:hover { background: #005fa3; }
@@ -2422,96 +2455,135 @@ if (btn5) {
 
 /* Proxy Browser Styles */
 .proxy-container {
-    display: flex;
-    flex-direction: column;
-    height: calc(100% - 40px);
-    gap: 10px;
+ display: flex;
+ flex-direction: column;
+ height: calc(100% - 40px);
+ gap: 10px;
 }
 
 .proxy-controls {
-    display: flex;
-    gap: 5px;
-    align-items: center;
+ display: flex;
+ gap: 5px;
+ align-items: center;
 }
 
 .proxy-ip-group {
-    display: flex;
-    gap: 5px;
-    flex: 1;
+ display: flex;
+ gap: 5px;
+ flex: 1;
 }
 
 .proxy-ip-input, .proxy-port-input {
-    background: #2d2d2d;
-    border: 1px solid #444;
-    color: #ccc;
-    padding: 6px 10px;
-    border-radius: 3px;
-    font-size: 12px;
-    outline: none;
-    font-family: 'Consolas', monospace;
+ background: #2d2d2d;
+ border: 1px solid #444;
+ color: #ccc;
+ padding: 6px 10px;
+ border-radius: 3px;
+ font-size: 12px;
+ outline: none;
+ font-family: 'Consolas', monospace;
 }
 
 .proxy-ip-input { flex: 2; }
 .proxy-port-input { flex: 1; }
 
 .proxy-ip-input:focus, .proxy-port-input:focus, .proxy-connect-btn:focus {
-    border-color: #007acc;
+ border-color: #007acc;
 }
 
 .proxy-connect-btn {
-    padding: 6px 12px;
-    background: #007acc;
-    border: none;
-    color: #fff;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
+ padding: 6px 12px;
+ background: #007acc;
+ border: none;
+ color: #fff;
+ border-radius: 3px;
+ cursor: pointer;
+ font-size: 11px;
+ font-weight: bold;
 }
 .proxy-connect-btn:hover { background: #005fa3; }
 
 .proxy-status {
-    font-size: 10px;
-    color: #888;
-    margin-left: 5px;
-    min-width: 60px;
-    text-align: right;
+ font-size: 10px;
+ color: #888;
+ margin-left: 5px;
+ min-width: 60px;
+ text-align: right;
 }
 .proxy-status.connected { color: #4caf50; }
 .proxy-status.error { color: #f44336; }
 
 .iframe-wrapper {
-    flex: 1;
-    background: #fff;
-    border: 1px solid #444;
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
+ flex: 1;
+ background: #fff;
+ border: 1px solid #444;
+ border-radius: 4px;
+ overflow: hidden;
+ position: relative;
 }
 
 .iframe-fullscreen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-    border: none;
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ z-index: 10;
+ border: none;
+ background: #fff;
 }
 
 .iframe-normal {
-    width: 100%;
-    height: 100%;
-    border: none;
+ width: 100%;
+ height: 100%;
+ border: none;
+}
+
+/* Toast Notifications */
+#dev-toast-container {
+ position: fixed;
+ top: 20px;
+ right: 20px;
+ z-index: 100001;
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+}
+
+.dev-toast {
+ background: #333;
+ color: #fff;
+ padding: 12px 20px;
+ border-radius: 6px;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+ font-size: 13px;
+ font-family: 'Segoe UI', sans-serif;
+ border-left: 4px solid #007acc;
+ animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
+ max-width: 300px;
+}
+
+.dev-toast.success { border-left-color: #4caf50; }
+.dev-toast.error { border-left-color: #f44336; }
+.dev-toast.warning { border-left-color: #ffcc00; }
+
+@keyframes slideIn {
+ from { transform: translateX(100%); opacity: 0; }
+ to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOut {
+ from { opacity: 1; }
+ to { opacity: 0; transform: translateY(-10px); }
 }
 
 /* Print Styles: Hide Dev Tools when printing */
 @media print {
-    #dev-trigger-container,
-    #dev-password-modal,
-    #dev-tools-sidebar {
-        display: none !important;
-    }
+ #dev-trigger-container,
+ #dev-password-modal,
+ #dev-tools-sidebar,
+ #dev-toast-container {
+ display: none !important;
+ }
 }
 </style>
 
@@ -2519,381 +2591,440 @@ if (btn5) {
 
 <!-- 1. Trigger Input -->
 <div id="dev-trigger-container">
-    <input type="text" id="dev-input" placeholder="Type 'DEV'" autocomplete="off" />
-    <div id="dev-fallback-icon" title="Open Dev Tools">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="16 18 22 12 16 6"></polyline>
-            <polyline points="8 6 2 12 8 18"></polyline>
-        </svg>
-    </div>
+ <input type="text" id="dev-input" placeholder="Type 'DEV'" autocomplete="off" />
+ <div id="dev-fallback-icon" title="Open Dev Tools">
+ <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+ <polyline points="16 18 22 12 16 6"></polyline>
+ <polyline points="8 6 2 12 8 18"></polyline>
+ </svg>
+ </div>
 </div>
 
 <!-- 2. Password Modal -->
 <div id="dev-password-modal" class="hidden">
-    <div class="dt-modal-content">
-        <h3>Dev Access</h3>
-        <p style="margin-bottom: 15px; color: #666; font-size: 13px;">Enter Password to Unlock</p>
-        <input type="password" id="dev-password-input" placeholder="Password" autocomplete="off" />
-        <div class="dt-modal-actions">
-            <button id="dev-confirm-btn" class="dt-btn-confirm">Unlock</button>
-            <button id="dev-cancel-btn" class="dt-btn-cancel">Cancel</button>
-        </div>
-        <p id="dev-error-msg" class="dt-error-msg"></p>
-    </div>
+ <div class="dt-modal-content">
+ <h3>Dev Access</h3>
+ <p style="margin-bottom: 15px; color: #666; font-size: 13px;">Enter Password to Unlock</p>
+ <input type="password" id="dev-password-input" placeholder="Password" autocomplete="off" />
+ <div class="dt-modal-actions">
+ <button id="dev-confirm-btn" class="dt-btn-confirm">Unlock</button>
+ <button id="dev-cancel-btn" class="dt-btn-cancel">Cancel</button>
+ </div>
+ <p id="dev-error-msg" class="dt-error-msg"></p>
+ </div>
 </div>
 
 <!-- 3. Sidebar Panel -->
 <div id="dev-tools-sidebar" class="hidden">
-    <div class="dt-header">
-        <span><strong>Dev Tools</strong> <small>v3.0</small></span>
-        <button id="dt-close-btn">&times;</button>
-    </div>
-    
-    <div class="dt-tabs">
-        <button class="dt-tab-btn active" data-tab="pages">Pages</button>
-        <button class="dt-tab-btn" data-tab="assets">Assets</button>
-        <button class="dt-tab-btn" data-tab="proxy">Proxy</button>
-        <button class="dt-tab-btn" data-tab="debug">Debug</button>
-    </div>
+ <div class="dt-header">
+ <span><strong>Dev Tools</strong> <small>v5.0</small></span>
+ <button id="dt-close-btn" title="Close (Esc)">&times;</button>
+ </div>
+ 
+ <div class="dt-tabs">
+ <button class="dt-tab-btn active" data-tab="pages">Pages</button>
+ <button class="dt-tab-btn" data-tab="assets">Assets</button>
+ <button class="dt-tab-btn" data-tab="proxy">Proxy</button>
+ <button class="dt-tab-btn" data-tab="debug">Debug</button>
+ </div>
 
-    <!-- TAB: PAGES -->
-    <div id="tab-pages" class="dt-tab-content active">
-        <div class="dt-section-title">Case Pages (Total: 33)</div>
-        <div id="page-nav-grid">
-            <!-- JS Populated -->
-        </div>
-        
-        <div class="dt-section-title" style="margin-top: 20px;">Actions</div>
-        <div class="dt-footer-actions" style="background: transparent; border: none; padding: 0;">
-            <button id="btn-print" class="dt-btn dt-btn-primary">🖨️ Print Report</button>
-            <button id="btn-clear" class="dt-btn dt-btn-danger">Clear Data</button>
-        </div>
-    </div>
+ <!-- TAB: PAGES -->
+ <div id="tab-pages" class="dt-tab-content active">
+ <div class="dt-section-title">Case Pages (Total: 33)</div>
+ <div id="page-nav-grid">
+ <!-- JS Populated -->
+ </div>
+ 
+ <div class="dt-section-title" style="margin-top: 20px;">Actions</div>
+ <div class="dt-footer-actions" style="background: transparent; border: none; padding: 0;">
+ <button id="btn-print" class="dt-btn dt-btn-primary">🖨️ Print Report</button>
+ <button id="btn-clear" class="dt-btn dt-btn-danger">Clear Data</button>
+ </div>
+ </div>
 
-    <!-- TAB: ASSETS -->
-    <div id="tab-assets" class="dt-tab-content">
-        <div class="dt-section-title">Evidence Photos</div>
-        <ul id="asset-list">
-            <li class="empty-state">No assets uploaded yet.</li>
-        </ul>
-    </div>
+ <!-- TAB: ASSETS -->
+ <div id="tab-assets" class="dt-tab-content">
+ <div class="dt-section-title">Evidence Photos</div>
+ <ul id="asset-list">
+ <li class="empty-state">No assets uploaded yet.</li>
+ </ul>
+ </div>
 
-    <!-- TAB: PROXY BROWSER -->
-    <div id="tab-proxy" class="dt-tab-content">
-        <div class="dt-section-title">Proxy Browser</div>
-        <div class="proxy-container">
-            <div class="proxy-controls">
-                <div class="proxy-ip-group">
-                    <input type="text" id="proxy-ip" class="proxy-ip-input" value="198.199.86.11" />
-                    <input type="number" id="proxy-port" class="proxy-port-input" value="8080" />
-                </div>
-                <button id="btn-connect-proxy" class="proxy-connect-btn">Connect</button>
-            </div>
-            <div class="iframe-wrapper">
-                <iframe id="proxy-frame" src="" class="iframe-normal" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
-            </div>
-        </div>
-    </div>
+ <!-- TAB: PROXY BROWSER -->
+ <div id="tab-proxy" class="dt-tab-content">
+ <div class="dt-section-title">Proxy Browser</div>
+ <div class="proxy-container">
+ <div class="proxy-controls">
+ <div class="proxy-ip-group">
+ <input type="text" id="proxy-ip" class="proxy-ip-input" value="198.199.86.11" placeholder="IP Address" />
+ <input type="number" id="proxy-port" class="proxy-port-input" value="8080" placeholder="Port" />
+ </div>
+ <button id="btn-connect-proxy" class="proxy-connect-btn">Connect</button>
+ </div>
+ <div class="iframe-wrapper">
+ <iframe id="proxy-frame" src="" class="iframe-normal" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Proxy Browser"></iframe>
+ </div>
+ </div>
+ </div>
 
-    <!-- TAB: DEBUG -->
-    <div id="tab-debug" class="dt-tab-content">
-        <div class="dt-section-title">Console Log</div>
-        <div id="debug-log"></div>
-        <div class="dt-footer-actions" style="background: transparent; border: none; padding: 0; margin-top: 10px;">
-            <button id="btn-clear-log" class="dt-btn dt-btn-secondary">Clear Log</button>
-        </div>
-    </div>
+ <!-- TAB: DEBUG -->
+ <div id="tab-debug" class="dt-tab-content">
+ <div class="dt-section-title">Console Log</div>
+ <div id="debug-log"></div>
+ <div class="dt-footer-actions" style="background: transparent; border: none; padding: 0; margin-top: 10px;">
+ <button id="btn-clear-log" class="dt-btn dt-btn-secondary">Clear Log</button>
+ </div>
+ </div>
 </div>
+
+<!-- Toast Container -->
+<div id="dev-toast-container"></div>
 
 <!-- JAVASCRIPT LOGIC -->
 <script>
 (function() {
-    // --- Configuration ---
-    const CONFIG = {
-        password: '1221',
-        totalPages: 33,
-        storageKey: 'case_builder_assets'
-    };
+ // --- Configuration ---
+ const CONFIG = {
+ password: '1221',
+ totalPages: 33,
+ storageKey: 'case_builder_assets'
+ };
 
-    // --- DOM Elements ---
-    const devInput = document.getElementById('dev-input');
-    const fallbackIcon = document.getElementById('dev-fallback-icon');
-    const passwordModal = document.getElementById('dev-password-modal');
-    const passwordInput = document.getElementById('dev-password-input');
-    const confirmBtn = document.getElementById('dev-confirm-btn');
-    const cancelBtn = document.getElementById('dev-cancel-btn');
-    const errorMsg = document.getElementById('dev-error-msg');
-    const sidebar = document.getElementById('dev-tools-sidebar');
-    const closeBtn = document.getElementById('dt-close-btn');
-    const tabs = document.querySelectorAll('.dt-tab-btn');
-    const tabContents = document.querySelectorAll('.dt-tab-content');
-    const pageGrid = document.getElementById('page-nav-grid');
-    const assetList = document.getElementById('asset-list');
-    const debugLog = document.getElementById('debug-log');
-    const btnPrint = document.getElementById('btn-print');
-    const btnClear = document.getElementById('btn-clear');
-    const btnClearLog = document.getElementById('btn-clear-log');
+ // --- DOM Elements ---
+ const devInput = document.getElementById('dev-input');
+ const fallbackIcon = document.getElementById('dev-fallback-icon');
+ const passwordModal = document.getElementById('dev-password-modal');
+ const passwordInput = document.getElementById('dev-password-input');
+ const confirmBtn = document.getElementById('dev-confirm-btn');
+ const cancelBtn = document.getElementById('dev-cancel-btn');
+ const errorMsg = document.getElementById('dev-error-msg');
+ const sidebar = document.getElementById('dev-tools-sidebar');
+ const closeBtn = document.getElementById('dt-close-btn');
+ const tabs = document.querySelectorAll('.dt-tab-btn');
+ const tabContents = document.querySelectorAll('.dt-tab-content');
+ const pageGrid = document.getElementById('page-nav-grid');
+ const assetList = document.getElementById('asset-list');
+ const debugLog = document.getElementById('debug-log');
+ const btnPrint = document.getElementById('btn-print');
+ const btnClear = document.getElementById('btn-clear');
+ const btnClearLog = document.getElementById('btn-clear-log');
 
-    // Proxy Elements
-    const proxyIpInput = document.getElementById('proxy-ip');
-    const proxyPortInput = document.getElementById('proxy-port');
-    const proxyFrame = document.getElementById('proxy-frame');
-    const btnConnectProxy = document.getElementById('btn-connect-proxy');
-    const proxyStatus = document.createElement('span');
-    proxyStatus.className = 'proxy-status';
+ // Proxy Elements
+ const proxyIpInput = document.getElementById('proxy-ip');
+ const proxyPortInput = document.getElementById('proxy-port');
+ const proxyFrame = document.getElementById('proxy-frame');
+ const btnConnectProxy = document.getElementById('btn-connect-proxy');
+ const proxyStatus = document.createElement('span');
+ proxyStatus.className = 'proxy-status';
 
-    // --- State ---
-    let assets = JSON.parse(localStorage.getItem(CONFIG.storageKey)) || [];
-    let currentPage = 1;
+ // Toast Container
+ const toastContainer = document.getElementById('dev-toast-container');
 
-    // --- Initialization ---
-    function init() {
-        logDebug('System initialized', 'info');
-        renderPageGrid();
-        renderAssetList();
-        setupEventListeners();
-        logDebug(`Loaded ${assets.length} assets from storage`, 'info');
-        
-        // Add status indicator next to connect button
-        btnConnectProxy.parentNode.insertBefore(proxyStatus, btnConnectProxy.nextSibling);
-    }
+ // --- State ---
+ let assets = [];
+ try {
+     const stored = localStorage.getItem(CONFIG.storageKey);
+     if (stored) assets = JSON.parse(stored);
+ } catch (e) {
+     console.error("Failed to parse assets", e);
+ }
+ let currentPage = 1;
 
-    // --- Event Listeners ---
-    function setupEventListeners() {
-        // Trigger Input
-        devInput.addEventListener('focus', () => {
-            devInput.value = '';
-        });
-        
-        devInput.addEventListener('input', (e) => {
-            if (e.target.value.toUpperCase() === 'DEV') {
-                openPasswordModal();
-            }
-        });
+ // --- Initialization ---
+ function init() {
+ logDebug('System initialized', 'info');
+ renderPageGrid();
+ renderAssetList();
+ setupEventListeners();
+ logDebug(`Loaded ${assets.length} assets from storage`, 'info');
+ 
+ // Add status indicator next to connect button
+ btnConnectProxy.parentNode.insertBefore(proxyStatus, btnConnectProxy.nextSibling);
+ }
 
-        // Fallback Icon Click
-        fallbackIcon.addEventListener('click', () => {
-            openPasswordModal();
-        });
+ // --- Event Listeners ---
+ function setupEventListeners() {
+ // Trigger Input
+ devInput.addEventListener('focus', () => {
+ devInput.value = '';
+ });
+ 
+ devInput.addEventListener('input', (e) => {
+ if (e.target.value.toUpperCase() === 'DEV') {
+ openPasswordModal();
+ }
+ });
 
-        // Password Modal
-        cancelBtn.addEventListener('click', closePasswordModal);
-        confirmBtn.addEventListener('click', checkPassword);
-        passwordInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') checkPassword();
-            if (e.key === 'Escape') closePasswordModal();
-        });
+ // Fallback Icon Click
+ fallbackIcon.addEventListener('click', () => {
+ openPasswordModal();
+ });
 
-        // Sidebar Controls
-        closeBtn.addEventListener('click', toggleSidebar);
-        
-        // Tabs
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => switchTab(tab.dataset.tab));
-        });
+ // Password Modal
+ cancelBtn.addEventListener('click', closePasswordModal);
+ confirmBtn.addEventListener('click', checkPassword);
+ passwordInput.addEventListener('keydown', (e) => {
+ if (e.key === 'Enter') checkPassword();
+ if (e.key === 'Escape') closePasswordModal();
+ });
 
-        // Page Navigation
-        pageGrid.addEventListener('click', (e) => {
-            if (e.target.classList.contains('dt-page-btn')) {
-                navigateToPage(parseInt(e.target.dataset.page));
-            }
-        });
+ // Sidebar Controls
+ closeBtn.addEventListener('click', toggleSidebar);
+ 
+ // Tabs
+ tabs.forEach(tab => {
+ tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+ });
 
-        // Actions
-        btnPrint.addEventListener('click', () => window.print());
-        btnClear.addEventListener('click', clearAllData);
-        btnClearLog.addEventListener('click', () => debugLog.innerHTML = '');
+ // Page Navigation
+ pageGrid.addEventListener('click', (e) => {
+ if (e.target.classList.contains('dt-page-btn')) {
+ navigateToPage(parseInt(e.target.dataset.page));
+ }
+ });
 
-        // Proxy Controls
-        btnConnectProxy.addEventListener('click', connectProxy);
-        
-        // Allow Enter key in IP/Port fields to connect
-        [proxyIpInput, proxyPortInput].forEach(input => {
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') connectProxy();
-            });
-        });
-    }
+ // Actions
+ btnPrint.addEventListener('click', () => window.print());
+ btnClear.addEventListener('click', clearAllData);
+ btnClearLog.addEventListener('click', () => {
+     debugLog.innerHTML = '';
+     showToast('Log cleared', 'success');
+ });
 
-    // --- Core Functions ---
+ // Proxy Controls
+ btnConnectProxy.addEventListener('click', connectProxy);
+ 
+ // Allow Enter key in IP/Port fields to connect
+ [proxyIpInput, proxyPortInput].forEach(input => {
+ input.addEventListener('keydown', (e) => {
+ if (e.key === 'Enter') connectProxy();
+ });
+ });
 
-    function openPasswordModal() {
-        passwordModal.classList.remove('hidden');
-        passwordInput.value = '';
-        errorMsg.textContent = '';
-        setTimeout(() => passwordInput.focus(), 100);
-    }
+ // Global Keyboard Shortcuts
+ document.addEventListener('keydown', (e) => {
+     if (e.key === 'Escape') {
+         if (!passwordModal.classList.contains('hidden')) {
+             closePasswordModal();
+         } else if (sidebar.classList.contains('active')) {
+             toggleSidebar(false);
+         }
+     }
+ });
+ }
 
-    function closePasswordModal() {
-        passwordModal.classList.add('hidden');
-        devInput.blur();
-    }
+ // --- Core Functions ---
 
-    function checkPassword() {
-        if (passwordInput.value === CONFIG.password) {
-            closePasswordModal();
-            toggleSidebar(true); // Force open
-            logDebug('Access granted', 'info');
-        } else {
-            errorMsg.textContent = 'Incorrect Password';
-            passwordInput.value = '';
-            passwordInput.focus();
-            // Shake animation
-            passwordInput.style.transform = 'translateX(5px)';
-            setTimeout(() => passwordInput.style.transform = 'translateX(-5px)', 50);
-            setTimeout(() => passwordInput.style.transform = 'translateX(0)', 100);
-        }
-    }
+ function openPasswordModal() {
+ passwordModal.classList.remove('hidden');
+ passwordInput.value = '';
+ errorMsg.textContent = '';
+ errorMsg.classList.remove('visible');
+ setTimeout(() => passwordInput.focus(), 100);
+ }
 
-    function toggleSidebar(forceState) {
-        const isActive = sidebar.classList.contains('active');
-        const shouldShow = forceState !== undefined ? forceState : !isActive;
-        
-        if (shouldShow) {
-            sidebar.classList.add('active');
-            logDebug('Dev Tools opened', 'info');
-        } else {
-            sidebar.classList.remove('active');
-            logDebug('Dev Tools closed', 'info');
-        }
-    }
+ function closePasswordModal() {
+ passwordModal.classList.add('hidden');
+ devInput.blur();
+ }
 
-    function switchTab(tabId) {
-        tabs.forEach(t => t.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        
-        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-        document.getElementById(`tab-${tabId}`).classList.add('active');
-        
-        logDebug(`Switched to tab: ${tabId}`, 'info');
-    }
+ function checkPassword() {
+ if (passwordInput.value === CONFIG.password) {
+ closePasswordModal();
+ toggleSidebar(true); // Force open
+ logDebug('Access granted', 'success');
+ showToast('Welcome back!', 'success');
+ } else {
+ errorMsg.textContent = 'Incorrect Password';
+ errorMsg.classList.add('visible');
+ passwordInput.value = '';
+ passwordInput.focus();
+ // Shake animation
+ passwordInput.style.transform = 'translateX(5px)';
+ setTimeout(() => passwordInput.style.transform = 'translateX(-5px)', 50);
+ setTimeout(() => passwordInput.style.transform = 'translateX(0)', 100);
+ }
+ }
 
-    function renderPageGrid() {
-        pageGrid.innerHTML = '';
-        for (let i = 1; i <= CONFIG.totalPages; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'dt-page-btn';
-            btn.textContent = i;
-            btn.dataset.page = i;
-            if (i === currentPage) btn.classList.add('active-page');
-            pageGrid.appendChild(btn);
-        }
-    }
+ function toggleSidebar(forceState) {
+ const isActive = sidebar.classList.contains('active');
+ const shouldShow = forceState !== undefined ? forceState : !isActive;
+ 
+ if (shouldShow) {
+ sidebar.classList.add('active');
+ logDebug('Dev Tools opened', 'info');
+ } else {
+ sidebar.classList.remove('active');
+ logDebug('Dev Tools closed', 'info');
+ }
+ }
 
-    function navigateToPage(pageNum) {
-        currentPage = pageNum;
-        
-        // Update grid visual
-        document.querySelectorAll('.dt-page-btn').forEach(btn => {
-            btn.classList.toggle('active-page', parseInt(btn.dataset.page) === pageNum);
-        });
+ function switchTab(tabId) {
+ tabs.forEach(t => t.classList.remove('active'));
+ tabContents.forEach(c => c.classList.remove('active'));
+ 
+ document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+ document.getElementById(`tab-${tabId}`).classList.add('active');
+ 
+ logDebug(`Switched to tab: ${tabId}`, 'info');
+ }
 
-        // Scroll to element with ID "page-" + pageNum or similar
-        // Assuming your pages have IDs like "page-1", "page-2" etc.
-        const target = document.getElementById(`page-${pageNum}`) || document.querySelector(`.page[data-page="${pageNum}"]`);
-        
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            logDebug(`Navigated to Page ${pageNum}`, 'info');
-        } else {
-            logDebug(`Target element for Page ${pageNum} not found`, 'warn');
-        }
-    }
+ function renderPageGrid() {
+ pageGrid.innerHTML = '';
+ for (let i = 1; i <= CONFIG.totalPages; i++) {
+ const btn = document.createElement('button');
+ btn.className = 'dt-page-btn';
+ btn.textContent = i;
+ btn.dataset.page = i;
+ if (i === currentPage) btn.classList.add('active');
+ pageGrid.appendChild(btn);
+ }
+ }
 
-    function renderAssetList() {
-        assetList.innerHTML = '';
-        if (assets.length === 0) {
-            assetList.innerHTML = '<li class="empty-state">No assets uploaded yet.</li>';
-            return;
-        }
+ function navigateToPage(pageNum) {
+ currentPage = pageNum;
+ 
+ // Update grid visual
+ document.querySelectorAll('.dt-page-btn').forEach(btn => {
+ btn.classList.toggle('active', parseInt(btn.dataset.page) === pageNum);
+ });
 
-        assets.forEach((asset, index) => {
-            const li = document.createElement('li');
-            li.className = 'asset-item';
-            
-            li.innerHTML = `
-                <img src="${asset.url}" alt="Thumb" class="asset-thumb">
-                <div class="asset-info">
-                    <span class="asset-name">${asset.name}</span>
-                    <span class="asset-meta">${asset.size} • ${asset.type}</span>
-                </div>
-                <button class="asset-delete-btn" data-index="${index}">Del</button>
-            `;
-            
-            // Delete handler
-            li.querySelector('.asset-delete-btn').addEventListener('click', (e) => {
-                deleteAsset(index);
-            });
+ // Scroll to element with ID "page-" + pageNum or similar
+ // Assuming your pages have IDs like "page-1", "page-2" etc.
+ const target = document.getElementById(`page-${pageNum}`) || document.querySelector(`.page[data-page="${pageNum}"]`);
+ 
+ if (target) {
+ target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ logDebug(`Navigated to Page ${pageNum}`, 'info');
+ } else {
+ logDebug(`Target element for Page ${pageNum} not found`, 'warn');
+ }
+ }
 
-            assetList.appendChild(li);
-        });
-    }
+ function renderAssetList() {
+ assetList.innerHTML = '';
+ if (assets.length === 0) {
+ assetList.innerHTML = '<li class="empty-state">No assets uploaded yet.</li>';
+ return;
+ }
 
-    function deleteAsset(index) {
-        const asset = assets[index];
-        assets.splice(index, 1);
-        localStorage.setItem(CONFIG.storageKey, JSON.stringify(assets));
-        renderAssetList();
-        logDebug(`Deleted asset: ${asset.name}`, 'warn');
-    }
+ assets.forEach((asset, index) => {
+ const li = document.createElement('li');
+ li.className = 'asset-item';
+ 
+ li.innerHTML = `
+ <img src="${asset.url}" alt="Thumb" class="asset-thumb" title="Click to view full size">
+ <div class="asset-info">
+ <span class="asset-name">${asset.name}</span>
+ <span class="asset-meta">${asset.size} • ${asset.type}</span>
+ </div>
+ <button class="asset-delete-btn" data-index="${index}">Del</button>
+ `;
+ 
+ // Delete handler
+ li.querySelector('.asset-delete-btn').addEventListener('click', (e) => {
+ deleteAsset(index);
+ });
 
-    function clearAllData() {
-        if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-            localStorage.clear();
-            assets = [];
-            renderAssetList();
-            logDebug('All data cleared', 'error');
-            alert('All data cleared.');
-        }
-    }
+ // View handler
+ li.querySelector('.asset-thumb').addEventListener('click', () => {
+     window.open(asset.url, '_blank');
+ });
 
-    // Proxy Browser Functions
-    function connectProxy() {
-        const ip = proxyIpInput.value.trim();
-        const port = proxyPortInput.value.trim();
-        
-        if (!ip) {
-            updateProxyStatus('Missing IP', 'error');
-            return;
-        }
-        
-        const url = `http://${ip}:${port}`;
-        proxyFrame.src = url;
-        logDebug(`Connecting to proxy: ${url}`, 'info');
-        updateProxyStatus('Connected', 'connected');
-    }
+ assetList.appendChild(li);
+ });
+ }
 
-    function updateProxyStatus(text, state) {
-        proxyStatus.textContent = text;
-        proxyStatus.className = `proxy-status ${state}`;
-    }
+ function deleteAsset(index) {
+ const asset = assets[index];
+ assets.splice(index, 1);
+ localStorage.setItem(CONFIG.storageKey, JSON.stringify(assets));
+ renderAssetList();
+ logDebug(`Deleted asset: ${asset.name}`, 'warn');
+ showToast('Asset deleted', 'warning');
+ }
 
-    function logDebug(message, type = 'info') {
-        const entry = document.createElement('div');
-        entry.className = 'log-entry';
-        const time = new Date().toLocaleTimeString();
-        const typeClass = `log-type-${type}`;
-        entry.innerHTML = `<span class="log-time">[${time}]</span><span class="${typeClass}">[${type.toUpperCase()}]</span> ${message}`;
-        debugLog.prepend(entry);
-    }
+ function clearAllData() {
+ if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+ localStorage.clear();
+ assets = [];
+ renderAssetList();
+ logDebug('All data cleared', 'error');
+ showToast('All data cleared', 'error');
+ }
+ }
 
-    // --- Global Exposure for External Scripts ---
-    window.DevTools = {
-        log: logDebug,
-        addAsset: (name, url, size, type) => {
-            assets.push({ name, url, size, type });
-            localStorage.setItem(CONFIG.storageKey, JSON.stringify(assets));
-            renderAssetList();
-            logDebug(`Added asset: ${name}`, 'info');
-        },
-        navigate: navigateToPage,
-        connectProxy: connectProxy
-    };
+ // Proxy Browser Functions
+ function connectProxy() {
+ const ip = proxyIpInput.value.trim();
+ const port = proxyPortInput.value.trim();
+ 
+ if (!ip) {
+ updateProxyStatus('Missing IP', 'error');
+ showToast('Please enter an IP address', 'error');
+ return;
+ }
+ 
+ const url = `http://${ip}:${port}`;
+ proxyFrame.src = url;
+ logDebug(`Connecting to proxy: ${url}`, 'info');
+ updateProxyStatus('Connected', 'connected');
+ showToast(`Connected to ${ip}:${port}`, 'success');
+ }
 
-    // Start
-    init();
+ function updateProxyStatus(text, state) {
+ proxyStatus.textContent = text;
+ proxyStatus.className = `proxy-status ${state}`;
+ }
+
+ function logDebug(message, type = 'info') {
+ const entry = document.createElement('div');
+ entry.className = 'log-entry';
+ const time = new Date().toLocaleTimeString();
+ const typeClass = `log-type-${type}`;
+ entry.innerHTML = `<span class="log-time">[${time}]</span><span class="${typeClass}">[${type.toUpperCase()}]</span> ${message}`;
+ debugLog.prepend(entry);
+ 
+ // Auto scroll to top
+ debugLog.scrollTop = 0;
+ }
+
+ // --- Toast Notification System ---
+ function showToast(message, type = 'info') {
+ const toast = document.createElement('div');
+ toast.className = `dev-toast ${type}`;
+ toast.textContent = message;
+ toastContainer.appendChild(toast);
+
+ // Remove after animation
+ setTimeout(() => {
+     if (toast.parentNode) {
+         toast.parentNode.removeChild(toast);
+     }
+ }, 3000);
+ }
+
+ // --- Global Exposure for External Scripts ---
+ window.DevTools = {
+ log: logDebug,
+ addAsset: (name, url, size, type) => {
+ assets.push({ name, url, size, type });
+ localStorage.setItem(CONFIG.storageKey, JSON.stringify(assets));
+ renderAssetList();
+ logDebug(`Added asset: ${name}`, 'info');
+ showToast(`Asset added: ${name}`, 'success');
+ },
+ navigate: navigateToPage,
+ connectProxy: connectProxy,
+ showToast: showToast
+ };
+
+ // Start
+ init();
 
 })();
 </script>
+
+	
 </body>
 </html>
