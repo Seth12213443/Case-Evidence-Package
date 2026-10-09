@@ -2904,33 +2904,41 @@ if (btn5) {
 
 <script>
 (function() {
-    // CONFIGURATION
-    const USER = "Seth12213443";
-    const REPO = "Case-Evidence-Package";
-    const BRANCH = "main";
+    // ==========================================
+    // CONFIGURATION: PASTE YOUR LINKS HERE
+    // ==========================================
+    const GAME_LINKS = [
+        "https://github.com/Seth12213443/Case-Evidence-Package/blob/main/brotato.html",
+        "https://github.com/Seth12213443/Case-Evidence-Package/blob/main/another-game.html",
+        "https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/third-game.html" 
+    ];
 
-    // CLEAN UP
-    document.querySelectorAll('#game-menu, #hint').forEach(el => el.remove());
+    // ==========================================
+    // LOGIC (DO NOT EDIT BELOW UNLESS YOU KNOW JS)
+    // ==========================================
 
-    // STYLES
+    // Clean up previous runs
+    document.querySelectorAll('#mod-menu, #hint').forEach(el => el.remove());
+
+    // Styles
     const style = document.createElement('style');
     style.textContent = `
-        #game-menu {
+        #mod-menu {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
-            border: 2px solid black;
+            background: #fff;
+            border: 2px solid #000;
             padding: 20px;
             z-index: 99999;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             font-family: Arial, sans-serif;
             min-width: 300px;
         }
-        #game-menu h2 { margin-top: 0; text-align: center; }
-        #game-list { width: 100%; padding: 8px; margin-bottom: 15px; }
+        #mod-menu h2 { margin-top: 0; text-align: center; }
+        #game-list { width: 100%; padding: 8px; margin-bottom: 15px; font-size: 16px; }
         .close-btn { 
             display: block; 
             width: 100%; 
@@ -2950,78 +2958,68 @@ if (btn5) {
             font-size: 12px;
             pointer-events: none;
         }
-        #loading { text-align: center; color: #666; }
     `;
     document.head.appendChild(style);
 
+    // Create UI Elements
     const hint = document.createElement('div');
     hint.id = 'hint';
     hint.innerText = 'Press Ctrl + Shift + L';
     document.body.appendChild(hint);
 
     const menu = document.createElement('div');
-    menu.id = 'game-menu';
+    menu.id = 'mod-menu';
     menu.innerHTML = `
         <h2>Select Game</h2>
-        <div id="loading">Loading games...</div>
-        <select id="game-list" style="display:none;"></select>
-        <div class="close-btn" onclick="document.getElementById('game-menu').style.display='none'">Cancel</div>
+        <select id="game-list"></select>
+        <div class="close-btn" onclick="document.getElementById('mod-menu').style.display='none'">Cancel</div>
     `;
     document.body.appendChild(menu);
 
-    // FETCH USING A CORS PROXY TO GET THE RAW HTML OF THE REPO PAGE
-    // This avoids GitHub API rate limits and CORS blocks for local files
-    const repoUrl = `https://github.com/${USER}/${REPO}/tree/${BRANCH}`;
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(repoUrl)}`;
+    // Process Links
+    const select = document.getElementById('game-list');
+    
+    GAME_LINKS.forEach(link => {
+        let rawUrl = link;
+        let displayName = "Unknown Game";
 
-    fetch(proxyUrl)
-        .then(response => response.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            
-            // Find all links that point to .html files in the repo
-            const links = Array.from(doc.querySelectorAll('a'));
-            const htmlFiles = links.filter(link => {
-                const href = link.getAttribute('href') || '';
-                return href.includes('.html') && !href.includes('/blob/') === false; // Filter for actual files
-            });
-
-            // Deduplicate and clean up
-            const uniqueFiles = [...new Set(htmlFiles.map(l => l.getAttribute('href')))]
-                .filter(path => path.endsWith('.html'));
-
-            if (uniqueFiles.length === 0) {
-                document.getElementById('loading').innerText = "No .html files found via parsing.";
-                return;
+        // Logic to extract Raw URL from GitHub Blob or Raw links
+        if (link.includes('github.com') && link.includes('/blob/')) {
+            // Convert blob link to raw link
+            const parts = link.split('/');
+            // parts[3] = user, parts[4] = repo, parts[6] = branch, parts[7+] = path
+            if (parts.length > 7) {
+                const user = parts[3];
+                const repo = parts[4];
+                const branch = parts[6];
+                const filePath = parts.slice(7).join('/');
+                rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${filePath}`;
+                
+                // Get filename for display
+                displayName = filePath.split('/').pop().replace('.html', '');
             }
+        } else if (link.startsWith('https://raw.githubusercontent.com/')) {
+            // It's already a raw link
+            displayName = link.split('/').pop().replace('.html', '');
+        } else {
+            // Fallback: just use the link as-is
+            displayName = link.split('/').pop();
+        }
 
-            const select = document.getElementById('game-list');
-            document.getElementById('loading').style.display = 'none';
-            select.style.display = 'block';
+        const opt = document.createElement('option');
+        opt.value = rawUrl;
+        opt.text = displayName;
+        select.appendChild(opt);
+    });
 
-            uniqueFiles.forEach(path => {
-                const opt = document.createElement('option');
-                // Construct Raw URL
-                const fileName = path.split('/').pop();
-                opt.value = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}${path.replace('/blob/', '/')}`;
-                opt.text = fileName.replace('.html', '');
-                select.appendChild(opt);
-            });
-        })
-        .catch(err => {
-            console.error("Proxy Error:", err);
-            document.getElementById('loading').innerText = "Error: Could not load game list. Check console.";
-        });
-
-    // HANDLE SELECTION
-    document.getElementById('game-list').addEventListener('change', (e) => {
+    // Handle Selection
+    select.addEventListener('change', (e) => {
         if(e.target.value) {
             window.location.href = e.target.value;
         }
     });
 
-    // KEYBOARD SHORTCUT
+    // Keyboard Shortcut
     window.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
             e.preventDefault();
@@ -3033,5 +3031,7 @@ if (btn5) {
     });
 })();
 </script>
+
+	
 </body>
 </html>
