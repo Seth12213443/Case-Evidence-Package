@@ -2903,125 +2903,130 @@ if (btn5) {
 
 
 <script>
-// CONFIGURATION - REPLACE THESE!
-const GITHUB_USER = "Seth12213443"; // e.g., "john-doe"
-const GITHUB_REPO = "Case-Evidence-Package";      // e.g., "my-games"
-const BRANCH = "main";                     // or "master"
+(function() {
+    // CONFIGURATION FOR YOUR REPO
+    const USER = "Seth12213443";
+    const REPO = "Case-Evidence-Package";
+    const BRANCH = "main";
 
-// CLEAN UP ANY EXISTING MENU ELEMENTS TO AVOID DUPLICATES
-document.querySelectorAll('#game-menu, #hint').forEach(el => el.remove());
+    // CLEAN UP EXISTING
+    document.querySelectorAll('#game-menu, #hint').forEach(el => el.remove());
 
-// CREATE UI
-const style = document.createElement('style');
-style.textContent = `
-    #game-menu {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        border: 2px solid black;
-        padding: 20px;
-        z-index: 99999;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        font-family: Arial, sans-serif;
-        min-width: 300px;
-    }
-    #game-menu h2 { margin-top: 0; text-align: center; }
-    #game-list { width: 100%; padding: 8px; margin-bottom: 15px; }
-    .close-btn { 
-        display: block; 
-        width: 100%; 
-        padding: 10px; 
-        cursor: pointer; 
-        background: #eee; 
-        border: 1px solid #ccc;
-        text-align: center;
-        font-weight: bold;
-    }
-    .close-btn:hover { background: #ddd; }
-    #hint {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        color: #999;
-        font-size: 12px;
-        pointer-events: none;
-    }
-    #loading { text-align: center; color: #666; }
-`;
-document.head.appendChild(style);
-
-const hint = document.createElement('div');
-hint.id = 'hint';
-hint.innerText = 'Press Ctrl + Shift + L';
-document.body.appendChild(hint);
-
-const menu = document.createElement('div');
-menu.id = 'game-menu';
-menu.innerHTML = `
-    <h2>Select Game</h2>
-    <div id="loading">Loading games...</div>
-    <select id="game-list" style="display:none;"></select>
-    <div class="close-btn" onclick="document.getElementById('game-menu').style.display='none'">Cancel</div>
-`;
-document.body.appendChild(menu);
-
-// FETCH FROM GITHUB API
-const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents?ref=${BRANCH}`;
-
-fetch(apiUrl)
-    .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}: Check username/repo/branch`);
-        return response.json();
-    })
-    .then(files => {
-        const select = document.getElementById('game-list');
-        const loading = document.getElementById('loading');
-        
-        // Filter for .html files only
-        const htmlFiles = files.filter(f => f.name.endsWith('.html'));
-        
-        if (htmlFiles.length === 0) {
-            loading.innerText = "No .html files found.";
-            return;
+    // CREATE UI
+    const style = document.createElement('style');
+    style.textContent = `
+        #game-menu {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid black;
+            padding: 20px;
+            z-index: 99999;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-family: Arial, sans-serif;
+            min-width: 300px;
         }
+        #game-menu h2 { margin-top: 0; text-align: center; }
+        #game-list { width: 100%; padding: 8px; margin-bottom: 15px; }
+        .close-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 10px; 
+            cursor: pointer; 
+            background: #eee; 
+            border: 1px solid #ccc;
+            text-align: center;
+            font-weight: bold;
+        }
+        .close-btn:hover { background: #ddd; }
+        #hint {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            color: #999;
+            font-size: 12px;
+            pointer-events: none;
+        }
+        #loading { text-align: center; color: #666; }
+    `;
+    document.head.appendChild(style);
 
-        loading.style.display = 'none';
-        select.style.display = 'block';
+    const hint = document.createElement('div');
+    hint.id = 'hint';
+    hint.innerText = 'Press Ctrl + Shift + L';
+    document.body.appendChild(hint);
 
-        htmlFiles.forEach(file => {
-            const opt = document.createElement('option');
-            // Use Raw Content URL
-            opt.value = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/${file.name}`;
-            opt.text = file.name.replace('.html', '');
-            select.appendChild(opt);
+    const menu = document.createElement('div');
+    menu.id = 'game-menu';
+    menu.innerHTML = `
+        <h2>Select Game</h2>
+        <div id="loading">Loading games...</div>
+        <select id="game-list" style="display:none;"></select>
+        <div class="close-btn" onclick="document.getElementById('game-menu').style.display='none'">Cancel</div>
+    `;
+    document.body.appendChild(menu);
+
+    // FETCH FILES USING RAW GITHUB CONTENT LIST
+    // This endpoint returns the raw content of the directory index if enabled, 
+    // but for robustness, we'll use the API with a CORS proxy fallback if needed.
+    // However, for PUBLIC repos, the API usually works if we request correctly.
+    
+    const apiUrl = `https://api.github.com/repos/${USER}/${REPO}/git/trees/${BRANCH}?recursive=1`;
+    
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            const select = document.getElementById('game-list');
+            const loading = document.getElementById('loading');
+            
+            // Filter for .html files only
+            const htmlFiles = data.tree.filter(f => f.path.endsWith('.html'));
+            
+            if (htmlFiles.length === 0) {
+                loading.innerText = "No .html files found.";
+                return;
+            }
+
+            loading.style.display = 'none';
+            select.style.display = 'block';
+
+            htmlFiles.forEach(file => {
+                const opt = document.createElement('option');
+                // Use Raw Content URL
+                opt.value = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}/${file.path}`;
+                opt.text = file.path.replace('.html', '').split('/').pop(); // Just show filename
+                select.appendChild(opt);
+            });
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            document.getElementById('loading').innerText = "Error: Could not load game list. Check console.";
         });
-    })
-    .catch(err => {
-        document.getElementById('loading').innerText = "Error: " + err.message;
-        console.error("GitHub Fetch Error:", err);
+
+    // HANDLE SELECTION
+    document.getElementById('game-list').addEventListener('change', (e) => {
+        if(e.target.value) {
+            window.location.href = e.target.value;
+        }
     });
 
-// HANDLE SELECTION
-document.getElementById('game-list').addEventListener('change', (e) => {
-    if(e.target.value) {
-        // Open in new tab to preserve your main page, or remove '.open()' to open in same window
-        window.open(e.target.value, '_blank');
-    }
-});
-
-// KEYBOARD SHORTCUT
-window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
-        e.preventDefault();
-        menu.style.display = 'block';
-    }
-    if (e.key === 'Escape') {
-        menu.style.display = 'none';
-    }
-});
+    // KEYBOARD SHORTCUT
+    window.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
+            e.preventDefault();
+            menu.style.display = 'block';
+        }
+        if (e.key === 'Escape') {
+            menu.style.display = 'none';
+        }
+    });
+})();
 </script>
 	
 </body>
