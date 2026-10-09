@@ -14,7 +14,7 @@
  }
  
  /* Interactive Input Styling */
- input[type="text"], textarea {
+ .page input[type="text"], .page textarea {
  font-family: "Times New Roman", Times, serif;
  font-size: 14px;
  border: none;
@@ -24,11 +24,14 @@
  outline: none;
  padding: 4px 0;
  resize: none;
+ overflow: hidden;
+ text-overflow: clip;
  }
  
- textarea {
+ .page textarea {
  height: calc(100% - 20px);
  line-height: 1.5;
+ overflow-wrap: anywhere;
  }
 
  /* Printable Page Setup */
@@ -180,7 +183,7 @@
 <!-- MACRO DEFINITIONS APPLIED PER PAGE -->
 
 <!-- PAGE 1: CSI Report -->
-<div class="page">
+<div class="page" data-page-label="report">
  <div class="header-title">Case Evidence Package</div>
  <div class="header-meta">
  <table style="width:100%">
@@ -1580,11 +1583,25 @@ document.addEventListener('DOMContentLoaded', function() {
             background-color: #222;
             color: #fff;
             box-sizing: border-box;
-            padding: 20px;
+            padding: 20px 20px 68px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             gap: 15px;
+          }
+
+          .case-tools-footer {
+            position: absolute;
+            left: 20px;
+            bottom: 14px;
+            right: 20px;
+            font-size: 9px;
+            line-height: 1.4;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            border-top: 1px solid rgba(255,255,255,0.12);
+            padding-top: 8px;
           }
 
           /* The toggle handle that sits on the edge */
@@ -1605,6 +1622,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
           /* App styling inside your box */
           h3 { margin: 0 0 10px 0; color: #00bcd4; }
+          .panel-header {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #00bcd4;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 8px;
+          }
+          .menu-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+          .menu-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #c7d0d8;
+            margin: 4px 0 2px;
+            opacity: 0.9;
+          }
           button.menu-action {
             background: #444;
             color: #fff;
@@ -1618,20 +1657,159 @@ document.addEventListener('DOMContentLoaded', function() {
             gap: 8px;
           }
           button.menu-action:hover { background: #555; }
+          select.menu-select {
+            width: 100%;
+            background: #444;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 12px;
+            font-size: 13px;
+            cursor: pointer;
+          }
+          .template-action {
+            margin-top: 4px;
+          }
+          .mini-divider {
+            border-top: 1px solid rgba(255,255,255,0.18);
+            margin: 6px 0;
+          }
+
+          .case-info-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+          }
+
+          .case-info-modal.hidden {
+            display: none;
+          }
+
+          .case-info-card {
+            width: 320px;
+            background: #1f1f1f;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 16px 30px rgba(0,0,0,0.35);
+          }
+
+          .case-info-card h4 {
+            margin: 0 0 12px;
+            color: #00bcd4;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+          }
+
+          .case-info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 14px;
+          }
+
+          .case-info-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #dfeaf0;
+          }
+
+          .case-info-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+          }
+
+          .case-info-actions button {
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 600;
+          }
+
+          .case-info-actions .confirm {
+            background: #00bcd4;
+            color: #fff;
+          }
+
+          .case-info-actions .cancel {
+            background: #444;
+            color: #fff;
+          }
         </style>
 
         <div class="sidebar-container" id="container">
           <div class="sidebar-panel">
-            <h3>Tool Box</h3>
-            
-            <!-- ADD YOUR CUSTOM HTML & CODE HERE -->
-            <button class="menu-action" id="btn1">🖨️ Print PDF</button>
-            <button class="menu-action" id="btn2">💾 Download/Save </button>
-            <button class="menu-action" id="btn3"> Help </button>
-	    <button class="menu-action" id="btn4">➕ Add Photo Page</button>
-	    <button class="menu-action" id="btn5">➕ Add Narrative Page</button>
+            <h3 class="panel-header">Case Tools</h3>
 
+            <div class="menu-section">
+              <button class="menu-action" id="btn1">🖨️ Print PDF</button>
+              <button class="menu-action" id="btn2">💾 Download/Save </button>
+              <button class="menu-action" id="btn3"> Help </button>
+            </div>
+
+            <div class="mini-divider"></div>
+
+            <div class="menu-section">
+              <div class="menu-label">Add Page</div>
+              <select class="menu-select" id="page-template-select">
+                <option value="">Select a page template</option>
+                <option value="photo-template">Photo Page</option>
+                <option value="narrative-page-template">Narrative Page</option>
+                <option value="csi-report-template">CSI Report Page</option>
+                <option value="scene-prep-template">Scene Prep Page</option>
+                <option value="scene-description-template">Scene Description Page</option>
+                <option value="briefing-template">Briefing Page</option>
+                <option value="entry-log-template">Entry Log Page</option>
+                <option value="recovery-log-template">Recovery Log Page</option>
+                <option value="triangulation-template">Triangulation Page</option>
+                <option value="measurement-template">Measurement Page</option>
+                <option value="chain-of-custody-template">Chain of Custody Page</option>
+                <option value="sketch-template">Sketch Page</option>
+                <option value="notes-template">Notes Page</option>
+              </select>
+              <button class="menu-action template-action" id="add-selected-page-btn">➕ Add Selected Page</button>
+            </div>
+
+            <div class="mini-divider"></div>
+
+            <div class="menu-section">
+              <div class="menu-label">Document Tools</div>
+              <button class="menu-action" id="btnDuplicatePage">⧉ Duplicate Current Page</button>
+              <button class="menu-action" id="btnDeletePage">🗑️ Delete Current Page</button>
+              <button class="menu-action" id="btnMovePageUp">↑ Move Page Up</button>
+              <button class="menu-action" id="btnMovePageDown">↓ Move Page Down</button>
+              <button class="menu-action" id="btnRenumberPages"># Renumber Pages</button>
+              <button class="menu-action" id="btnApplyCaseInfo">↳ Apply Case Info</button>
+              <button class="menu-action" id="btnValidatePacket">✓ Validate Packet</button>
+            </div>
           </div>
+          <div id="case-info-modal" class="case-info-modal hidden">
+            <div class="case-info-card">
+              <h4>Apply Case Info</h4>
+              <div class="case-info-list">
+                <label class="case-info-option"><input type="checkbox" value="agency" checked> Agency Name</label>
+                <label class="case-info-option"><input type="checkbox" value="caseNumber" checked> Case #</label>
+                <label class="case-info-option"><input type="checkbox" value="offence" checked> Offence</label>
+                <label class="case-info-option"><input type="checkbox" value="date" checked> Date</label>
+              </div>
+              <div class="case-info-actions">
+                <button class="cancel" type="button" id="case-info-cancel">Cancel</button>
+                <button class="confirm" type="button" id="case-info-confirm">Apply</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-tools-footer">v6.0 • Updated 2026-10-09</div>
           <button class="toggle-btn" id="toggleBtn">❯</button>
         </div>
       `;
@@ -1643,9 +1821,277 @@ document.addEventListener('DOMContentLoaded', function() {
       const btn1 = this.shadowRoot.getElementById('btn1');
       const btn2 = this.shadowRoot.getElementById('btn2');
       const btn3 = this.shadowRoot.getElementById('btn3');
-      const btn4 = this.shadowRoot.getElementById('btn4');
-      const btn5 = this.shadowRoot.getElementById('btn5');
+      const pageTemplateSelect = this.shadowRoot.getElementById('page-template-select');
+      const addSelectedPageBtn = this.shadowRoot.getElementById('add-selected-page-btn');
+      const btnDuplicatePage = this.shadowRoot.getElementById('btnDuplicatePage');
+      const btnDeletePage = this.shadowRoot.getElementById('btnDeletePage');
+      const btnMovePageUp = this.shadowRoot.getElementById('btnMovePageUp');
+      const btnMovePageDown = this.shadowRoot.getElementById('btnMovePageDown');
+      const btnRenumberPages = this.shadowRoot.getElementById('btnRenumberPages');
+      const btnApplyCaseInfo = this.shadowRoot.getElementById('btnApplyCaseInfo');
+      const btnValidatePacket = this.shadowRoot.getElementById('btnValidatePacket');
+      const caseInfoModal = this.shadowRoot.getElementById('case-info-modal');
+      const caseInfoConfirm = this.shadowRoot.getElementById('case-info-confirm');
+      const caseInfoCancel = this.shadowRoot.getElementById('case-info-cancel');
+      const caseInfoOptions = Array.from(this.shadowRoot.querySelectorAll('.case-info-option input'));
 
+      const getPages = () => Array.from(document.querySelectorAll('.page'));
+
+      const getPageLabel = (pageEl) => {
+        const pageText = pageEl?.textContent?.toLowerCase() || '';
+        const labels = [
+          [/crime scene entry log/, 'entry'],
+          [/evidence recovery log/, 'recovery'],
+          [/triangulation method/, 'triangulation'],
+          [/measurement record/, 'measurement'],
+          [/chain of custody|custody report/, 'custody'],
+          [/rough sketch/, 'sketch'],
+          [/case narrative/, 'narrative'],
+          [/crime scene photograph|photo description/, 'photo'],
+          [/briefing from/, 'briefing'],
+          [/scene description/, 'scene'],
+          [/team preparation|health & safety hazards/, 'prep'],
+          [/additional notes|supplemental field/, 'notes']
+        ];
+        return labels.find(([pattern]) => pattern.test(pageText))?.[1] || 'case';
+      };
+
+      const refreshPageNavigator = () => {
+        const pageCount = getPages().length;
+        const header = document.querySelector('#tab-pages .dt-section-title');
+        if (header) {
+          header.textContent = `Case Pages (Total: ${pageCount})`;
+        }
+
+        const pageButtons = Array.from(document.querySelectorAll('.dt-page-btn'));
+        const currentSelectedPage = getCurrentPage();
+        const activeIndex = currentSelectedPage ? getPages().indexOf(currentSelectedPage) + 1 : currentPage;
+        currentPage = Math.max(1, activeIndex || 1);
+
+        pageGrid.innerHTML = '';
+        for (let i = 1; i <= pageCount; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'dt-page-btn';
+          btn.dataset.page = i;
+          btn.title = i <= CONFIG.totalPages ? 'Original packet page' : 'Added page';
+          const label = getPageLabel(getPages()[i - 1]);
+          btn.innerHTML = `
+            <span class="dt-page-number">${i}</span>
+            <small class="dt-page-label">${label}</small>
+          `;
+          if (i <= CONFIG.totalPages) {
+            btn.classList.add('page-original');
+          } else {
+            btn.classList.add('page-extra');
+          }
+          if (i === currentPage) {
+            btn.classList.add('active');
+          }
+          pageGrid.appendChild(btn);
+        }
+      };
+
+      const setCurrentPage = (pageEl) => {
+        getPages().forEach(page => {
+          page.style.outline = 'none';
+          page.style.boxShadow = '';
+          page.dataset.selected = 'false';
+          page.classList.remove('is-selected');
+        });
+        if (pageEl) {
+          pageEl.style.outline = '2px solid #00bcd4';
+          pageEl.style.boxShadow = '0 0 0 4px rgba(0,188,212,0.15)';
+          pageEl.dataset.selected = 'true';
+          pageEl.classList.add('is-selected');
+          currentPage = getPages().indexOf(pageEl) + 1;
+        }
+      };
+
+      const getCurrentPage = () => {
+        const selected = document.querySelector('.page.is-selected') ||
+          document.querySelector('.page[data-selected="true"]') ||
+          document.querySelector('.page[style*="outline: 2px solid"]') ||
+          document.querySelector('.page[style*="outline: 2px solid rgb(0, 188, 212)"]');
+        return selected || getPages().at(-1) || null;
+      };
+
+      const attachPageSelection = (pageEl) => {
+        if (!pageEl) return;
+        pageEl.addEventListener('click', () => setCurrentPage(pageEl));
+      };
+
+      const markSignatureFieldsReadOnly = (root) => {
+        const pages = root.matches && root.matches('.page')
+          ? [root]
+          : Array.from(root.querySelectorAll('.page'));
+
+        pages.forEach((page) => {
+          page.querySelectorAll('input[type="text"], textarea').forEach((field) => {
+            const cell = field.closest('td, th, label');
+            const cellIndex = cell ? Array.from(cell.parentElement.children).indexOf(cell) : -1;
+            const headerCell = cell?.closest('table')?.querySelector('thead tr')?.children[cellIndex];
+            const labelText = `${cell?.textContent || ''} ${headerCell?.textContent || ''}`;
+            if (!/\bsignature\b/i.test(labelText)) return;
+            field.readOnly = true;
+            field.setAttribute('aria-label', field.getAttribute('aria-label') || 'Signature field');
+          });
+        });
+      };
+
+      const getFieldLabelText = (element) => {
+        const source = element?.closest('td, div, label, .field, .block-box, .input-row')?.textContent || '';
+        return source.replace(/\s+/g, ' ').replace(/:/g, '').trim();
+      };
+
+      const getPageFieldMap = (pageEl) => {
+        const map = {};
+        if (!pageEl) return map;
+
+        const inputs = Array.from(pageEl.querySelectorAll('input[type="text"], textarea'));
+        map.date = [];
+        inputs.forEach((input) => {
+          const label = getFieldLabelText(input).toLowerCase();
+          if (!label) return;
+          if (label.includes('agency name')) map.agency = input;
+          else if (label.includes('case #') || label.includes('case number')) map.caseNumber = input;
+          else if (label.includes('offence') || label.includes('offense')) map.offence = input;
+          else if (/^date\s*$/.test(label)) map.date.push(input);
+        });
+
+        return map;
+      };
+
+      const openCaseInfoPicker = () => {
+        caseInfoModal.classList.remove('hidden');
+      };
+
+      const closeCaseInfoPicker = () => {
+        caseInfoModal.classList.add('hidden');
+      };
+
+      const addTemplatePage = (templateId) => {
+        const template = document.getElementById(templateId);
+        if (!template) {
+          alert(`Error: Could not find '${templateId}' in the main document.`);
+          return;
+        }
+
+        const clone = template.content.cloneNode(true);
+        const newPage = clone.querySelector('.page');
+        const existingPages = document.querySelectorAll('.page').length;
+        const nextPageNum = existingPages + 1;
+
+        newPage.querySelectorAll('.dynamic-page-num').forEach(el => {
+          el.textContent = nextPageNum;
+        });
+
+        newPage.querySelectorAll('input, textarea').forEach(input => {
+          input.value = '';
+        });
+
+        markSignatureFieldsReadOnly(newPage);
+        document.body.appendChild(clone);
+        attachPageSelection(newPage);
+        setCurrentPage(newPage);
+        refreshPageNavigator();
+        newPage.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      getPages().forEach(page => {
+        attachPageSelection(page);
+        markSignatureFieldsReadOnly(page);
+      });
+
+      const renumberPages = () => {
+        const pages = getPages();
+        pages.forEach((page, index) => {
+          const footer = page.querySelector('.page-footer');
+          if (footer) {
+            footer.textContent = String(index + 1);
+          }
+          const pageNumEls = page.querySelectorAll('.dynamic-page-num');
+          pageNumEls.forEach(el => {
+            el.textContent = String(index + 1);
+          });
+        });
+      };
+
+      const applyCaseInfoToAllPages = (selectedKeys = ['agency', 'caseNumber', 'offence', 'date']) => {
+        const pages = getPages();
+        if (!pages.length) {
+          alert('There are no pages to update.');
+          return;
+        }
+
+        const sourceMap = getPageFieldMap(pages[0]);
+        const sourceDate = sourceMap.date.find((input) => input.value.trim());
+        const availableKeys = selectedKeys.filter((key) => key === 'date' ? sourceDate : sourceMap[key]);
+
+        if (!availableKeys.length) {
+          alert('None of the selected case fields were found in the first page.');
+          return;
+        }
+
+        pages.forEach((page, index) => {
+          if (index === 0) return;
+          const targetMap = getPageFieldMap(page);
+          availableKeys.forEach((key) => {
+            if (key === 'date') {
+              targetMap.date.forEach((targetInput) => {
+                targetInput.value = sourceDate.value.trim();
+              });
+              return;
+            }
+            const sourceInput = sourceMap[key];
+            const targetInput = targetMap[key];
+            if (sourceInput && targetInput && sourceInput.value.trim()) {
+              targetInput.value = sourceInput.value.trim();
+            }
+          });
+        });
+
+        const labels = {
+          agency: 'Agency Name',
+          caseNumber: 'Case #',
+          offence: 'Offence',
+          date: 'Date'
+        };
+
+        const appliedList = availableKeys.map((key) => labels[key] || key).join(', ');
+        alert(`Applied: ${appliedList}`);
+      };
+
+      const validatePacket = () => {
+        const pages = getPages();
+        const required = [
+          { key: 'agency', label: 'Agency Name' },
+          { key: 'caseNumber', label: 'Case #' },
+          { key: 'offence', label: 'Offence' }
+        ];
+        const missing = [];
+
+        pages.forEach((page, pageIndex) => {
+          const fieldMap = getPageFieldMap(page);
+          required.forEach(({ key, label }) => {
+            const field = fieldMap[key];
+            if (field && !field.value.trim()) {
+              missing.push(`Page ${pageIndex + 1}: missing ${label}`);
+            }
+          });
+        });
+
+        if (missing.length) {
+          alert('Packet check found empty required fields:\n\n' + missing.slice(0, 12).join('\n') + (missing.length > 12 ? '\n\n...and more' : ''));
+        } else {
+          alert(`Packet validation passed: ${pages.length} page(s) checked and all required case fields are filled.`);
+        }
+      };
+
+      const ensureCurrentPageVisible = (pageEl) => {
+        if (!pageEl) return;
+        setCurrentPage(pageEl);
+        pageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
 
       // Expand/Collapse logic
       toggleBtn.addEventListener('click', () => {
@@ -1658,85 +2104,131 @@ document.addEventListener('DOMContentLoaded', function() {
         window.print();
       });
       
-if (btn4) {
-        btn4.addEventListener('click', () => {
-          // 1. Get the template
-          const template = document.getElementById('photo-template');
-          if (!template) {
-            alert("Error: Could not find 'photo-template' in the main document.");
+      if (addSelectedPageBtn && pageTemplateSelect) {
+        addSelectedPageBtn.addEventListener('click', () => {
+          const selectedValue = pageTemplateSelect.value;
+          if (!selectedValue) {
+            alert('Please select a page template first.');
             return;
           }
-
-          // 2. Clone the content
-          const clone = template.content.cloneNode(true);
-          const newPage = clone.querySelector('.page');
-
-          // 3. Calculate Page Numbering
-          const existingPages = document.querySelectorAll('.page').length;
-          const nextPageNum = existingPages + 1;
-
-          // 4. Update the Page Header Number
-          const pageNumSpan = newPage.querySelector('.dynamic-page-num');
-          if (pageNumSpan) {
-            pageNumSpan.textContent = `${nextPageNum} of Additional Pages`;
-          }
-
-          // 5. Update the Footer Number
-          const footerSpan = newPage.querySelector('.footer-page-num');
-          if (footerSpan) {
-            footerSpan.textContent = nextPageNum;
-          }
-
-          // 6. Clear all inputs in the new page so it starts fresh
-          const inputs = newPage.querySelectorAll('input, textarea');
-          inputs.forEach(input => input.value = '');
-
-          // 7. Append to body
-          document.body.appendChild(clone);
-
-          // 8. Scroll smoothly to the new page
-          newPage.scrollIntoView({ behavior: 'smooth' });
+          addTemplatePage(selectedValue);
         });
       }
 
-if (btn5) {
-        btn5.addEventListener('click', () => {
-          // 1. Get the template
-          const template = document.getElementById('narrative-page-template');
-          if (!template) {
-            alert("Error: Could not find 'photo-template' in the main document.");
+      if (btnDuplicatePage) {
+        btnDuplicatePage.addEventListener('click', () => {
+          const sourcePage = getCurrentPage();
+          if (!sourcePage) return;
+
+          const clone = sourcePage.cloneNode(true);
+          clone.querySelectorAll('input, textarea').forEach((input) => {
+            input.value = '';
+          });
+          markSignatureFieldsReadOnly(clone);
+          sourcePage.after(clone);
+          attachPageSelection(clone);
+          setCurrentPage(clone);
+          renumberPages();
+          refreshPageNavigator();
+          ensureCurrentPageVisible(clone);
+        });
+      }
+
+      if (btnDeletePage) {
+        btnDeletePage.addEventListener('click', () => {
+          const pages = getPages();
+          if (pages.length <= 1) {
+            alert('At least one page must remain in the packet.');
             return;
           }
 
-          // 2. Clone the content
-          const clone = template.content.cloneNode(true);
-          const newPage = clone.querySelector('.page');
+          const currentPage = getCurrentPage();
+          if (!currentPage) return;
 
-          // 3. Calculate Page Numbering
-          const existingPages = document.querySelectorAll('.page').length;
-          const nextPageNum = existingPages + 1;
+          const currentIndex = pages.indexOf(currentPage);
+          currentPage.remove();
 
-          // 4. Update the Page Header Number
-          const pageNumSpan = newPage.querySelector('.dynamic-page-num');
-          if (pageNumSpan) {
-            pageNumSpan.textContent = `${nextPageNum} of Additional Pages`;
+          const remaining = getPages();
+          const nextPage = remaining[currentIndex] || remaining[currentIndex - 1] || remaining[0];
+          setCurrentPage(nextPage || null);
+          renumberPages();
+          refreshPageNavigator();
+          if (nextPage) ensureCurrentPageVisible(nextPage);
+        });
+      }
+
+      if (btnMovePageUp) {
+        btnMovePageUp.addEventListener('click', () => {
+          const currentPage = getCurrentPage();
+          if (!currentPage) return;
+
+          const pages = getPages();
+          const currentIndex = pages.indexOf(currentPage);
+          if (currentIndex <= 0) return;
+
+          const prevPage = pages[currentIndex - 1];
+          prevPage.before(currentPage);
+          setCurrentPage(currentPage);
+          renumberPages();
+          refreshPageNavigator();
+          ensureCurrentPageVisible(currentPage);
+        });
+      }
+
+      if (btnMovePageDown) {
+        btnMovePageDown.addEventListener('click', () => {
+          const currentPage = getCurrentPage();
+          if (!currentPage) return;
+
+          const pages = getPages();
+          const currentIndex = pages.indexOf(currentPage);
+          if (currentIndex >= pages.length - 1) return;
+
+          const nextPage = pages[currentIndex + 1];
+          nextPage.after(currentPage);
+          setCurrentPage(currentPage);
+          renumberPages();
+          refreshPageNavigator();
+          ensureCurrentPageVisible(currentPage);
+        });
+      }
+
+      if (btnRenumberPages) {
+        btnRenumberPages.addEventListener('click', () => {
+          renumberPages();
+          alert('Pages have been renumbered.');
+        });
+      }
+
+      if (btnApplyCaseInfo) {
+        btnApplyCaseInfo.addEventListener('click', () => {
+          openCaseInfoPicker();
+        });
+      }
+
+      if (caseInfoCancel) {
+        caseInfoCancel.addEventListener('click', closeCaseInfoPicker);
+      }
+
+      if (caseInfoConfirm) {
+        caseInfoConfirm.addEventListener('click', () => {
+          const selected = caseInfoOptions
+            .filter((option) => option.checked)
+            .map((option) => option.value);
+
+          closeCaseInfoPicker();
+          if (!selected.length) {
+            alert('Choose at least one field to apply.');
+            return;
           }
 
-          // 5. Update the Footer Number
-          const footerSpan = newPage.querySelector('.footer-page-num');
-          if (footerSpan) {
-            footerSpan.textContent = nextPageNum;
-          }
+          applyCaseInfoToAllPages(selected);
+        });
+      }
 
-          // 6. Clear all inputs in the new page so it starts fresh
-          const inputs = newPage.querySelectorAll('input, textarea');
-          inputs.forEach(input => input.value = '');
-
-          // 7. Append to body
-          document.body.appendChild(clone);
-
-          // 8. Scroll smoothly to the new page
-          newPage.scrollIntoView({ behavior: 'smooth' });
+      if (btnValidatePacket) {
+        btnValidatePacket.addEventListener('click', () => {
+          validatePacket();
         });
       }
 
@@ -2059,6 +2551,663 @@ if (btn5) {
     </div>
 </template>
 
+<template id="csi-report-template">
+  <div class="page" data-page-label="report">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr>
+                    <td style="font-weight:bold">Gilmer High School</td>
+                    <td style="text-align:right; font-weight:bold">Criminal Investigations Class</td>
+                </tr>
+                <tr>
+                    <td>Law & Public Safety Pathway</td>
+                    <td style="text-align:right">Block #: <input type="text" style="width:120px; border-bottom:1px solid #000;"></td>
+                </tr>
+            </table>
+        </div>
+
+        <table class="grid-table">
+            <tr>
+                <td style="width: 50%;"><strong>Agency Name:</strong> <input type="text"></td>
+                <td style="width: 25%;"><strong>Case #:</strong> <input type="text"></td>
+                <td style="width: 25%;"><strong>Page:</strong> <span class="dynamic-page-num">__</span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Offence:</strong> <input type="text"></td>
+                <td><strong>Date:</strong> <input type="text"></td>
+            </tr>
+            <tr>
+                <td><strong>Location:</strong> <input type="text"></td>
+                <td><strong>Time Called Out:</strong> <input type="text"></td>
+                <td><strong>Time on Scene:</strong> <input type="text"></td>
+            </tr>
+        </table>
+
+        <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Team Members on Scene:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Legal Authority:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:1;"><label>Perimeter Assessment:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:1;"><label>Transient Evidence Evaluation:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:1;"><label>Briefing From First Responding Officer:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:0; min-height:60px;"><label>Temperature, Lighting, & Weather Data:</label><textarea></textarea></div>
+
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr>
+                <td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td>
+                <td><strong>Date:</strong> <input type="text"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td>
+            </tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="scene-prep-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="block-box" style="flex-grow:1;"><label>Team Preparation:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:1;"><label>Health & Safety Hazards:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:2;"><label>Scene Description:</label><textarea></textarea></div>
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+            <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="scene-description-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="block-box" style="flex-grow:3;"><label>Scene Description Continued:</label><textarea></textarea></div>
+        <div class="block-box" style="flex-grow:1;"><label>Contamination Control Procedures:</label><textarea></textarea></div>
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+            <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="briefing-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="block-box" style="flex-grow:1;"><label>Briefing From the First Responding Officer(s):</label><textarea></textarea></div>
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+            <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="entry-log-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+
+        <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Entry Log Sheet</div>
+        <table class="grid-table">
+            <thead>
+                <tr style="background:#eee;">
+                    <th style="border:1.5px solid #000; padding:6px; width:25%;">Name & Title</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:15%;">Agency</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:15%;">Date/Time In</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:15%;">Date/Time Out</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:30%;">Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+            </tbody>
+        </table>
+
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+            <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="recovery-log-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+
+        <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Evidence Recovery Log</div>
+        <table class="grid-table">
+            <thead>
+                <tr style="background:#eee;">
+                    <th style="border:1.5px solid #000; padding:6px; width:8%;">Item #</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:27%;">Description of Item</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:25%;">Specific Location (Within the Scene)</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:15%;">Collected By</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:13%;">Packing Method</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:12%;">Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+            </tbody>
+        </table>
+
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+            <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="triangulation-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+
+        <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Triangulation Method Example</div>
+        <div class="photo-space" style="border-style:solid; background:#fff; flex-direction:column; justify-content:space-between; padding:15px; font-weight:normal; color:#000;">
+            <div style="display:flex; justify-content:space-between; width:100%; font-size:11px; font-weight:bold;">
+                <div>Point #1: Northwest Corner</div>
+                <div>Point #2: Northeast Corner</div>
+            </div>
+            <div style="text-align:center; margin:40px 0;">
+                <p style="font-weight:bold; color:#777;">[ Diagram Example Visualization Area ]</p>
+            </div>
+            <div style="display:flex; justify-content:space-between; width:100%; font-size:11px; font-weight:bold;">
+                <div>Point #3: Southwest Corner</div>
+                <div>Point #4: Southeast Corner</div>
+            </div>
+        </div>
+
+        <table class="grid-table">
+            <tr style="background:#eee; font-weight:bold; text-align:center;">
+                <td>Item Number</td><td>Description</td><td>Distance from Point 1</td><td>Distance from Point 2</td><td>Distance from Point 3</td><td>Distance from Point 4</td>
+            </tr>
+            <tr><td>1-A</td><td>Top Center of Cell Phone</td><td>5ft 7in</td><td>4ft 11in</td><td></td><td></td></tr>
+            <tr><td>1-B</td><td>Bottom Center of Cell Phone</td><td></td><td>6ft 1in</td><td></td><td>5ft 2in</td></tr>
+            <tr><td>2</td><td>Center of Letterman Jacket</td><td></td><td>4ft 3in</td><td></td><td>4ft 10in</td></tr>
+        </table>
+        <div style="text-align:center; font-weight:bold; margin-top:20px; font-size:14px; letter-spacing:1px;">EXAMPLE MEASUREMENT PAGE - NOT PART OF THE EVIDENCE PACKAGE</div>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="measurement-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+
+        <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Measurement Record</div>
+        <table class="grid-table">
+            <thead>
+                <tr style="background:#eee;">
+                    <th style="border:1.5px solid #000; padding:6px; width:10%;">Item Number</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:34%;">Description</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 1</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 2</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 3</th>
+                    <th style="border:1.5px solid #000; padding:6px; width:14%;">Distance from Point 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr><tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+            </tbody>
+        </table>
+
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+            <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="chain-of-custody-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <table class="grid-table">
+            <tr><td style="width:50%"><strong>Agency Name:</strong> <input type="text"></td><td style="width:25%"><strong>Case #:</strong> <input type="text"></td><td><strong>Page:</strong> <span class="dynamic-page-num">__</span></td></tr>
+            <tr><td colspan="2"><strong>Offence:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+        </table>
+
+        <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:15px; text-decoration:underline;">CRIME LABORATORY CHAIN OF CUSTODY REPORT</div>
+
+        <table class="grid-table">
+            <tr>
+                <td style="width:20%;"><strong>Item Number:</strong><br><input type="text"></td>
+                <td><strong>Description of Property (one item only):</strong><br><input type="text"></td>
+            </tr>
+        </table>
+
+        <table class="grid-table" style="font-size:11px;">
+            <thead>
+                <tr style="background:#eee; text-align:center; font-weight:bold;">
+                    <td>Date Out</td>
+                    <td>Time Out</td>
+                    <td>Release By Name/ID #</td>
+                    <td>Property Received By Name/ID#</td>
+                    <td>Property Received Signature</td>
+                    <td>Destination (court, lab, prosecutor)</td>
+                    <td>Return By Name/ID #</td>
+                    <td>Date Returned</td>
+                    <td>Time Returned</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+                </tr>
+                <tr>
+                    <td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"><br><small>AM / PM</small></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="grid-table" style="margin-top:20px;">
+            <tr>
+                <td style="width:50%;"><strong>Property Room Personnel Name (Printed)</strong><br><input type="text"></td>
+                <td><strong>Property Room Personnel Name (Signature)</strong><br><input type="text"></td>
+            </tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="sketch-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+
+        <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:10px;">Crime Scene Rough Sketch</div>
+
+        <div class="photo-space sketch-upload-area" style="border: 2px dashed #ccc; padding: 20px; min-height: 500px; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: #f9f9f9; position: relative; overflow: hidden;">
+            <input type="file" accept="image/*" id="sketch-file-input" style="display: none;">
+            <div class="upload-placeholder" style="text-align: center; color: #888;">
+                <div style="font-size: 24px; margin-bottom: 10px;">📷</div>
+                <div>Click to Upload Sketch Photo</div>
+                <div style="font-size: 12px; margin-top: 5px;">(JPG, PNG)</div>
+            </div>
+            <img id="sketch-preview" style="max-width: 100%; max-height: 480px; display: none; object-fit: contain;" />
+        </div>
+
+        <table class="grid-table" style="margin-top:auto; margin-bottom:0;">
+            <tr><td style="width:75%"><strong>Reporting Investigators Name:</strong> <input type="text"></td><td><strong>Date:</strong> <input type="text"></td></tr>
+            <tr><td colspan="2" style="height:45px;"><strong>Reporting Investigators Signature:</strong> <input type="text"></td></tr>
+        </table>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+<template id="notes-template">
+    <div class="page">
+        <div class="header-title">Case Evidence Package</div>
+        <div class="header-meta">
+            <table style="width:100%">
+                <tr><td><strong>Gilmer High School</strong><br>Law & Public Safety Pathway</td><td style="text-align:right"><strong>Criminal Investigations Class</strong><br>Block #: ______________</td></tr>
+            </table>
+        </div>
+        <div style="flex-grow:1; border:1px dashed #ccc; display:flex; align-items:center; justify-content:center; color:#999;">
+            [ Additional Notes / Blank Supplemental Field ]
+        </div>
+        <div class="page-footer"><span class="dynamic-page-num">__</span></div>
+    </div>
+</template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2085,62 +3234,64 @@ if (btn5) {
 /* 1. Trigger Input & Floating Icon */
 #dev-trigger-container {
  position: fixed;
- bottom: 20px;
- right: 20px;
+ bottom: 18px;
+ right: 18px;
  z-index: 99999;
  display: flex;
  align-items: center;
+ gap: 8px;
+ pointer-events: auto;
 }
 
 #dev-input {
- width: 60px;
- padding: 8px;
- border: 1px solid #ccc;
- border-radius: 4px 0 0 4px;
+ width: 64px;
+ padding: 9px 12px;
+ border: 1px solid rgba(204, 204, 204, 0.9);
+ border-radius: 999px 0 0 999px;
  font-size: 12px;
- background: rgba(255, 255, 255, 0.9);
+ background: rgba(255, 255, 255, 0.94);
  outline: none;
- transition: all 0.3s ease;
- font-weight: bold;
- color: #333;
+ transition: all 0.25s ease;
+ font-weight: 700;
+ color: #1d1d1d;
+ box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 #dev-trigger-container:hover #dev-input,
 #dev-input:focus {
- width: 140px;
- border-radius: 8px;
- box-shadow: 0 0 15px rgba(0, 122, 204, 0.6);
+ width: 150px;
+ border-radius: 999px;
+ box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.14), 0 12px 22px rgba(0, 122, 204, 0.22);
  border-color: #007acc;
 }
 
 /* Fallback Icon if user doesn't type */
 #dev-fallback-icon {
- position: absolute;
- right: -40px;
- top: 0;
- width: 40px;
- height: 40px;
- background: #2c3e50;
+ position: relative;
+ width: 42px;
+ height: 42px;
+ background: linear-gradient(180deg, #2c3e50, #233342);
  color: white;
  border-radius: 50%;
  display: flex;
  align-items: center;
  justify-content: center;
  cursor: pointer;
- box-shadow: 0 4px 12px rgba(0,0,0,0.3);
- opacity: 0;
- transition: opacity 0.3s, transform 0.2s;
- transform: scale(0.8);
+ box-shadow: 0 8px 18px rgba(0,0,0,0.22);
+ opacity: 0.9;
+ transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+ transform: scale(0.96);
 }
 
 #dev-trigger-container:hover #dev-fallback-icon,
 #dev-input:focus + #dev-fallback-icon {
  opacity: 1;
  transform: scale(1);
+ box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.16), 0 10px 20px rgba(0, 122, 204, 0.28);
 }
 
 #dev-fallback-icon:hover {
- background: #007acc;
+ background: linear-gradient(180deg, #0a7ad9, #005fa3);
 }
 
 /* 2. Password Modal Overlay */
@@ -2320,32 +3471,85 @@ if (btn5) {
 .dt-tab-content::-webkit-scrollbar-thumb:hover { background: #555; }
 
 /* Section Titles */
+.dt-section-head {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 8px;
+ margin: 15px 0 10px 0;
+}
+
 .dt-section-title {
  font-size: 11px;
  text-transform: uppercase;
  color: #999;
- margin: 15px 0 10px 0;
  font-weight: bold;
  letter-spacing: 1px;
 }
 .dt-section-title:first-child { margin-top: 0; }
 
+.dt-refresh-btn {
+ border: 1px solid #444;
+ background: #2d2d2d;
+ color: #d4d4d4;
+ border-radius: 4px;
+ padding: 5px 8px;
+ cursor: pointer;
+ font-size: 10px;
+ font-weight: 700;
+ letter-spacing: 0.06em;
+ text-transform: uppercase;
+}
+.dt-refresh-btn:hover { background: #3a3a3a; border-color: #007acc; color: #fff; }
+
 /* Page Grid */
 #page-nav-grid {
  display: grid;
- grid-template-columns: repeat(5, 1fr);
- gap: 6px;
+ grid-template-columns: repeat(4, minmax(0, 1fr));
+ gap: 8px;
 }
 
 .dt-page-btn {
- padding: 8px 0;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ gap: 3px;
+ min-height: 48px;
+ padding: 7px 4px;
  background: #333;
  border: 1px solid #444;
  color: #ccc;
  border-radius: 3px;
  cursor: pointer;
+ touch-action: manipulation;
+ user-select: none;
  font-size: 12px;
  transition: all 0.15s;
+}
+
+.dt-page-number {
+ font-weight: 700;
+ line-height: 1;
+}
+
+.dt-page-label {
+ font-size: 9px;
+ line-height: 1.1;
+ text-transform: lowercase;
+ opacity: 0.9;
+}
+
+.dt-page-btn.page-original {
+ background: #d4af37;
+ color: #1b1b1b;
+ border-color: #b8921d;
+}
+
+.dt-page-btn.page-extra {
+ background: #2e8b57;
+ color: #fff;
+ border-color: #256f45;
 }
 
 .dt-page-btn:hover { background: #007acc; color: #fff; border-color: #007acc; }
@@ -2589,6 +3793,34 @@ if (btn5) {
  min-height: 60px;
  word-wrap: break-word;
 }
+.sticky-note-actions {
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ margin-top: 8px;
+ padding-right: 18px;
+}
+.note-page-select {
+ min-width: 0;
+ flex: 1;
+ padding: 5px 6px;
+ background: rgba(255,255,255,0.65);
+ border: 1px solid rgba(0,0,0,0.18);
+ border-radius: 3px;
+ color: #333;
+ font-size: 11px;
+}
+.note-assign-btn {
+ padding: 5px 8px;
+ background: #2e6f64;
+ border: none;
+ border-radius: 3px;
+ color: #fff;
+ cursor: pointer;
+ font-size: 11px;
+ font-weight: 700;
+}
+.note-assign-btn:hover { background: #24594f; }
 .sticky-note textarea {
  width: 100%;
  background: transparent;
@@ -2610,6 +3842,30 @@ if (btn5) {
  font-size: 14px;
 }
 .sticky-note .delete-note:hover { color: #f44336; }
+
+#page-note-overlays {
+ position: fixed;
+ inset: 0;
+ z-index: 99997;
+ pointer-events: none;
+}
+.page-note-overlay {
+ position: fixed;
+ width: 220px;
+ max-width: calc(100vw - 24px);
+ max-height: 160px;
+ box-sizing: border-box;
+ overflow: auto;
+ padding: 10px 12px;
+ background: #fef3c7;
+ border-left: 3px solid #d7a92c;
+ box-shadow: 2px 3px 10px rgba(0,0,0,0.2);
+ color: #333;
+ font: 12px/1.4 'Segoe UI', sans-serif;
+ white-space: pre-wrap;
+ overflow-wrap: anywhere;
+ pointer-events: auto;
+}
 
 /* System Info */
 .sys-info-row {
@@ -2653,6 +3909,7 @@ if (btn5) {
  #dev-trigger-container,
  #dev-password-modal,
  #dev-tools-sidebar,
+ #page-note-overlays,
  #dev-toast-container,
  #asset-viewer-modal {
  display: none !important;
@@ -2688,7 +3945,7 @@ if (btn5) {
 </div>
 
 <!-- 3. Sidebar Panel -->
-<div id="dev-tools-sidebar" class="hidden">
+<div id="dev-tools-sidebar">
  <div class="dt-header">
  <span><strong>Dev Tools</strong> <small>v6.0</small></span>
  <button id="dt-close-btn" title="Close (Esc)">&times;</button>
@@ -2697,7 +3954,7 @@ if (btn5) {
  <div class="dt-tabs">
  <button class="dt-tab-btn active" data-tab="pages">Pages</button>
  <button class="dt-tab-btn" data-tab="assets">Assets</button>
- <button class="dt-tab-btn" data-tab="proxy">Proxy</button>
+ <button class="dt-tab-btn" data-tab="files">Files</button>
  <button class="dt-tab-btn" data-tab="notes">Notes</button>
  <button class="dt-tab-btn" data-tab="sysinfo">Info</button>
  <button class="dt-tab-btn" data-tab="debug">Debug</button>
@@ -2705,7 +3962,10 @@ if (btn5) {
 
  <!-- TAB: PAGES -->
  <div id="tab-pages" class="dt-tab-content active">
- <div class="dt-section-title">Case Pages (Total: 33)</div>
+ <div class="dt-section-head">
+   <div class="dt-section-title">Case Pages (Total: 33)</div>
+   <button class="dt-refresh-btn" id="refresh-pages" type="button">Refresh</button>
+ </div>
  <div id="page-nav-grid">
  <!-- JS Populated -->
  </div>
@@ -2719,32 +3979,32 @@ if (btn5) {
 
  <!-- TAB: ASSETS -->
  <div id="tab-assets" class="dt-tab-content">
- <div class="dt-section-title">Evidence Photos</div>
+ <div class="dt-section-head">
+   <div class="dt-section-title">Evidence Photos</div>
+   <button class="dt-refresh-btn" id="refresh-assets" type="button">Refresh</button>
+ </div>
  <ul id="asset-list">
  <li class="empty-state">No assets uploaded yet.</li>
  </ul>
  </div>
 
- <!-- TAB: PROXY BROWSER -->
- <div id="tab-proxy" class="dt-tab-content">
- <div class="dt-section-title">Proxy Browser</div>
- <div class="proxy-container">
- <div class="proxy-controls">
- <div class="proxy-ip-group">
- <input type="text" id="proxy-ip" class="proxy-ip-input" value="198.199.86.11" placeholder="IP Address" />
- <input type="number" id="proxy-port" class="proxy-port-input" value="8080" placeholder="Port" />
+ <!-- TAB: FILES -->
+ <div id="tab-files" class="dt-tab-content">
+ <div class="dt-section-head">
+   <div class="dt-section-title">Case Files</div>
+   <button class="dt-refresh-btn" id="refresh-files" type="button">Refresh</button>
  </div>
- <button id="btn-connect-proxy" class="proxy-connect-btn">Connect</button>
- </div>
- <div class="iframe-wrapper">
- <iframe id="proxy-frame" src="" class="iframe-normal" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" title="Proxy Browser"></iframe>
- </div>
- </div>
+ <ul id="files-list" class="asset-list">
+ <li class="empty-state">No case files attached yet.</li>
+ </ul>
  </div>
 
  <!-- TAB: NOTES -->
  <div id="tab-notes" class="dt-tab-content">
- <div class="dt-section-title">Sticky Notes</div>
+ <div class="dt-section-head">
+   <div class="dt-section-title">Sticky Notes</div>
+   <button class="dt-refresh-btn" id="refresh-notes" type="button">Refresh</button>
+ </div>
  <div id="notes-container">
  <!-- JS Populated -->
  </div>
@@ -2753,7 +4013,10 @@ if (btn5) {
 
  <!-- TAB: SYSTEM INFO -->
  <div id="tab-sysinfo" class="dt-tab-content">
- <div class="dt-section-title">System Information</div>
+ <div class="dt-section-head">
+   <div class="dt-section-title">System Information</div>
+   <button class="dt-refresh-btn" id="refresh-sysinfo" type="button">Refresh</button>
+ </div>
  <div id="sys-info-container">
  <!-- JS Populated -->
  </div>
@@ -2761,13 +4024,18 @@ if (btn5) {
 
  <!-- TAB: DEBUG -->
  <div id="tab-debug" class="dt-tab-content">
- <div class="dt-section-title">Console Log</div>
+ <div class="dt-section-head">
+   <div class="dt-section-title">Console Log</div>
+   <button class="dt-refresh-btn" id="refresh-debug" type="button">Refresh</button>
+ </div>
  <div id="debug-log"></div>
  <div class="dt-footer-actions" style="background: transparent; border: none; padding: 0; margin-top: 10px;">
  <button id="btn-clear-log" class="dt-btn dt-btn-secondary">Clear Log</button>
  </div>
  </div>
 </div>
+
+<div id="page-note-overlays" aria-live="polite"></div>
 
 <!-- Toast Container -->
 <div id="dev-toast-container"></div>
@@ -2806,18 +4074,19 @@ if (btn5) {
  const btnPrint = document.getElementById('btn-print');
  const btnClear = document.getElementById('btn-clear');
  const btnClearLog = document.getElementById('btn-clear-log');
-
- // Proxy Elements
- const proxyIpInput = document.getElementById('proxy-ip');
- const proxyPortInput = document.getElementById('proxy-port');
- const proxyFrame = document.getElementById('proxy-frame');
- const btnConnectProxy = document.getElementById('btn-connect-proxy');
- const proxyStatus = document.createElement('span');
- proxyStatus.className = 'proxy-status';
+ const refreshButtons = {
+   pages: document.getElementById('refresh-pages'),
+   assets: document.getElementById('refresh-assets'),
+   files: document.getElementById('refresh-files'),
+   notes: document.getElementById('refresh-notes'),
+   sysinfo: document.getElementById('refresh-sysinfo'),
+   debug: document.getElementById('refresh-debug')
+ };
 
  // Notes Elements
  const notesContainer = document.getElementById('notes-container');
  const btnAddNote = document.getElementById('btn-add-note');
+ const pageNoteOverlays = document.getElementById('page-note-overlays');
 
  // System Info Elements
  const sysInfoContainer = document.getElementById('sys-info-container');
@@ -2847,6 +4116,7 @@ if (btn5) {
  }
 
  let currentPage = 1;
+ let pageListObserver = null;
 
  // --- Initialization ---
  function init() {
@@ -2856,14 +4126,78 @@ if (btn5) {
  renderNotes();
  renderSystemInfo();
  setupEventListeners();
+ pageListObserver = new MutationObserver(() => {
+   refreshNotePageOptions();
+   renderPageNoteOverlays();
+ });
+ pageListObserver.observe(document.body, { childList: true });
+ renderPageNoteOverlays();
  logDebug(`Loaded ${assets.length} assets and ${notes.length} notes`, 'info');
  
- // Add status indicator next to connect button
- btnConnectProxy.parentNode.insertBefore(proxyStatus, btnConnectProxy.nextSibling);
  }
+
+ function isDocumentTextField(element) {
+ return Boolean(element.closest('.page')) &&
+   (element instanceof HTMLTextAreaElement ||
+     (element instanceof HTMLInputElement && element.type === 'text'));
+ }
+
+ function textFieldFits(element) {
+ if (element instanceof HTMLTextAreaElement) {
+   return element.scrollHeight <= element.clientHeight + 1 &&
+     element.scrollWidth <= element.clientWidth + 1;
+ }
+
+ const style = getComputedStyle(element);
+ const canvas = documentFieldMeasureCanvas;
+ const context = canvas.getContext('2d');
+ context.font = style.font;
+ const value = element.value;
+ const letterSpacing = parseFloat(style.letterSpacing) || 0;
+ const textWidth = context.measureText(value).width + Math.max(0, value.length - 1) * letterSpacing;
+ const availableWidth = element.clientWidth -
+   parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+ return textWidth <= availableWidth + 1;
+ }
+
+ const documentFieldMeasureCanvas = document.createElement('canvas');
+ const acceptedFieldValues = new WeakMap();
 
  // --- Event Listeners ---
  function setupEventListeners() {
+ window.addEventListener('scroll', positionPageNoteOverlays, { passive: true });
+ window.addEventListener('resize', positionPageNoteOverlays);
+
+ document.addEventListener('focusin', (event) => {
+   const field = event.target;
+   if (!isDocumentTextField(field)) return;
+   acceptedFieldValues.set(field, {
+     value: field.value,
+     start: field.selectionStart,
+     end: field.selectionEnd
+   });
+ });
+
+ document.addEventListener('input', (event) => {
+   const field = event.target;
+   if (!isDocumentTextField(field)) return;
+   const accepted = acceptedFieldValues.get(field) || { value: '', start: 0, end: 0 };
+   if (textFieldFits(field)) {
+     acceptedFieldValues.set(field, {
+       value: field.value,
+       start: field.selectionStart,
+       end: field.selectionEnd
+     });
+     return;
+   }
+
+   field.value = accepted.value;
+   if (field === document.activeElement) {
+     const position = Math.min(accepted.start ?? accepted.value.length, accepted.value.length);
+     field.setSelectionRange(position, Math.min(accepted.end ?? position, accepted.value.length));
+   }
+ });
+
  // Trigger Input
  devInput.addEventListener('focus', () => {
  devInput.value = '';
@@ -2889,7 +4223,9 @@ if (btn5) {
  });
 
  // Sidebar Controls
- closeBtn.addEventListener('click', toggleSidebar);
+ closeBtn.addEventListener('click', () => toggleSidebar(false));
+
+ // Keep the panel open while the user edits the packet. Ignore outside clicks so the tool stays usable.
  
  // Tabs
  tabs.forEach(tab => {
@@ -2898,9 +4234,25 @@ if (btn5) {
 
  // Page Navigation
  pageGrid.addEventListener('click', (e) => {
- if (e.target.classList.contains('dt-page-btn')) {
- navigateToPage(parseInt(e.target.dataset.page));
+ const button = e.target.closest('.dt-page-btn');
+ if (button && pageGrid.contains(button)) {
+ navigateToPage(parseInt(button.dataset.page, 10));
  }
+ });
+
+ Object.entries(refreshButtons).forEach(([key, button]) => {
+   if (!button) return;
+   button.addEventListener('click', () => {
+     if (key === 'pages') renderPageGrid();
+     if (key === 'assets') renderAssetList();
+     if (key === 'files') renderAssetList();
+     if (key === 'notes') renderNotes();
+     if (key === 'sysinfo') renderSystemInfo();
+     if (key === 'debug') {
+       logDebug('Debug panel refreshed', 'info');
+       showToast('Debug panel refreshed', 'success');
+     }
+   });
  });
 
  // Actions
@@ -2909,16 +4261,6 @@ if (btn5) {
  btnClearLog.addEventListener('click', () => {
      debugLog.innerHTML = '';
      showToast('Log cleared', 'success');
- });
-
- // Proxy Controls
- btnConnectProxy.addEventListener('click', connectProxy);
- 
- // Allow Enter key in IP/Port fields to connect
- [proxyIpInput, proxyPortInput].forEach(input => {
- input.addEventListener('keydown', (e) => {
- if (e.key === 'Enter') connectProxy();
- });
  });
 
  // Global Keyboard Shortcuts
@@ -2931,6 +4273,13 @@ if (btn5) {
          } else if (!assetViewerModal.classList.contains('hidden')) {
              closeAssetViewer();
          }
+     }
+ });
+
+ // Reset the button state when the user clicks the field again
+ devInput.addEventListener('blur', () => {
+     if (!devInput.value) {
+         devInput.value = 'DEV';
      }
  });
 
@@ -2952,6 +4301,7 @@ if (btn5) {
  passwordInput.value = '';
  errorMsg.textContent = '';
  errorMsg.classList.remove('visible');
+ passwordInput.style.transform = 'translateX(0)';
  setTimeout(() => passwordInput.focus(), 100);
  }
 
@@ -2982,8 +4332,11 @@ if (btn5) {
  const isActive = sidebar.classList.contains('active');
  const shouldShow = forceState !== undefined ? forceState : !isActive;
  
+ if (shouldShow === isActive) return;
+ 
  if (shouldShow) {
  sidebar.classList.add('active');
+ devInput.blur();
  logDebug('Dev Tools opened', 'info');
  } else {
  sidebar.classList.remove('active');
@@ -3002,35 +4355,79 @@ if (btn5) {
  }
 
  function renderPageGrid() {
+ const pages = Array.from(document.querySelectorAll('.page'));
+ const totalPages = Math.max(pages.length || 1, 1);
+ currentPage = Math.min(Math.max(currentPage, 1), totalPages);
  pageGrid.innerHTML = '';
- for (let i = 1; i <= CONFIG.totalPages; i++) {
- const btn = document.createElement('button');
- btn.className = 'dt-page-btn';
- btn.textContent = i;
- btn.dataset.page = i;
- if (i === currentPage) btn.classList.add('active');
- pageGrid.appendChild(btn);
+
+ const getPageLabel = (pageEl) => {
+        if (pageEl?.dataset.pageLabel) return pageEl.dataset.pageLabel;
+   if (pageEl?.dataset.pageLabel) return pageEl.dataset.pageLabel;
+   const pageText = pageEl?.textContent?.toLowerCase() || '';
+   const labels = [
+     [/crime scene entry log/, 'entry'],
+     [/evidence recovery log/, 'recovery'],
+     [/triangulation method/, 'triangulation'],
+     [/measurement record/, 'measurement'],
+     [/chain of custody|custody report/, 'custody'],
+     [/rough sketch/, 'sketch'],
+     [/case narrative/, 'narrative'],
+     [/crime scene photograph|photo description/, 'photo'],
+     [/briefing from/, 'briefing'],
+     [/scene description/, 'scene'],
+     [/team preparation|health & safety hazards/, 'prep'],
+     [/additional notes|supplemental field/, 'notes']
+   ];
+   return labels.find(([pattern]) => pattern.test(pageText))?.[1] || 'case';
+ };
+
+ const header = document.querySelector('#tab-pages .dt-section-title');
+ if (header) {
+   header.textContent = `Case Pages (Total: ${totalPages})`;
+ }
+
+ for (let i = 1; i <= totalPages; i++) {
+   const btn = document.createElement('button');
+   btn.className = 'dt-page-btn';
+   btn.dataset.page = i;
+   btn.title = i <= CONFIG.totalPages ? 'Original packet page' : 'Added page';
+  const label = getPageLabel(pages[i - 1]);
+   btn.innerHTML = `
+     <span class="dt-page-number">${i}</span>
+     <small class="dt-page-label">${label}</small>
+   `;
+   if (i <= CONFIG.totalPages) {
+     btn.classList.add('page-original');
+   } else {
+     btn.classList.add('page-extra');
+   }
+   if (i === currentPage) btn.classList.add('active');
+   pageGrid.appendChild(btn);
  }
  }
 
  function navigateToPage(pageNum) {
- currentPage = pageNum;
+ const pages = Array.from(document.querySelectorAll('.page'));
+ const targetPage = pages[pageNum - 1] || pages.at(-1);
+ if (!targetPage) return;
+ currentPage = pages.indexOf(targetPage) + 1;
  
- // Update grid visual
  document.querySelectorAll('.dt-page-btn').forEach(btn => {
- btn.classList.toggle('active', parseInt(btn.dataset.page) === pageNum);
+   btn.classList.toggle('active', parseInt(btn.dataset.page, 10) === currentPage);
  });
 
- // Robust Search for Page Element
- const target = findPageElement(pageNum);
- 
- if (target) {
- target.scrollIntoView({ behavior: 'smooth', block: 'start' });
- logDebug(`Navigated to Page ${pageNum}`, 'info');
- } else {
- logDebug(`Target element for Page ${pageNum} not found`, 'warn');
- showToast(`Page ${pageNum} not found`, 'warning');
- }
+ pages.forEach((page) => {
+   page.classList.remove('is-selected');
+   page.dataset.selected = 'false';
+   page.style.outline = 'none';
+   page.style.boxShadow = '';
+ });
+ targetPage.classList.add('is-selected');
+ targetPage.dataset.selected = 'true';
+ targetPage.style.outline = '2px solid #00bcd4';
+ targetPage.style.boxShadow = '0 0 0 4px rgba(0,188,212,0.15)';
+ targetPage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ logDebug(`Navigated to Page ${currentPage}`, 'info');
  }
 
  function findPageElement(pageNum) {
@@ -3052,36 +4449,65 @@ if (btn5) {
  }
 
  function renderAssetList() {
+ const documentImages = Array.from(document.querySelectorAll('img.preview-img, img.csi-preview-img, .previewContainer img, .photo-space img, .sketch-upload-area img, .imageUpload + .previewContainer img'));
+ const foundImages = [];
+ const seenUrls = new Set();
+
+ documentImages.forEach((img) => {
+   const src = img.currentSrc || img.src || img.getAttribute('src');
+   if (!src || seenUrls.has(src)) return;
+   seenUrls.add(src);
+   const generatedName = `Image ${foundImages.length + 1}`;
+   const altText = (img.alt || '').trim();
+   const pageText = img.closest('.page')?.querySelector('strong, .page-title, .header-title')?.textContent || '';
+   const name = altText || pageText || generatedName;
+   foundImages.push({
+     name: name || generatedName,
+     url: src,
+     size: 'Uploaded image',
+     type: 'image'
+   });
+ });
+
+ const list = foundImages.length ? foundImages : assets;
  assetList.innerHTML = '';
- if (assets.length === 0) {
+ if (list.length === 0) {
  assetList.innerHTML = '<li class="empty-state">No assets uploaded yet.</li>';
  return;
  }
 
- assets.forEach((asset, index) => {
- const li = document.createElement('li');
- li.className = 'asset-item';
- 
- li.innerHTML = `
- <img src="${asset.url}" alt="Thumb" class="asset-thumb" title="Click to view full size">
- <div class="asset-info">
- <span class="asset-name">${asset.name}</span>
- <span class="asset-meta">${asset.size} • ${asset.type}</span>
- </div>
- <button class="asset-delete-btn" data-index="${index}">Del</button>
- `;
- 
- // Delete handler
- li.querySelector('.asset-delete-btn').addEventListener('click', (e) => {
- deleteAsset(index);
- });
+ list.forEach((asset, index) => {
+   const li = document.createElement('li');
+   li.className = 'asset-item';
+   li.innerHTML = `
+     <img src="${asset.url}" alt="Thumb" class="asset-thumb" title="Click to view full size">
+     <div class="asset-info">
+       <span class="asset-name">${asset.name}</span>
+       <span class="asset-meta">${asset.size} • ${asset.type}</span>
+     </div>
+     <button class="asset-delete-btn" data-index="${index}">Del</button>
+   `;
 
- // View handler
- li.querySelector('.asset-thumb').addEventListener('click', () => {
- openAssetViewer(asset.url);
- });
+   li.querySelector('.asset-delete-btn').addEventListener('click', () => {
+     if (foundImages.length) {
+       const target = documentImages[index];
+       if (target) {
+         const parent = target.closest('.previewContainer') || target.parentNode;
+         target.remove();
+         const uploadText = parent && parent.querySelector ? parent.querySelector('.uploadText') : null;
+         if (uploadText) uploadText.classList.remove('hidden');
+       }
+       renderAssetList();
+       return;
+     }
+     deleteAsset(index);
+   });
 
- assetList.appendChild(li);
+   li.querySelector('.asset-thumb').addEventListener('click', () => {
+     openAssetViewer(asset.url);
+   });
+
+   assetList.appendChild(li);
  });
  }
 
@@ -3101,32 +4527,10 @@ if (btn5) {
  notes = [];
  renderAssetList();
  renderNotes();
+ renderPageNoteOverlays();
  logDebug('All data cleared', 'error');
  showToast('All data cleared', 'error');
  }
- }
-
- // Proxy Browser Functions
- function connectProxy() {
- const ip = proxyIpInput.value.trim();
- const port = proxyPortInput.value.trim();
- 
- if (!ip) {
- updateProxyStatus('Missing IP', 'error');
- showToast('Please enter an IP address', 'error');
- return;
- }
- 
- const url = `http://${ip}:${port}`;
- proxyFrame.src = url;
- logDebug(`Connecting to proxy: ${url}`, 'info');
- updateProxyStatus('Connected', 'connected');
- showToast(`Connected to ${ip}:${port}`, 'success');
- }
-
- function updateProxyStatus(text, state) {
- proxyStatus.textContent = text;
- proxyStatus.className = `proxy-status ${state}`;
  }
 
  // Notes Functions
@@ -3134,27 +4538,71 @@ if (btn5) {
  notesContainer.innerHTML = '';
  if (notes.length === 0) {
      notesContainer.innerHTML = '<div class="empty-state">No notes yet.</div>';
+     renderPageNoteOverlays();
      return;
  }
 
  notes.forEach((note, index) => {
      const noteEl = document.createElement('div');
      noteEl.className = 'sticky-note';
-     
-     noteEl.innerHTML = `
-         <textarea rows="3">${note.text}</textarea>
-         <button class="delete-note">&times;</button>
-     `;
+
+     const textarea = document.createElement('textarea');
+     textarea.rows = 3;
+     textarea.value = String(note.text || '');
+     noteEl.appendChild(textarea);
+
+     const deleteBtn = document.createElement('button');
+     deleteBtn.className = 'delete-note';
+     deleteBtn.type = 'button';
+     deleteBtn.setAttribute('aria-label', 'Delete note');
+     deleteBtn.textContent = '\u00d7';
+     noteEl.appendChild(deleteBtn);
+
+     const actions = document.createElement('div');
+     actions.className = 'sticky-note-actions';
+     const pageSelect = document.createElement('select');
+     pageSelect.className = 'note-page-select';
+     pageSelect.setAttribute('aria-label', `Assign note ${index + 1} to a page`);
+     const noPageOption = document.createElement('option');
+     noPageOption.value = '';
+     noPageOption.textContent = 'No page';
+     pageSelect.appendChild(noPageOption);
+     document.querySelectorAll('.page').forEach((page, pageIndex) => {
+       const option = document.createElement('option');
+       option.value = String(pageIndex + 1);
+       option.textContent = `Page ${pageIndex + 1}`;
+       pageSelect.appendChild(option);
+     });
+     pageSelect.value = String(note.page || '');
+
+     const assignBtn = document.createElement('button');
+     assignBtn.className = 'note-assign-btn';
+     assignBtn.type = 'button';
+     assignBtn.textContent = 'Assign';
+     actions.append(pageSelect, assignBtn);
+     noteEl.appendChild(actions);
 
      // Save on input
-     const textarea = noteEl.querySelector('textarea');
      textarea.addEventListener('input', () => {
          notes[index].text = textarea.value;
          localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
+         const overlay = Array.from(pageNoteOverlays.children)
+           .find((element) => Number(element.dataset.noteIndex) === index);
+         if (overlay) {
+           overlay.textContent = textarea.value.trim() || 'Empty note';
+           positionPageNoteOverlays();
+         }
+     });
+
+     assignBtn.addEventListener('click', () => {
+         const pageNumber = Number(pageSelect.value);
+         notes[index].page = pageNumber > 0 ? pageNumber : null;
+         localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
+         renderNotes();
+         showToast(pageNumber > 0 ? `Note assigned to page ${pageNumber}` : 'Page assignment cleared', 'success');
      });
 
      // Delete handler
-     const deleteBtn = noteEl.querySelector('.delete-note');
      deleteBtn.addEventListener('click', () => {
          notes.splice(index, 1);
          localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
@@ -3164,14 +4612,84 @@ if (btn5) {
 
      notesContainer.appendChild(noteEl);
  });
+   refreshNotePageOptions();
+   renderPageNoteOverlays();
  }
 
  function addNote() {
- const newNote = { text: '' };
+   const newNote = { text: '', page: null };
  notes.push(newNote);
  localStorage.setItem(CONFIG.notesStorageKey, JSON.stringify(notes));
  renderNotes();
  showToast('New note added', 'success');
+ }
+
+ function refreshNotePageOptions() {
+ const pages = Array.from(document.querySelectorAll('.page'));
+ notesContainer.querySelectorAll('.note-page-select').forEach((select) => {
+   const selectedPage = select.value;
+   select.replaceChildren(new Option('No page', ''));
+   pages.forEach((page, index) => {
+     select.add(new Option(`Page ${index + 1}`, String(index + 1)));
+   });
+   select.value = pages.some((page, index) => String(index + 1) === selectedPage) ? selectedPage : '';
+ });
+ }
+
+ function renderPageNoteOverlays() {
+ pageNoteOverlays.replaceChildren();
+ const pages = Array.from(document.querySelectorAll('.page'));
+
+ notes.forEach((note, index) => {
+   const pageNumber = Number(note.page);
+   if (!pageNumber || !pages[pageNumber - 1]) return;
+   const overlay = document.createElement('aside');
+   overlay.className = 'page-note-overlay';
+   overlay.dataset.pageNumber = String(pageNumber);
+   overlay.dataset.noteIndex = String(index);
+   overlay.setAttribute('aria-label', `Note assigned to page ${pageNumber}`);
+   overlay.textContent = String(note.text || '').trim() || 'Empty note';
+   pageNoteOverlays.appendChild(overlay);
+ });
+
+ positionPageNoteOverlays();
+ }
+
+ function positionPageNoteOverlays() {
+ const pages = Array.from(document.querySelectorAll('.page'));
+ const offsets = new Map();
+
+ Array.from(pageNoteOverlays.children).forEach((overlay) => {
+   const pageNumber = Number(overlay.dataset.pageNumber);
+   const page = pages[pageNumber - 1];
+   if (!page) {
+     overlay.hidden = true;
+     return;
+   }
+
+   const bounds = page.getBoundingClientRect();
+   if (bounds.bottom <= 0 || bounds.top >= window.innerHeight) {
+     overlay.hidden = true;
+     return;
+   }
+
+   overlay.hidden = false;
+   const width = overlay.offsetWidth;
+   const height = overlay.offsetHeight;
+   const gap = 12;
+   let left = bounds.right + gap;
+   if (left + width > window.innerWidth - 8) left = bounds.left - width - gap;
+   if (left < 8 || left + width > window.innerWidth - 8) {
+     left = Math.max(8, Math.min(window.innerWidth - width - 8, bounds.right + gap));
+   }
+
+   const offset = offsets.get(pageNumber) || 0;
+   let top = Math.max(8, bounds.top + 12 + offset);
+   if (top + height > window.innerHeight - 8) top = Math.max(8, window.innerHeight - height - 8);
+   overlay.style.left = `${left}px`;
+   overlay.style.top = `${top}px`;
+   offsets.set(pageNumber, offset + height + 8);
+ });
  }
 
  // System Info Functions
@@ -3244,7 +4762,6 @@ if (btn5) {
  showToast(`Asset added: ${name}`, 'success');
  },
  navigate: navigateToPage,
- connectProxy: connectProxy,
  showToast: showToast,
  addNote: addNote,
  getNotes: () => notes,
@@ -3261,5 +4778,35 @@ if (btn5) {
 })();
 </script>
 	
+
+
+// Prevent Refresh Script
+<script>
+(() => {
+    // Ask for confirmation before refreshing or leaving
+    window.addEventListener("beforeunload", (event) => {
+        event.preventDefault();
+        event.returnValue = "";
+    });
+
+    // Intercept common refresh keyboard shortcuts
+    window.addEventListener("keydown", (event) => {
+        const key = event.key.toLowerCase();
+
+        const isRefresh =
+            key === "f5" ||
+            ((event.ctrlKey || event.metaKey) && key === "r");
+
+        if (isRefresh) {
+            event.preventDefault();
+
+            if (confirm("Refreshing will erase temporary app data. Are you sure you want to refresh?")) {
+                window.removeEventListener("beforeunload", arguments.callee);
+                location.reload();
+            }
+        }
+    }, true);
+})();
+</script>
 </body>
 </html>
