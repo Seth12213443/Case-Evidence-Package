@@ -5,6 +5,7 @@
  <title>Gilmer High School - Case Evidence Package</title>
  <style>
  /* Global Styles */
+	 
  body {
  font-family: "Times New Roman", Times, serif;
  margin: 0;
@@ -176,7 +177,65 @@
  </style>
 </head>
 <body>
+<style>
+  /* Define default values */
+  :root {
+    --class-block: "[CLASS BLOCK]";
+    --case-number: "[CASE NUMBER]";
+    --agency-name: "[AGENCY NAME]";
+  }
 
+  /* Style the input form so it looks nice but stays on screen */
+  #setup-panel {
+    background: #f0f0f0;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    font-family: sans-serif;
+  }
+  #setup-panel label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  #setup-panel input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+
+  /* CRITICAL: Hide the setup panel when printing */
+  @media print {
+    #setup-panel {
+      display: none !important;
+    }
+    /* Ensure the variables are used in your content */
+    .dynamic-class::after { content: var(--class-block); }
+    .dynamic-case::after { content: var(--case-number); }
+    .dynamic-agency::after { content: var(--agency-name); }
+  }
+</style>
+
+<!-- THE SETUP PAGE -->
+<div id="setup-panel">
+  <h3>Document Setup</h3>
+  
+  <label for="input-class">1. Class Block:</label>
+  <input type="text" id="input-class" placeholder="e.g., Class A Felony" oninput="updateVar('--class-block', this.value)">
+
+  <label for="input-case">2. Case Number:</label>
+  <input type="text" id="input-case" placeholder="e.g., 24-CR-12345" oninput="updateVar('--case-number', this.value)">
+
+  <label for="input-agency">Agency Name:</label>
+  <input type="text" id="input-agency" placeholder="e.g., NYPD" oninput="updateVar('--agency-name', this.value)">
+</div>
+
+<script>
+  function updateVar(variableName, value) {
+    document.documentElement.style.setProperty(variableName, value || "");
+  }
+</script>
 <!-- MACRO DEFINITIONS APPLIED PER PAGE -->
 
 <!-- PAGE 1: CSI Report -->
@@ -2058,5 +2117,25 @@ if (btn5) {
         <div class="page-footer"><span class="dynamic-page-num">__</span></div>
     </div>
 </template>
+<script>
+	// Replace all instances of placeholders in the document
+function applyValues() {
+  const cls = document.getElementById('input-class').value;
+  const caseNum = document.getElementById('input-case').value;
+  const agency = document.getElementById('input-agency').value;
+
+  // Replace specific placeholder strings in your existing HTML
+  document.body.innerHTML = document.body.innerHTML
+    .replace(/{{CLASS}}/g, cls)
+    .replace(/{{CASE}}/g, caseNum)
+    .replace(/{{AGENCY}}/g, agency);
+}
+
+// Run on load and on input change
+document.addEventListener('DOMContentLoaded', applyValues);
+document.getElementById('input-class').addEventListener('input', applyValues);
+document.getElementById('input-case').addEventListener('input', applyValues);
+document.getElementById('input-agency').addEventListener('input', applyValues);
+<script>
 </body>
 </html>
