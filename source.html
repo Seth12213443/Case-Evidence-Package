@@ -2899,5 +2899,423 @@ if (btn5) {
 
 })();
 </script>
+
+<!-- NOTRACK AI MODULE START -->
+<style>
+    /* Floating Button Styles */
+    #notrack-fab {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        cursor: grab;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: none;
+        outline: none;
+        user-select: none;
+        touch-action: none;
+    }
+
+    #notrack-fab:active {
+        cursor: grabbing;
+        transform: scale(1.05);
+    }
+
+    #notrack-fab svg {
+        width: 32px;
+        height: 32px;
+        fill: white;
+        pointer-events: none;
+    }
+
+    /* Chat Window Styles */
+    #notrack-chat-window {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 350px;
+        height: 500px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        z-index: 99998;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        display: none; 
+        border: 1px solid #e0e0e0;
+    }
+
+    .nt-header {
+        background: #f8f9fa;
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .nt-close {
+        cursor: pointer;
+        font-size: 18px;
+        color: #999;
+        line-height: 1;
+    }
+    .nt-close:hover { color: #333; }
+
+    .nt-messages {
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nt-msg {
+        max-width: 85%;
+        padding: 10px 14px;
+        border-radius: 18px;
+        font-size: 14px;
+        line-height: 1.4;
+        word-wrap: break-word;
+    }
+
+    .nt-user {
+        align-self: flex-end;
+        background: #667eea;
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+
+    .nt-ai {
+        align-self: flex-start;
+        background: #f1f3f5;
+        color: #333;
+        border-bottom-left-radius: 4px;
+    }
+
+    .nt-input-area {
+        padding: 10px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        gap: 8px;
+        background: #fff;
+    }
+
+    .nt-input-area input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        outline: none;
+        font-size: 14px;
+    }
+
+    .nt-input-area input:focus {
+        border-color: #667eea;
+    }
+
+    .nt-input-area button {
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+    .nt-input-area button:hover {
+        background: #764ba2;
+    }
+
+    .nt-input-area button svg {
+        width: 16px;
+        height: 16px;
+        fill: white;
+        margin-left: 2px;
+    }
+
+    /* Loading Spinner */
+    .nt-spinner {
+        width: 10px;
+        height: 10px;
+        border: 2px solid #ccc;
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 480px) {
+        #notrack-chat-window {
+            width: 90%;
+            right: 5%;
+            bottom: 80px;
+            height: 60vh;
+        }
+    }
+</style>
+
+<!-- HTML Structure -->
+<button id="notrack-fab" title="Ask Notrack AI">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7l10 5 10-5-10-5zm0 2.2L18.5 8 12 11.2 5.5 8 12 4.2zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="12" cy="12" r="2" fill="white"/>
+    </svg>
+</button>
+
+<div id="notrack-chat-window">
+    <div class="nt-header">
+        <span>Notrack Assistant</span>
+        <span class="nt-close" onclick="toggleChat()">&times;</span>
+    </div>
+    <div class="nt-messages" id="nt-messages">
+        <div class="nt-msg nt-ai">Hello! I'm powered by Notrack. How can I help you today?</div>
+    </div>
+    <div class="nt-input-area">
+        <input type="text" id="nt-input" placeholder="Type a message..." autocomplete="off">
+        <button onclick="sendMessage()">
+            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Configuration
+    const NOTRACK_API_KEY = "sk-notrack-7dbb6d646e907305e971e8713d534cb9dd2a41e6598d000b";
+    const NOTRACK_API_URL = "https://api.ntrack.ai/v1/chat/completions"; 
+    
+    // Public CORS Proxy to bypass local file restrictions
+    const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+    
+    // Fallback Hugging Face Model URL
+    const FALLBACK_HF_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2";
+
+    // DOM Elements
+    const fab = document.getElementById('notrack-fab');
+    const chatWindow = document.getElementById('notrack-chat-window');
+    const messagesContainer = document.getElementById('nt-messages');
+    const inputField = document.getElementById('nt-input');
+    const sendBtn = document.querySelector('.nt-input-area button');
+
+    // State
+    let isOpen = false;
+    let isLoading = false;
+
+    // --- DRAGGABLE LOGIC ---
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+    let currentLeft = 0;
+    let currentTop = 0;
+
+    function startDrag(e) {
+        isDragging = true;
+        const rect = fab.getBoundingClientRect();
+        currentLeft = rect.left;
+        currentTop = rect.top;
+
+        if (e.type === 'touchstart') {
+            dragOffsetX = e.touches[0].clientX - currentLeft;
+            dragOffsetY = e.touches[0].clientY - currentTop;
+        } else {
+            dragOffsetX = e.clientX - currentLeft;
+            dragOffsetY = e.clientY - currentTop;
+        }
+
+        fab.style.zIndex = 999999;
+        fab.style.transition = 'none';
+    }
+
+    function onDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        let clientX, clientY;
+        if (e.type === 'touchmove') {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+
+        let newX = clientX - dragOffsetX;
+        let newY = clientY - dragOffsetY;
+
+        const maxX = window.innerWidth - fab.offsetWidth;
+        const maxY = window.innerHeight - fab.offsetHeight;
+
+        newX = Math.max(0, Math.min(newX, maxX));
+        newY = Math.max(0, Math.min(newY, maxY));
+
+        fab.style.left = `${newX}px`;
+        fab.style.top = `${newY}px`;
+        fab.style.right = 'auto';
+        fab.style.bottom = 'auto';
+    }
+
+    function stopDrag() {
+        isDragging = false;
+        fab.style.zIndex = 99999;
+        fab.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+    }
+
+    fab.addEventListener('mousedown', startDrag);
+    fab.addEventListener('touchstart', startDrag, { passive: false });
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('touchmove', onDrag, { passive: false });
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('touchend', stopDrag);
+
+    // --- CHAT LOGIC ---
+
+    function toggleChat() {
+        isOpen = !isOpen;
+        chatWindow.style.display = isOpen ? 'flex' : 'none';
+        if (isOpen) {
+            setTimeout(() => inputField.focus(), 100);
+        }
+    }
+
+    fab.addEventListener('click', (e) => {
+        toggleChat();
+    });
+
+    inputField.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    async function sendMessage() {
+        const text = inputField.value.trim();
+        if (!text || isLoading) return;
+
+        addMessage(text, 'user');
+        inputField.value = '';
+        isLoading = true;
+        showLoading(true);
+
+        try {
+            let responseText = "";
+            
+            // Attempt 1: Try Notrack API via CORS Proxy
+            try {
+                const proxyUrl = `${CORS_PROXY}${encodeURIComponent(NOTRACK_API_URL)}`;
+                
+                const response = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${NOTRACK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "notrack-1", 
+                        messages: [
+                            { role: "system", content: "You are a helpful assistant." },
+                            { role: "user", content: text }
+                        ],
+                        max_tokens: 500,
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) throw new Error(`Notrack API Status: ${response.status}`);
+                
+                const data = await response.json();
+                responseText = data.choices[0].message.content;
+            } catch (notrackError) {
+                console.warn("Notrack API failed, falling back to Hugging Face...", notrackError);
+                
+                // Attempt 2: Fallback to Hugging Face via CORS Proxy
+                try {
+                    const proxyHfUrl = `${CORS_PROXY}${encodeURIComponent(FALLBACK_HF_URL)}`;
+                    
+                    const hfResponse = await fetch(proxyHfUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            inputs: `<s>[INST] You are a helpful assistant. User: ${text} [/INST]`,
+                            parameters: { max_new_tokens: 250, return_full_text: false }
+                        })
+                    });
+
+                    if (!hfResponse.ok) throw new Error(`HF API Status: ${hfResponse.status}`);
+                    
+                    const hfData = await hfResponse.json();
+                    // Handle different response formats from HF
+                    if (Array.isArray(hfData) && hfData.length > 0) {
+                        responseText = hfData[0].generated_text.replace("<s>", "").trim();
+                    } else {
+                        throw new Error("Unexpected HF response format");
+                    }
+                } catch (hfError) {
+                    throw new Error(`Both APIs failed. Notrack: ${notrackError.message}. HF: ${hfError.message}`);
+                }
+            }
+
+            addMessage(responseText, 'ai');
+
+        } catch (error) {
+            console.error("Final Error:", error);
+            addMessage(`Error: ${error.message}`, 'ai');
+        } finally {
+            isLoading = false;
+            showLoading(false);
+            inputField.focus();
+        }
+    }
+
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.className = `nt-msg nt-${sender}`;
+        div.textContent = text;
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function showLoading(show) {
+        if (show) {
+            const spinnerDiv = document.createElement('div');
+            spinnerDiv.id = 'nt-loading-indicator';
+            spinnerDiv.className = 'nt-msg nt-ai';
+            spinnerDiv.innerHTML = '<span class="nt-spinner"></span> Thinking...';
+            messagesContainer.appendChild(spinnerDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } else {
+            const loader = document.getElementById('nt-loading-indicator');
+            if (loader) loader.remove();
+        }
+    }
+</script>
+<!-- NOTRACK AI MODULE END -->
+	
 </body>
 </html>
