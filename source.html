@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="icon" href="https://res.cloudinary.com/iueer3qt/image/upload/f_auto,q_auto/Forsaken_Development_Circular_Logo-removebg-preview" type="image/png">
  <meta charset="UTF-8">
- <title>Gilmer High School - Case Evidence Package</title>
+ <title>Case Evidence Package v6.1</title>
  <style>
  /* Global Styles */
  body {
@@ -1808,7 +1809,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
           </div>
 
-          <div class="case-tools-footer">v6.0 • Updated 2026-10-09</div>
           <button class="toggle-btn" id="toggleBtn">❯</button>
         </div>
       `;
@@ -4933,6 +4933,19 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 <!-- END DARK MODE TOGGLE -->
+<!-- Floating Bottom-Right Logo & Version -->
+<div style="position: fixed; bottom: 160px; right: 20px; display: flex; align-items: center; gap: 12px; z-index: 9999;">
+    <img src="https://res.cloudinary.com/iueer3qt/image/upload/f_auto,q_auto/Forsaken_Development_Circular_Logo-removebg-preview" alt="Forsaken Development Logo" style="height: 40px; width: auto;" />
+    <span style="color: #fff; font-size: 14px; font-weight: bold; background-color: rgba(0, 0, 0, 0.8); padding: 6px 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">v6.1 • Updated 2026-12-09</span>
+</div>
 
+<style>
+    /* Hide when printing */
+    @media print {
+        div[style*="position: fixed"][style*="right: 20px"] {
+            display: none !important;
+        }
+    }
+</style>
 </body>
 </html>
