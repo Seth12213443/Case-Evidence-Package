@@ -1755,6 +1755,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="menu-section">
               <button class="menu-action" id="btn1">🖨️ Print PDF</button>
               <button class="menu-action" id="btn3"> Help </button>
+			  <button class="menu-action" id="btn9"> Report Bug </button>
             </div>
 
             <div class="mini-divider"></div>
@@ -1820,6 +1821,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const btn1 = this.shadowRoot.getElementById('btn1');
       const btn2 = this.shadowRoot.getElementById('btn2');
       const btn3 = this.shadowRoot.getElementById('btn3');
+	  const btn9 = this.shadowRoot.getElementById('btn9');
       const pageTemplateSelect = this.shadowRoot.getElementById('page-template-select');
       const addSelectedPageBtn = this.shadowRoot.getElementById('add-selected-page-btn');
       const btnDuplicatePage = this.shadowRoot.getElementById('btnDuplicatePage');
@@ -2233,6 +2235,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
       btn3.addEventListener('click', () => {
 	window.open('https://classroom.google.com/c/ODcxMTUxNTc2NjE5/m/ODg4ODE5MDc5NTc0/details', '_blank');
+      });
+
+		btn9.addEventListener('click', () => {
+	window.open('https://forms.gle/xUjNkLC6Cu5h2Nfp8', '_blank');
       });
 
 
