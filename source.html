@@ -4938,10 +4938,37 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 <!-- END DARK MODE TOGGLE -->
-<!-- Floating Bottom-Right Logo & Version -->
+
+	
+	
+	
+	
+	
+	<!-- Floating Bottom-Right Logo & Version -->
 <div style="position: fixed; bottom: 160px; right: 20px; display: flex; align-items: center; gap: 12px; z-index: 9999;">
     <img src="https://res.cloudinary.com/iueer3qt/image/upload/f_auto,q_auto/Forsaken_Development_Circular_Logo-removebg-preview" alt="Forsaken Development Logo" style="height: 40px; width: auto;" />
-    <span style="color: #fff; font-size: 14px; font-weight: bold; background-color: rgba(0, 0, 0, 0.8); padding: 6px 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">v6.1 • Updated 2026-12-09</span>
+    
+    <!-- Container for the interactive element -->
+    <div id="version-popup-container">
+        <!-- The Button -->
+        <button 
+            onclick="document.getElementById('version-bubble').classList.toggle('show')"
+            style="color: #fff; font-size: 14px; font-weight: bold; background-color: rgba(0, 0, 0, 0.8); padding: 6px 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); cursor: pointer; border: none; outline: none; transition: background-color 0.2s;"
+            onmouseover="this.style.backgroundColor='rgba(50, 50, 50, 0.9)'"
+            onmouseout="this.style.backgroundColor='rgba(0, 0, 0, 0.8)'"
+        >
+            v6.2 • Updated 2026-12-09
+        </button>
+
+        <!-- The Popup Bubble -->
+        <div id="version-bubble" class="bubble-content">
+            <span class="close-btn" onclick="document.getElementById('version-bubble').classList.remove('show')">&times;</span>
+            <p style="margin: 0; color: #333; font-size: 14px; line-height: 1.4;">
+                Update Version 6.2<br>
+                Added toolbar tools, and added more to dev tools, dev tools still locked.
+            </p>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -4951,6 +4978,60 @@ document.addEventListener('DOMContentLoaded', function() {
             display: none !important;
         }
     }
+
+    /* Bubble Positioning */
+    .bubble-content {
+        display: none; /* Hidden by default */
+        position: absolute;
+        bottom: 55px; /* Pushes it above the button */
+        right: 0;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        padding: 15px;
+        border-radius: 8px;
+        z-index: 10000;
+        min-width: 200px;
+        max-width: 300px;
+    }
+
+    /* Show bubble when 'show' class is added via JS */
+    .bubble-content.show {
+        display: block;
+        animation: fadeIn 0.2s ease-in-out;
+    }
+
+    /* Close Button Styling */
+    .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        color: #aaa;
+    }
+    .close-btn:hover {
+        color: #333;
+    }
+
+    /* Simple fade-in animation */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
+
+<script>
+    // Optional: Close the bubble if the user clicks anywhere else on the page
+    window.addEventListener('click', function(e) {
+        const container = document.getElementById('version-popup-container');
+        const bubble = document.getElementById('version-bubble');
+        
+        if (!container.contains(e.target)) {
+            bubble.classList.remove('show');
+        }
+    });
+</script>
 </body>
 </html>
