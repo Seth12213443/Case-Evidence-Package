@@ -2037,7 +2037,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageNumEls = page.querySelectorAll('.dynamic-page-num');
     pageNumEls.forEach(el => {
       el.textContent = displayText;
-		setInterval(renumberPages, 60000);
+		setInterval(renumberPages, 10000);
 		renumberPages();
     });
   });
