@@ -11,12 +11,12 @@
   window.CEPAccountSystemLoaded = true;
 
   const firebaseConfig = {
-    apiKey: 'REPLACE_WITH_YOUR_FIREBASE_WEB_API_KEY',
+    apiKey: 'AIzaSyCkI-NXOJgSJ3pKRmEN01jZmGs5JT0J0JM',
     authDomain: 'ghspackage.firebaseapp.com',
     databaseURL: 'https://ghspackage-default-rtdb.firebaseio.com',
     projectId: 'ghspackage',
     // storageBucket is not used in v1
-    appId: '1:000000000000:web:0000000000000000000000' // Placeholder; not used by Auth/Realtime Database in this module
+    appId: '1:968709734238:web:7efa5ca1dfbc3fd33219cf' // Placeholder; not used by Auth/Realtime Database in this module
   };
 
   const SYNTHETIC_EMAIL_DOMAIN = 'ghspackage-login.com';
