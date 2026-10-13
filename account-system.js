@@ -273,57 +273,183 @@
     });
   }
 
+ 
   function captureForm() {
     const pages = Array.from(document.querySelectorAll('.page'));
+
+    // Save the HTML structure of every page. This preserves added pages,
+    // duplicated pages, and the current page order.
+    const pageHTML = pages.map(page => page.outerHTML);
+
     const fields = [];
+
     pages.forEach((page, pageIndex) => {
-      const controls = Array.from(page.querySelectorAll('input, textarea, select')).filter(element => {
-        if (element.matches('[type="file"], [type="button"], [type="submit"], [type="reset"], [type="password"], [type="hidden"]')) return false;
-        if (element.disabled) return false;
-        return true;
+      const controls = Array.from(
+        page.querySelectorAll('input, textarea, select')
+      ).filter(element => {
+        if (element.matches(
+          '[type="file"], [type="button"], [type="submit"], ' +
+          '[type="reset"], [type="password"], [type="hidden"]'
+        )) return false;
+
+        return !element.disabled;
       });
+
       controls.forEach((element, fieldIndex) => {
         const type = (element.type || element.tagName).toLowerCase();
-        let value;
-        if (type === 'checkbox' || type === 'radio') value = Boolean(element.checked);
-        else value = element.value;
-        fields.push({ page: pageIndex, index: fieldIndex, type, value });
+
+        fields.push({
+          page: pageIndex,
+          index: fieldIndex,
+          type,
+          value: (type === 'checkbox' || type === 'radio')
+            ? element.checked
+            : element.value
+        });
       });
     });
-    return { version: 1, savedAt: Date.now(), fields };
+
+    return {
+      version: 2,
+      savedAt: Date.now(),
+      pageHTML,
+      fields
+    };
   }
 
   function applyForm(saved) {
-    if (!saved || !Array.isArray(saved.fields)) throw new Error('The saved record has an unexpected format. Nothing was changed.');
-    const pages = Array.from(document.querySelectorAll('.page'));
-    let restored = 0;
-    const skipped = [];
-    // Validate all page indices before applying any values.
-    for (const field of saved.fields) {
-      if (!Number.isInteger(field.page) || !Number.isInteger(field.index) || !pages[field.page]) {
-        throw new Error('The saved record does not match this document version. Nothing was changed.');
-      }
+    if (!saved || !Array.isArray(saved.fields)) {
+      throw new Error('This save has an invalid format.');
     }
+
+    let pages = Array.from(document.querySelectorAll('.page'));
+
+    // Restore page structure when the save contains a structural snapshot.
+    // Legacy saves without pageHTML continue to load into existing pages.
+    if (Array.isArray(saved.pageHTML)) {
+      if (saved.pageHTML.length > 200) {
+        throw new Error('This save contains too many pages to restore safely.');
+      }
+
+      const restoredPages = [];
+
+      for (const html of saved.pageHTML) {
+        if (typeof html !== 'string' || html.length > 2_000_000) {
+          throw new Error('A saved page is invalid or too large.');
+        }
+
+        const template = document.createElement('template');
+        template.innerHTML = html.trim();
+
+        const page = template.content.firstElementChild;
+
+        // Each snapshot must contain one .page root.
+        if (
+          !page ||
+          !page.classList ||
+          !page.classList.contains('page')
+        ) {
+          throw new Error('A saved page has an unexpected structure.');
+        }
+
+        restoredPages.push(page);
+      }
+
+      if (restoredPages.length === 0) {
+        throw new Error('The save contains no pages.');
+      }
+
+      // Keep the existing document untouched until all snapshots validate.
+      // Then replace the page elements in the saved order.
+      const oldPages = Array.from(document.querySelectorAll('.page'));
+      const firstOldPage = oldPages[0];
+
+      if (!firstOldPage || !firstOldPage.parentNode) {
+        throw new Error('Could not locate the document pages.');
+      }
+
+      const parent = firstOldPage.parentNode;
+      const anchor = firstOldPage;
+
+      restoredPages.forEach(page => parent.insertBefore(page, anchor));
+
+      oldPages.forEach(page => page.remove());
+
+      // Reapply saved values after reconstructing the page HTML.
+      pages = Array.from(document.querySelectorAll('.page'));
+    }
+
+    let restored = 0;
+    let skipped = 0;
+
     saved.fields.forEach(field => {
-      const page = pages[field.page];
-      const controls = Array.from(page.querySelectorAll('input, textarea, select')).filter(element => {
-        if (element.matches('[type="file"], [type="button"], [type="submit"], [type="reset"], [type="password"], [type="hidden"]')) return false;
-        if (element.disabled) return false;
-        return true;
-      });
-      const element = controls[field.index];
-      if (!element || (element.type || element.tagName).toLowerCase() !== field.type) {
-        skipped.push(field);
+      if (
+        !field ||
+        !Number.isInteger(field.page) ||
+        !Number.isInteger(field.index) ||
+        field.page < 0 ||
+        field.index < 0
+      ) {
+        skipped++;
         return;
       }
-      if (field.type === 'checkbox' || field.type === 'radio') element.checked = Boolean(field.value);
-      else element.value = field.value == null ? '' : String(field.value);
+
+      const page = pages[field.page];
+
+      if (!page) {
+        skipped++;
+        return;
+      }
+
+      const controls = Array.from(
+        page.querySelectorAll('input, textarea, select')
+      ).filter(element => {
+        if (element.matches(
+          '[type="file"], [type="button"], [type="submit"], ' +
+          '[type="reset"], [type="password"], [type="hidden"]'
+        )) return false;
+
+        return !element.disabled;
+      });
+
+      const element = controls[field.index];
+
+      if (
+        !element ||
+        (element.type || element.tagName).toLowerCase() !== field.type
+      ) {
+        skipped++;
+        return;
+      }
+
+      if (field.type === 'checkbox' || field.type === 'radio') {
+        element.checked = Boolean(field.value);
+      } else {
+        element.value = field.value == null ? '' : String(field.value);
+      }
+
       element.dispatchEvent(new Event('input', { bubbles: true }));
       element.dispatchEvent(new Event('change', { bubbles: true }));
+
       restored++;
     });
-    return { restored, skipped: skipped.length };
+
+    // Let other code know the page structure has been rebuilt.
+    document.dispatchEvent(new CustomEvent('cep:pages-restored', {
+      detail: {
+        pageCount: pages.length,
+        restoredFields: restored,
+        skippedFields: skipped
+      }
+    }));
+
+    return {
+      restored,
+      skipped,
+      pages: pages.length
+    };
   }
+
 
   async function requireSignedIn() {
     if (currentUser) return true;
