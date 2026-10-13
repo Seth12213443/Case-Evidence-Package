@@ -204,7 +204,6 @@
 <body>
 
 <!-- MACRO DEFINITIONS APPLIED PER PAGE -->
-
 <!-- PAGE 1: CSI Report -->
 <div class="page" data-page-label="report">
  <div class="header-title">Case Evidence Package</div>
@@ -2038,6 +2037,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageNumEls = page.querySelectorAll('.dynamic-page-num');
     pageNumEls.forEach(el => {
       el.textContent = displayText;
+		setInterval(renumberPages, 60000);
+		renumberPages();
     });
   });
 };
