@@ -471,10 +471,11 @@
       }
       const payload = captureForm();
       await ref.set(payload);
-     alert(
+    alert(
   `Saved ${payload.fields.length} fields across ` +
   `${payload.pageHTML.length} pages.`
-); catch (error) {
+); 
+    catch (error) {
       alert('Save failed: ' + friendlyError(error));
     } finally { setBusy(false); }
   }
@@ -500,7 +501,8 @@
     ? ` ${result.skipped} fields could not be matched.`
     : '') +
   ' Uploaded images are not included.'
-); catch (error) {
+); 
+    catch (error) {
       alert('Load failed: ' + friendlyError(error));
     } finally { setBusy(false); }
   }
