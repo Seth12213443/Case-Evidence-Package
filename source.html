@@ -2023,19 +2023,24 @@ document.addEventListener('DOMContentLoaded', function() {
         markSignatureFieldsReadOnly(page);
       });
 
-      const renumberPages = () => {
-        const pages = getPages();
-        pages.forEach((page, index) => {
-          const footer = page.querySelector('.page-footer');
-          if (footer) {
-            footer.textContent = String(index + 1);
-          }
-          const pageNumEls = page.querySelectorAll('.dynamic-page-num');
-          pageNumEls.forEach(el => {
-            el.textContent = String(index + 1);
-          });
-        });
-      };
+ const renumberPages = () => {
+  const pages = getPages();
+  const totalPages = pages.length; // Get total count once
+
+  pages.forEach((page, index) => {
+    const displayText = `${index + 1} of ${totalPages}`;
+
+    const footer = page.querySelector('.page-footer');
+    if (footer) {
+      footer.textContent = displayText;
+    }
+
+    const pageNumEls = page.querySelectorAll('.dynamic-page-num');
+    pageNumEls.forEach(el => {
+      el.textContent = displayText;
+    });
+  });
+};
 
       const applyCaseInfoToAllPages = (selectedKeys = ['agency', 'caseNumber', 'offence', 'date']) => {
         const pages = getPages();
