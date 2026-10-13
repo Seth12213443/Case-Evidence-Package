@@ -3,6 +3,26 @@
 <head>
 	<link rel="icon" href="https://res.cloudinary.com/iueer3qt/image/upload/f_auto,q_auto/Forsaken_Development_Circular_Logo-removebg-preview">
  <meta charset="UTF-8">
+	<!-- Add this script to force the icon to load -->
+    <script>
+        // Wait for the DOM to be ready
+        document.addEventListener("DOMContentLoaded", function() {
+            // Create a new link element
+            var link = document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/png';
+            link.href = 'https://res.cloudinary.com/iueer3qt/image/upload/f_png,q_auto/Forsaken_Development_Circular_Logo-removebg-preview.png';
+            
+            // Remove any existing icons to avoid conflicts
+            var oldLink = document.querySelector("link[rel='icon']");
+            if (oldLink) {
+                oldLink.remove();
+            }
+            
+            // Append the new icon link
+            document.head.appendChild(link);
+        });
+    </script>
  <title>Case Evidence Package v6.3</title>
  <style>
  /* Global Styles */
