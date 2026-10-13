@@ -471,8 +471,10 @@
       }
       const payload = captureForm();
       await ref.set(payload);
-      alert(`Saved ${payload.fields.length} form fields to your account. Photos themselves are not included in v1.`);
-    } catch (error) {
+     alert(
+  `Saved ${payload.fields.length} fields across ` +
+  `${payload.pageHTML.length} pages.`
+); catch (error) {
       alert('Save failed: ' + friendlyError(error));
     } finally { setBusy(false); }
   }
