@@ -494,8 +494,13 @@
         return;
       }
       const result = applyForm(snapshot.val());
-      alert(`Loaded ${result.restored} form fields.${result.skipped ? ` ${result.skipped} fields did not match this version of the document and were skipped.` : ''} Photos are not restored in v1.`);
-    } catch (error) {
+      alert(
+  `Loaded ${result.restored} fields across ${result.pages} pages.` +
+  (result.skipped
+    ? ` ${result.skipped} fields could not be matched.`
+    : '') +
+  ' Uploaded images are not included.'
+); catch (error) {
       alert('Load failed: ' + friendlyError(error));
     } finally { setBusy(false); }
   }
