@@ -5066,15 +5066,57 @@ setInterval(renumberPages, 10000);
 </script>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
 <script>
-  const accountScript = document.createElement('script');
-  accountScript.src =
+(async () => {
+  const url =
     'https://cdn.jsdelivr.net/gh/Seth12213443/Case-Evidence-Package@main/account-system.js';
-  accountScript.async = false;
-  accountScript.onload = () => console.log('Account system loaded');
-  accountScript.onerror = () => console.error('Account system failed to load');
-  document.head.appendChild(accountScript);
+
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store'
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const code = await response.text();
+    const script = document.createElement('script');
+
+    script.textContent = code;
+    document.head.appendChild(script);
+
+    console.log('Account system loaded without browser HTTP cache.');
+  } catch (error) {
+    console.error('Failed to load account system:', error);
+  }
+})();
 </script>
+
+
+
+
+
+
+
+
+
 
 	
 </body>
