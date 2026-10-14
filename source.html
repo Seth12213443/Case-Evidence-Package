@@ -5082,29 +5082,52 @@ setInterval(renumberPages, 10000);
 
 	
 
+
 <script>
-(async () => {
-  const url =
-    'https://cdn.jsdelivr.net/gh/Seth12213443/Case-Evidence-Package@main/account-system.js';
+(async function loadCEPAccountSystem() {
+  const source =
+    'https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/main/account-system.js';
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(source + '?t=' + Date.now(), {
       cache: 'no-store'
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+      throw new Error('GitHub returned HTTP ' + response.status);
     }
 
     const code = await response.text();
-    const script = document.createElement('script');
 
+    // Fail instead of silently running an older version.
+    if (!code.includes('Save format v5')) {
+      throw new Error(
+        'The downloaded file does not identify itself as V5. ' +
+        'Check the account-system.js file on GitHub.'
+      );
+    }
+
+    const script = document.createElement('script');
     script.textContent = code;
+    script.dataset.cepVersion = '5';
     document.head.appendChild(script);
 
-    console.log('Account system loaded without browser HTTP cache.');
+    console.info('[CEP] Account system V5 loaded.');
   } catch (error) {
-    console.error('Failed to load account system:', error);
+    console.error('[CEP] Account system failed to load:', error);
+
+    const message = document.createElement('div');
+    message.style.cssText =
+      'position:fixed;top:0;left:0;right:0;z-index:999999;' +
+      'padding:14px;background:#7f1d1d;color:white;' +
+      'font:16px Arial,sans-serif;text-align:center;';
+
+    message.textContent =
+      'The Case Evidence Package could not load the latest account ' +
+      'system. Check your internet connection and reopen the document. ' +
+      'Do not save until this issue is resolved.';
+
+    document.body.appendChild(message);
   }
 })();
 </script>
