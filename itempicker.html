@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Evidence Loader</title>
+    <style>
+        :root {
+            --bg-color: #0f0c29;
+            --gradient-1: #302b63;
+            --gradient-2: #24243e;
+            --accent: #00d2ff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;
+            --card-width: 200px;
+            --card-height: 280px;
+            --card-depth: 400px; /* Controls the radius of the carousel */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(to bottom, var(--bg-color), var(--gradient-1), var(--gradient-2));
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+        }
+
+        /* Background animated particles/grid for "tech" feel */
+        .bg-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            perspective: 1000px;
+            transform: rotateX(20deg) scale(1.5);
+            pointer-events: none;
+        }
+
+        /* --- MENU CONTAINER --- */
+        .menu-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .carousel {
+            position: relative;
+            width: var(--card-width);
+            height: var(--card-height);
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .card {
+            position: absolute;
+            width: var(--card-width);
+            height: var(--card-height);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            user-select: none;
+            
+            /* Centering logic handled by JS transform */
+            backface-visibility: visible;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+            transform: translateZ(20px) scale(1.05); /* Pop out effect on hover */
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .card-subtitle {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        /* --- PREVIEW AREA --- */
+        .preview-area {
+            width: 90%;
+            max-width: 1200px;
+            height: 55vh;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--glass-border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- CONTROLS --- */
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-control {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-control:hover {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* --- ACTIVE STATE --- */
+        .card.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent);
+        }
+        
+        .status-bar {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <!-- Header -->
+    <h1 style="margin-bottom: 20px; text-shadow: 0 0 10px var(--accent);">CASE EVIDENCE LOADER</h1>
+
+    <!-- 3D Menu -->
+    <div class="menu-container">
+        <div class="carousel" id="carousel">
+            <!-- Cards injected by JS -->
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button class="btn-control" onclick="rotateCarousel(-1)">◀ PREV</button>
+        <button class="btn-control" onclick="rotateCarousel(1)">NEXT ▶</button>
+    </div>
+
+    <!-- Live Preview Iframe -->
+    <div class="preview-area">
+        <div class="loading-overlay" id="loader">
+            <div class="spinner"></div>
+        </div>
+        <iframe id="previewFrame" src="about:blank"></iframe>
+    </div>
+
+    <div class="status-bar" id="statusText">Ready</div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION: ADD YOUR FILES HERE
+        // ==========================================
+        const SOURCE_FILES = [
+            {
+                id: 'CasePackage',
+                title: 'Case Package',
+                subtitle: 'Main Case Form Structure',
+                icon: '📄',
+                url: 'https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/refs/heads/main/source.html'
+            }
+        ];
+
+        // ==========================================
+        // LOGIC
+        // ==========================================
+        const carousel = document.getElementById('carousel');
+        const previewFrame = document.getElementById('previewFrame');
+        const loader = document.getElementById('loader');
+        const statusText = document.getElementById('statusText');
+        
+        let currentIndex = 0;
+        const totalCards = SOURCE_FILES.length;
+        const cardAngle = 360 / totalCards;
+        const radius = Math.round((totalCards / 2) / Math.tan(Math.PI / totalCards)) + 100; // Dynamic radius calculation
+
+        // Initialize Carousel
+        function initCarousel() {
+            SOURCE_FILES.forEach((file, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.index = index;
+                
+                // Calculate rotation for 3D cylinder
+                const rotateY = index * cardAngle;
+                const translateZ = radius; 
+                
+                card.style.transform = `rotateY(${rotateY}deg) translateZ(${translateZ}px)`;
+                
+                card.innerHTML = `
+                    <div class="card-icon">${file.icon}</div>
+                    <div class="card-title">${file.title}</div>
+                    <div class="card-subtitle">${file.subtitle}</div>
+                `;
+
+                card.addEventListener('click', () => {
+                    selectCard(index);
+                });
+
+                carousel.appendChild(card);
+            });
+            
+            // Initial render
+            updateCarousel();
+            selectCard(0); // Load first item
+        }
+
+        function updateCarousel() {
+            const rotateX = 0; // Keep flat horizontally
+            const rotateY = -(currentIndex * cardAngle);
+            carousel.style.transform = `rotateY(${rotateY}deg)`;
+
+            // Update active state classes
+            document.querySelectorAll('.card').forEach((card, idx) => {
+                if (idx === currentIndex) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        function rotateCarousel(direction) {
+            currentIndex += direction;
+            if (currentIndex >= totalCards) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = totalCards - 1;
+            updateCarousel();
+        }
+
+        function selectCard(index) {
+            currentIndex = index;
+            updateCarousel();
+            loadFile(SOURCE_FILES[index].url);
+        }
+
+        function loadFile(url) {
+            statusText.textContent = `Loading: ${url.split('/').pop()}...`;
+            loader.classList.add('active');
+            
+            // Clear iframe to stop previous content
+            previewFrame.src = 'about:blank';
+            
+            // Small delay to allow spinner to show
+            setTimeout(() => {
+                previewFrame.onload = () => {
+                    loader.classList.remove('active');
+                    statusText.textContent = `Loaded: ${url.split('/').pop()}`;
+                };
+                
+                previewFrame.onerror = () => {
+                    loader.classList.remove('active');
+                    statusText.textContent = "Error loading preview";
+                };
+
+                previewFrame.src = url;
+            }, 100);
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') rotateCarousel(-1);
+            if (e.key === 'ArrowRight') rotateCarousel(1);
+        });
+
+        // Start
+        initCarousel();
+
+    </script>
+</body>
+</html>
