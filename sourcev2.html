@@ -119,7 +119,7 @@
     .back:hover { border-color:var(--accent); color:var(--accent); }
     iframe { display:block; border:0; width:100%; height:calc(100% - 58px); background:white; }
     .loading { position:absolute; inset:58px 0 0; display:none; place-items:center; color:#303542; background:#f4f5f7; font-size:14px; pointer-events:none; }
-    .loading.show { display:grid; }
+    .loading.show { display:grid; }\n    .loading.error { pointer-events:auto; color:#9b1c1c; }
     @media (max-width:800px) { .tile { flex-basis:250px; } .feature:after { right:3%; opacity:.45; } }
     @media (max-width:560px) {
       .topbar { height:64px; } .top-right .status-text { display:none; }
@@ -211,7 +211,7 @@
       <button class="back" id="back-button" type="button">←&nbsp; Back to library</button>
     </div>
     <iframe id="content-frame" title="Selected workspace"></iframe>
-    <div class="loading" id="loading">Loading workspace…</div>
+    <div class="loading" id="loading" role="status" aria-live="polite">Loading workspace…</div>
   </section>
 
   <script>
@@ -229,20 +229,42 @@
     const title = document.getElementById('viewer-title');
     let activeIndex = 0;
 
-    function openSource(id) {
+    async function openSource(id) {
       const file = SOURCE_FILES.find((item) => item.id === id);
       if (!file || !file.url) return;
+
+      let url;
       try {
-        const url = new URL(file.url);
+        url = new URL(file.url);
         if (url.protocol !== 'https:' || url.hostname !== 'raw.githubusercontent.com') return;
       } catch { return; }
 
       title.textContent = file.title;
+      loading.textContent = 'Loading workspace…';
+      loading.classList.remove('error');
       loading.classList.add('show');
       viewer.classList.add('open');
       viewer.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
-      iframe.src = file.url;
+      iframe.src = 'about:blank';
+
+      try {
+        const response = await fetch(url.href, { cache: 'no-store' });
+        if (!response.ok) throw new Error('GitHub returned HTTP ' + response.status);
+        let html = await response.text();
+        const baseUrl = new URL('.', url.href).href;
+        const baseTag = '<base href="' + baseUrl + '">';
+        if (/<head\\b[^>]*>/i.test(html)) {
+          html = html.replace(/<head\\b[^>]*>/i, (head) => head + baseTag);
+        } else {
+          html = '<head>' + baseTag + '</head>' + html;
+        }
+        iframe.srcdoc = html;
+      } catch (error) {
+        console.error('Could not load workspace:', error);
+        loading.textContent = 'Could not load this workspace. Check your connection, then select the card to try again.';
+        loading.classList.add('error');
+      }
     }
 
     function closeViewer() {
@@ -258,7 +280,7 @@
       button.addEventListener('click', () => openSource(button.dataset.open));
     });
     document.getElementById('back-button').addEventListener('click', closeViewer);
-    iframe.addEventListener('load', () => loading.classList.remove('show'));
+    iframe.addEventListener('load', () => {\n      loading.classList.remove('show', 'error');\n      loading.textContent = 'Loading workspace…';\n    });
     document.getElementById('scroll-left').addEventListener('click', () => {
       document.getElementById('library').scrollBy({ left: -260, behavior: 'smooth' });
     });
