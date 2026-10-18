@@ -81,9 +81,9 @@
       color:var(--ink); background:rgba(255,255,255,.04); cursor:pointer;
     }
     .shelf-controls button:hover { border-color:rgba(140,244,206,.6); color:var(--accent); }
-    .library { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+    .library { display:flex; gap:14px; overflow-x:auto; padding:3px 3px 10px; scroll-snap-type:x mandatory; scrollbar-width:thin; scrollbar-color:rgba(140,244,206,.45) transparent; }
     .tile {
-      appearance:none; min-height:178px; text-align:left; position:relative; overflow:hidden;
+      appearance:none; flex:0 0 280px; min-height:178px; text-align:left; position:relative; overflow:hidden; scroll-snap-align:start;
       border:1px solid var(--line); border-radius:16px; padding:17px; color:var(--ink);
       background:linear-gradient(145deg, rgba(31,37,51,.97), rgba(18,21,31,.97));
       cursor:pointer; transition:transform .2s,border-color .2s,background .2s;
@@ -120,13 +120,13 @@
     iframe { display:block; border:0; width:100%; height:calc(100% - 58px); background:white; }
     .loading { position:absolute; inset:58px 0 0; display:none; place-items:center; color:#303542; background:#f4f5f7; font-size:14px; pointer-events:none; }
     .loading.show { display:grid; }
-    @media (max-width:800px) { .library { grid-template-columns:repeat(2,minmax(0,1fr)); } .feature:after { right:3%; opacity:.45; } }
+    @media (max-width:800px) { .tile { flex-basis:250px; } .feature:after { right:3%; opacity:.45; } }
     @media (max-width:560px) {
       .topbar { height:64px; } .top-right .status-text { display:none; }
       main { padding-top:27px; } .welcome { align-items:start; flex-direction:column; gap:12px; }
       .date-chip { display:none; } .feature { min-height:280px; }
       .feature:after { width:155px; height:155px; right:-5%; top:26%; }
-      .library { gap:10px; } .tile { min-height:158px; padding:13px; }
+      .library { gap:10px; } .tile { flex-basis:78vw; min-height:158px; padding:13px; }
       .tile-art { height:67px; } .lower-row { grid-template-columns:1fr; }
       .footer { gap:10px; flex-direction:column; }
     }
