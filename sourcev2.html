@@ -1,405 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evidence Loader</title>
-    <style>
-        :root {
-            --bg-dark: #0a0a12;
-            --primary: #00f3ff;
-            --secondary: #bc13fe;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --card-width: 220px;
-            --card-height: 320px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0a0a12 100%),
-                linear-gradient(0deg, rgba(0,0,0,0.2) 0%, transparent 1px),
-                linear-gradient(90deg, rgba(0,0,0,0.2) 0%, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
-            color: white;
-        }
-
-        /* --- Header --- */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            z-index: 1000;
-            background: rgba(10, 10, 18, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            font-size: 0.7rem;
-            opacity: 0.6;
-            letter-spacing: 2px;
-        }
-
-        /* --- 3D Carousel --- */
-        .scene {
-            width: var(--card-width);
-            height: var(--card-height);
-            perspective: 1000px;
-            margin-top: 150px;
-            margin-bottom: 50px;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .carousel {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .card {
-            position: absolute;
-            width: var(--card-width);
-            height: var(--card-height);
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            user-select: none;
-        }
-
-        .card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--primary);
-            box-shadow: 0 0 25px var(--primary), inset 0 0 10px rgba(0, 243, 255, 0.2);
-            transform: scale(1.05) !important;
-        }
-
-        .card-icon {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 10px var(--primary));
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
-            padding: 0 10px;
-        }
-
-        .card-meta {
-            font-size: 0.75rem;
-            color: var(--primary);
-            margin-top: 8px;
-            opacity: 0.8;
-        }
-
-        /* --- Controls --- */
-        .controls {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            z-index: 1000;
-        }
-
-        button.nav-btn {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        button.nav-btn:hover {
-            background: var(--primary);
-            color: black;
-            box-shadow: 0 0 15px var(--primary);
-        }
-
-        /* Loader Overlay */
-        #loader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 18, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-
-        #loader.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--glass-border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Back Button inside content */
-        .back-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 0 20px var(--secondary);
-            z-index: 1500;
-            display: none;
-            transition: transform 0.2s;
-        }
-
-        .back-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* Scrollbar styling */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <title>Case Evidence Package — Library</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f4f5f8;
+      --muted: #a5a9b5;
+      --panel: #151923;
+      --panel-strong: #202633;
+      --line: rgba(255,255,255,.11);
+      --accent: #8cf4ce;
+      --accent-2: #9ea8ff;
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: #090b12; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--ink);
+      background:
+        radial-gradient(ellipse at 82% 0%, rgba(73,112,126,.22), transparent 38rem),
+        radial-gradient(ellipse at 0% 42%, rgba(76,68,133,.15), transparent 38rem),
+        #090b12;
+    }
+    button { font: inherit; }
+    .topbar {
+      height: 76px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(20px, 5vw, 76px); border-bottom: 1px solid rgba(255,255,255,.07);
+      background: rgba(9,11,18,.68); backdrop-filter: blur(18px);
+    }
+    .brand { display:flex; align-items:center; gap:13px; font-weight:750; letter-spacing:.02em; }
+    .brand-mark {
+      display:grid; place-items:center; width:34px; height:34px; border-radius:11px;
+      color:#08120f; background:var(--accent); font-size:17px;
+      box-shadow:0 0 25px rgba(140,244,206,.18);
+    }
+    .top-right { color:var(--muted); font-size:13px; display:flex; align-items:center; gap:10px; }
+    .online { width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent); }
+    main { width:min(1280px, 100%); margin:0 auto; padding:38px clamp(20px,5vw,76px) 52px; }
+    .eyebrow { color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.19em; text-transform:uppercase; }
+    .welcome { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:26px; }
+    h1 { font-size:clamp(30px,4vw,48px); line-height:1.04; letter-spacing:-.045em; margin:9px 0 0; }
+    .welcome-copy { margin:12px 0 0; color:var(--muted); font-size:15px; }
+    .date-chip { border:1px solid var(--line); border-radius:999px; padding:9px 13px; color:#d6dae3; font-size:12px; white-space:nowrap; }
+    .feature {
+      position:relative; overflow:hidden; min-height:270px; display:flex; align-items:center;
+      padding:clamp(24px,4vw,48px); border:1px solid rgba(255,255,255,.12); border-radius:25px;
+      background:
+        radial-gradient(circle at 82% 47%, rgba(140,244,206,.2), transparent 13rem),
+        linear-gradient(120deg, rgba(32,43,52,.97), rgba(20,24,37,.95) 55%, rgba(29,32,52,.96));
+      box-shadow:0 25px 80px rgba(0,0,0,.25);
+    }
+    .feature:after {
+      content:""; position:absolute; width:245px; height:245px; right:9%; top:50%; transform:translateY(-50%) rotate(12deg);
+      border:1px solid rgba(140,244,206,.25); border-radius:52px;
+      box-shadow:0 0 0 22px rgba(140,244,206,.035), 0 0 0 46px rgba(140,244,206,.025);
+      pointer-events:none;
+    }
+    .feature-content { position:relative; z-index:1; max-width:600px; }
+    .feature-tag { display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#c3fce6; }
+    .feature-tag:before { content:""; width:6px; height:6px; border-radius:50%; background:var(--accent); }
+    .feature h2 { margin:14px 0 8px; font-size:clamp(26px,3vw,38px); letter-spacing:-.04em; }
+    .feature p { max-width:510px; margin:0; color:#b8bfca; line-height:1.6; font-size:14px; }
+    .feature-actions { display:flex; align-items:center; gap:14px; margin-top:24px; }
+    .launch {
+      border:0; border-radius:9px; padding:12px 18px; background:var(--accent); color:#08130f;
+      font-weight:800; cursor:pointer; transition:transform .18s, filter .18s;
+    }
+    .launch:hover { transform:translateY(-2px); filter:brightness(1.06); }
+    .hint { color:#aeb4c1; font-size:12px; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:20px; margin:38px 0 15px; }
+    h3 { margin:0; font-size:19px; letter-spacing:-.02em; }
+    .section-sub { color:var(--muted); font-size:12px; margin-top:5px; }
+    .shelf-controls { display:flex; gap:8px; }
+    .shelf-controls button {
+      border:1px solid var(--line); border-radius:50%; width:34px; height:34px;
+      color:var(--ink); background:rgba(255,255,255,.04); cursor:pointer;
+    }
+    .shelf-controls button:hover { border-color:rgba(140,244,206,.6); color:var(--accent); }
+    .library { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+    .tile {
+      appearance:none; min-height:178px; text-align:left; position:relative; overflow:hidden;
+      border:1px solid var(--line); border-radius:16px; padding:17px; color:var(--ink);
+      background:linear-gradient(145deg, rgba(31,37,51,.97), rgba(18,21,31,.97));
+      cursor:pointer; transition:transform .2s,border-color .2s,background .2s;
+    }
+    .tile:not(:disabled):hover, .tile:focus-visible {
+      outline:none; transform:translateY(-4px); border-color:rgba(140,244,206,.65);
+      background:linear-gradient(145deg, rgba(41,56,60,.98), rgba(20,25,36,.98));
+    }
+    .tile-art { height:79px; display:flex; align-items:center; justify-content:center; margin:-4px 0 10px; }
+    .document-icon { width:58px; height:68px; position:relative; border:1px solid rgba(140,244,206,.56); border-radius:8px; background:linear-gradient(155deg,#344b4c,#182a30); transform:rotate(-5deg); }
+    .document-icon:before { content:""; position:absolute; left:12px; right:12px; top:24px; height:2px; background:#a1f5d7; box-shadow:0 8px 0 rgba(161,245,215,.62),0 16px 0 rgba(161,245,215,.35); }
+    .document-icon:after { content:""; position:absolute; top:-1px; right:-1px; width:16px; height:16px; background:#567a73; border-left:1px solid rgba(140,244,206,.45); border-bottom:1px solid rgba(140,244,206,.45); border-radius:0 7px 0 5px; }
+    .locked-art { font-size:29px; filter:grayscale(.3); opacity:.68; }
+    .tile-title { font-size:14px; font-weight:750; }
+    .tile-meta { color:var(--muted); font-size:11px; margin-top:5px; }
+    .tile-status { position:absolute; top:13px; right:13px; color:#c4c9d2; font-size:9px; text-transform:uppercase; letter-spacing:.1em; }
+    .tile:disabled { cursor:not-allowed; opacity:.64; }
+    .tile:disabled .tile-status { color:#9ea4b0; }
+    .lower-row { display:grid; grid-template-columns:1.2fr .8fr; gap:14px; margin-top:18px; }
+    .info-panel { min-height:105px; border:1px solid var(--line); border-radius:15px; background:rgba(255,255,255,.035); padding:19px; display:flex; align-items:center; gap:15px; }
+    .info-icon { width:39px; height:39px; flex:none; display:grid; place-items:center; border-radius:12px; background:rgba(158,168,255,.12); color:#c3c9ff; }
+    .info-panel strong { font-size:13px; }
+    .info-panel p { margin:5px 0 0; color:var(--muted); font-size:11px; line-height:1.5; }
+    .footer { margin-top:30px; padding-top:16px; border-top:1px solid rgba(255,255,255,.07); color:#757c89; display:flex; justify-content:space-between; font-size:11px; }
+    .viewer { position:fixed; inset:0; z-index:10; display:none; background:#090b12; }
+    .viewer.open { display:block; }
+    .viewer-bar { height:58px; display:flex; align-items:center; justify-content:space-between; padding:0 18px; background:#11151e; border-bottom:1px solid var(--line); }
+    .viewer-title { font-weight:700; font-size:13px; }
+    .back {
+      border:1px solid rgba(255,255,255,.15); border-radius:8px; background:#252c39; color:white;
+      padding:9px 13px; font-weight:700; cursor:pointer;
+    }
+    .back:hover { border-color:var(--accent); color:var(--accent); }
+    iframe { display:block; border:0; width:100%; height:calc(100% - 58px); background:white; }
+    .loading { position:absolute; inset:58px 0 0; display:none; place-items:center; color:#303542; background:#f4f5f7; font-size:14px; pointer-events:none; }
+    .loading.show { display:grid; }
+    @media (max-width:800px) { .library { grid-template-columns:repeat(2,minmax(0,1fr)); } .feature:after { right:3%; opacity:.45; } }
+    @media (max-width:560px) {
+      .topbar { height:64px; } .top-right .status-text { display:none; }
+      main { padding-top:27px; } .welcome { align-items:start; flex-direction:column; gap:12px; }
+      .date-chip { display:none; } .feature { min-height:280px; }
+      .feature:after { width:155px; height:155px; right:-5%; top:26%; }
+      .library { gap:10px; } .tile { min-height:158px; padding:13px; }
+      .tile-art { height:67px; } .lower-row { grid-template-columns:1fr; }
+      .footer { gap:10px; flex-direction:column; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior:auto !important; transition:none !important; } }
+  </style>
 </head>
 <body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span>CASE EVIDENCE PACKAGE</span></div>
+    <div class="top-right"><span class="online" aria-hidden="true"></span><span class="status-text">LIBRARY READY</span></div>
+  </header>
 
-    <header id="main-header">
-        <h1>Evidence Loader</h1>
-        <div class="subtitle">Select Source File to Preview</div>
-    </header>
-
-    <!-- 3D Menu -->
-    <div id="menu-container">
-        <div class="scene" id="menuScene">
-            <div class="carousel" id="carousel"></div>
-        </div>
-
-        <!-- Controls -->
-        <div class="controls" id="navControls">
-            <button class="nav-btn" onclick="rotate(-1)">◀ PREV</button>
-            <button class="nav-btn" onclick="rotate(1)">NEXT ▶</button>
-        </div>
+  <main id="dashboard">
+    <div class="welcome">
+      <div>
+        <div class="eyebrow">Your workspace</div>
+        <h1>Good to see you.</h1>
+        <p class="welcome-copy">Pick up where your investigation begins.</p>
+      </div>
+      <div class="date-chip">EVIDENCE LIBRARY&nbsp; / &nbsp;01</div>
     </div>
 
-    <!-- Loader -->
-    <div id="loader">
-        <div class="spinner"></div>
+    <section class="feature" aria-labelledby="feature-title">
+      <div class="feature-content">
+        <div class="feature-tag">Featured • Ready to launch</div>
+        <h2 id="feature-title">Case Evidence Package</h2>
+        <p>Open the complete case form workspace. Document the scene, organize evidence, and keep every detail together.</p>
+        <div class="feature-actions">
+          <button class="launch" type="button" data-open="source-html">▶&nbsp; Open workspace</button>
+          <span class="hint">Press Enter to launch</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="library-title">
+      <div class="section-head">
+        <div><h3 id="library-title">Your library</h3><div class="section-sub">Choose a workspace to continue</div></div>
+        <div class="shelf-controls" aria-label="Library controls">
+          <button type="button" id="scroll-left" aria-label="Scroll library left">‹</button>
+          <button type="button" id="scroll-right" aria-label="Scroll library right">›</button>
+        </div>
+      </div>
+      <div class="library" id="library">
+        <button class="tile" type="button" data-open="source-html" aria-label="Open Case Evidence Package">
+          <span class="tile-status">Available</span>
+          <span class="tile-art" aria-hidden="true"><span class="document-icon"></span></span>
+          <span class="tile-title">Case Evidence Package</span>
+          <span class="tile-meta">Main case form · HTML</span>
+        </button>
+        <button class="tile" type="button" disabled aria-disabled="true">
+          <span class="tile-status">Coming soon</span>
+          <span class="tile-art locked-art" aria-hidden="true">🔒</span>
+          <span class="tile-title">Account system</span>
+          <span class="tile-meta">Firebase auth &amp; database</span>
+        </button>
+        <button class="tile" type="button" disabled aria-disabled="true">
+          <span class="tile-status">Coming soon</span>
+          <span class="tile-art locked-art" aria-hidden="true">🔒</span>
+          <span class="tile-title">Visual styling</span>
+          <span class="tile-meta">Formatting resources</span>
+        </button>
+        <button class="tile" type="button" disabled aria-disabled="true">
+          <span class="tile-status">Coming soon</span>
+          <span class="tile-art locked-art" aria-hidden="true">🔒</span>
+          <span class="tile-title">Instructions &amp; setup</span>
+          <span class="tile-meta">Guides and documentation</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="lower-row">
+      <div class="info-panel"><span class="info-icon" aria-hidden="true">⌘</span><div><strong>Quick navigation</strong><p>Use the arrow keys to move through available tiles. Press Enter to open, or Escape to return.</p></div></div>
+      <div class="info-panel"><span class="info-icon" aria-hidden="true">↗</span><div><strong>More workspaces soon</strong><p>New library entries will appear here when their source links are configured.</p></div></div>
     </div>
 
-    <script>
-        // ==========================================
-        // CONFIGURATION
-        // ==========================================
-        const SOURCE_FILES = [
-            {
-                id: 'source-html',
-                title: 'Source HTML',
-                meta: 'Main Case Form Structure',
-                icon: '📄',
-                url: 'https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/refs/heads/main/source.html'
-            },
-            {
-                id: 'account-js',
-                title: 'Coming soon',
-                meta: 'Firebase Auth & DB Logic',
-                icon: '🔐',
-                url: ''
-            },
-            {
-                id: 'style-css',
-                title: 'Coming soon',
-                meta: 'Visual Formatting',
-                icon: '🔐',
-                url: ''
-            },
-            {
-                id: 'readme',
-                title: 'Coming soon',
-                meta: 'Instructions & Setup',
-                icon: '🔐',
-                url: ''
-            }
-        ];
+    <footer class="footer"><span>CASE EVIDENCE PACKAGE</span><span>Personal workspace</span></footer>
+  </main>
 
-        // ==========================================
-        // LOGIC
-        // ==========================================
-        const carousel = document.getElementById('carousel');
-        const menuContainer = document.getElementById('menu-container');
-        const navControls = document.getElementById('navControls');
-        const loader = document.getElementById('loader');
-        
-        let currentIndex = 0;
-        const totalCards = SOURCE_FILES.length;
-        const cardAngle = 360 / totalCards;
-        const radius = Math.round((totalCards / 2) / Math.tan(Math.PI / totalCards)) + 150; 
+  <section class="viewer" id="viewer" aria-label="Workspace viewer" aria-hidden="true">
+    <div class="viewer-bar">
+      <span class="viewer-title" id="viewer-title">Workspace</span>
+      <button class="back" id="back-button" type="button">←&nbsp; Back to library</button>
+    </div>
+    <iframe id="content-frame" title="Selected workspace"></iframe>
+    <div class="loading" id="loading">Loading workspace…</div>
+  </section>
 
-        function initCarousel() {
-            SOURCE_FILES.forEach((file, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.index = index;
-                
-                const rotateY = index * cardAngle;
-                const translateZ = radius; 
-                
-                card.style.transform = `rotateY(${rotateY}deg) translateZ(${translateZ}px)`;
-                
-                card.innerHTML = `
-                    <div class="card-icon">${file.icon}</div>
-                    <div class="card-title">${file.title}</div>
-                    <div class="card-meta">${file.meta}</div>
-                `;
+  <script>
+    // Add a raw GitHub HTML URL here to activate a library tile.
+    const SOURCE_FILES = [
+      { id: 'source-html', title: 'Case Evidence Package', url: 'https://raw.githubusercontent.com/Seth12213443/Case-Evidence-Package/refs/heads/main/source.html' },
+      { id: 'account-js', title: 'Account system', url: '' },
+      { id: 'style-css', title: 'Visual styling', url: '' },
+      { id: 'readme', title: 'Instructions & setup', url: '' }
+    ];
 
-                card.addEventListener('click', () => {
-                    loadFile(SOURCE_FILES[index]);
-                });
+    const viewer = document.getElementById('viewer');
+    const iframe = document.getElementById('content-frame');
+    const loading = document.getElementById('loading');
+    const title = document.getElementById('viewer-title');
+    let activeIndex = 0;
 
-                carousel.appendChild(card);
-            });
-            
-            updateCarousel();
-            selectCard(0); 
-        }
+    function openSource(id) {
+      const file = SOURCE_FILES.find((item) => item.id === id);
+      if (!file || !file.url) return;
+      try {
+        const url = new URL(file.url);
+        if (url.protocol !== 'https:' || url.hostname !== 'raw.githubusercontent.com') return;
+      } catch { return; }
 
-        function updateCarousel() {
-            const rotateY = -(currentIndex * cardAngle);
-            carousel.style.transform = `rotateY(${rotateY}deg)`;
-        }
+      title.textContent = file.title;
+      loading.classList.add('show');
+      viewer.classList.add('open');
+      viewer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      iframe.src = file.url;
+    }
 
-        function rotate(direction) {
-            currentIndex += direction;
-            if (currentIndex >= totalCards) currentIndex = 0;
-            if (currentIndex < 0) currentIndex = totalCards - 1;
-            updateCarousel();
-        }
+    function closeViewer() {
+      viewer.classList.remove('open');
+      viewer.setAttribute('aria-hidden', 'true');
+      loading.classList.remove('show');
+      iframe.src = 'about:blank';
+      document.body.style.overflow = '';
+      document.querySelector('[data-open="source-html"]').focus();
+    }
 
-        function selectCard(index) {
-            currentIndex = index;
-            updateCarousel();
-        }
+    document.querySelectorAll('[data-open]').forEach((button) => {
+      button.addEventListener('click', () => openSource(button.dataset.open));
+    });
+    document.getElementById('back-button').addEventListener('click', closeViewer);
+    iframe.addEventListener('load', () => loading.classList.remove('show'));
+    document.getElementById('scroll-left').addEventListener('click', () => {
+      document.getElementById('library').scrollBy({ left: -260, behavior: 'smooth' });
+    });
+    document.getElementById('scroll-right').addEventListener('click', () => {
+      document.getElementById('library').scrollBy({ left: 260, behavior: 'smooth' });
+    });
 
-        async function loadFile(fileObj) {
-            showLoader(true);
-            
-            try {
-                const response = await fetch(fileObj.url);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
-                const htmlContent = await response.text();
-                
-                // Hide Menu Completely
-                menuContainer.style.display = 'none';
-                document.getElementById('main-header').style.display = 'none';
-                
-                // Clear Body completely
-                document.body.innerHTML = '';
-                
-                // Create an iframe to isolate the content
-                const iframe = document.createElement('iframe');
-                iframe.srcdoc = htmlContent;
-                iframe.style.width = '100%';
-                iframe.style.height = '100vh';
-                iframe.style.border = 'none';
-                iframe.style.background = '#fff'; // Default background for raw files
-                
-                document.body.appendChild(iframe);
-
-                // Add a "Back" button dynamically inside the content
-                const btn = document.createElement('button');
-                btn.className = 'sys-back-btn back-btn';
-                btn.innerText = '🔙 Return to Menu';
-                btn.onclick = returnToMenu;
-                iframe.contentWindow.document.body.appendChild(btn);
-
-                // Show the back button after a slight delay
-                setTimeout(() => {
-                    document.querySelector('.back-btn').style.display = 'block';
-                }, 100);
-
-            } catch (error) {
-                console.error("Error loading file:", error);
-                alert("Failed to load file. Check console.");
-                returnToMenu();
-            } finally {
-                showLoader(false);
-            }
-        }
-
-        function returnToMenu() {
-            // Rebuild the entire DOM structure
-            location.reload(); 
-        }
-
-        function showLoader(show) {
-            if (show) {
-                loader.classList.add('visible');
-            } else {
-                loader.classList.remove('visible');
-            }
-        }
-
-        // Keyboard Navigation
-        document.addEventListener('keydown', (e) => {
-            if (menuContainer.style.display === 'none') return; // Disable nav when in content
-            if (e.key === 'ArrowLeft') rotate(-1);
-            if (e.key === 'ArrowRight') rotate(1);
-        });
-
-        // Start
-        initCarousel();
-
-    </script>
+    document.addEventListener('keydown', (event) => {
+      if (viewer.classList.contains('open')) {
+        if (event.key === 'Escape') closeViewer();
+        return;
+      }
+      const available = Array.from(document.querySelectorAll('.tile:not(:disabled)'));
+      const current = document.activeElement.closest?.('.tile');
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        activeIndex = current ? available.indexOf(current) : 0;
+        activeIndex = (activeIndex + (event.key === 'ArrowRight' ? 1 : available.length - 1)) % available.length;
+        available[activeIndex].focus();
+      } else if (event.key === 'Enter' && current) {
+        current.click();
+      }
+    });
+  </script>
 </body>
 </html>
