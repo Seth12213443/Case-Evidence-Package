@@ -226,7 +226,7 @@
       loading.classList.add('show');
 
       try {
-        const dashboardHtml = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;
+        const dashboardHtml = '<!DOCTYPE html>' + document.documentElement.outerHTML;
         sessionStorage.setItem(dashboardStorageKey, dashboardHtml);
 
         const response = await fetch(url.href, { cache: 'no-store' });
@@ -292,10 +292,6 @@
     });
 
     document.addEventListener('keydown', (event) => {
-      if (viewer.classList.contains('open')) {
-        if (event.key === 'Escape') closeViewer();
-        return;
-      }
       const available = Array.from(document.querySelectorAll('.tile:not(:disabled)'));
       const current = document.activeElement.closest?.('.tile');
       if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
