@@ -227,7 +227,8 @@
     const iframe = document.getElementById('content-frame');
     const loading = document.getElementById('loading');
     const title = document.getElementById('viewer-title');
-    let activeIndex = 0;\n    let waitingForFrame = false;
+    let activeIndex = 0;
+    let waitingForFrame = false;
 
     async function openSource(id) {
       const file = SOURCE_FILES.find((item) => item.id === id);
@@ -246,7 +247,7 @@
       viewer.classList.add('open');
       viewer.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
-      iframe.src = 'about:blank';
+      waitingForFrame = true;
 
       try {
         const response = await fetch(url.href, { cache: 'no-store' });
@@ -254,13 +255,14 @@
         let html = await response.text();
         const baseUrl = new URL('.', url.href).href;
         const baseTag = '<base href="' + baseUrl + '">';
-        if (/<head\\b[^>]*>/i.test(html)) {
-          html = html.replace(/<head\\b[^>]*>/i, (head) => head + baseTag);
+        if (/<head\b[^>]*>/i.test(html)) {
+          html = html.replace(/<head\b[^>]*>/i, (head) => head + baseTag);
         } else {
           html = '<head>' + baseTag + '</head>' + html;
         }
         iframe.srcdoc = html;
       } catch (error) {
+        waitingForFrame = false;
         console.error('Could not load workspace:', error);
         loading.textContent = 'Could not load this workspace. Check your connection, then select the card to try again.';
         loading.classList.add('error');
@@ -270,7 +272,8 @@
     function closeViewer() {
       viewer.classList.remove('open');
       viewer.setAttribute('aria-hidden', 'true');
-      loading.classList.remove('show');
+      loading.classList.remove('show', 'error');
+      waitingForFrame = false;
       iframe.src = 'about:blank';
       document.body.style.overflow = '';
       document.querySelector('[data-open="source-html"]').focus();
