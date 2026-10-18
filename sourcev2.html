@@ -227,7 +227,7 @@
     const iframe = document.getElementById('content-frame');
     const loading = document.getElementById('loading');
     const title = document.getElementById('viewer-title');
-    let activeIndex = 0;
+    let activeIndex = 0;\n    let waitingForFrame = false;
 
     async function openSource(id) {
       const file = SOURCE_FILES.find((item) => item.id === id);
@@ -280,7 +280,7 @@
       button.addEventListener('click', () => openSource(button.dataset.open));
     });
     document.getElementById('back-button').addEventListener('click', closeViewer);
-    iframe.addEventListener('load', () => {\n      loading.classList.remove('show', 'error');\n      loading.textContent = 'Loading workspace…';\n    });
+    iframe.addEventListener('load', () => {\n      if (!waitingForFrame) return;\n      waitingForFrame = false;\n      loading.classList.remove('show', 'error');\n      loading.textContent = 'Loading workspace…';\n    });
     document.getElementById('scroll-left').addEventListener('click', () => {
       document.getElementById('library').scrollBy({ left: -260, behavior: 'smooth' });
     });
