@@ -283,7 +283,12 @@
       button.addEventListener('click', () => openSource(button.dataset.open));
     });
     document.getElementById('back-button').addEventListener('click', closeViewer);
-    iframe.addEventListener('load', () => {\n      if (!waitingForFrame) return;\n      waitingForFrame = false;\n      loading.classList.remove('show', 'error');\n      loading.textContent = 'Loading workspace…';\n    });
+    iframe.addEventListener('load', () => {
+      if (!waitingForFrame) return;
+      waitingForFrame = false;
+      loading.classList.remove('show', 'error');
+      loading.textContent = 'Loading workspace…';
+    });
     document.getElementById('scroll-left').addEventListener('click', () => {
       document.getElementById('library').scrollBy({ left: -260, behavior: 'smooth' });
     });
