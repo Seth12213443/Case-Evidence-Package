@@ -1,1 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <title>PDF to HTML Converter</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090b12;
+      --panel: #151923;
+      --panel-raised: #1c2230;
+      --line: rgba(255,255,255,.12);
+      --text: #f4f5f8;
+      --muted: #a5a9b5;
+      --accent: #8cf4ce;
+      --danger: #ffaaa7;
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--text);
+      background: radial-gradient(ellipse at 80% 0%, rgba(73,112,126,.2), transparent 38rem), var(--bg);
+    }
+    button, input { font: inherit; }
+    .topbar {
+      height: 72px; display:flex; align-items:center; justify-content:space-between;
+      padding:0 clamp(20px,5vw,76px); border-bottom:1px solid rgba(255,255,255,.07);
+      background:rgba(9,11,18,.72);
+    }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:750; letter-spacing:.03em; font-size:13px; }
+    .mark { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; background:var(--accent); color:#08120f; font-size:17px; }
+    .top-note { color:var(--muted); font-size:12px; }
+    main { width:min(1040px,100%); margin:0 auto; padding:44px clamp(20px,5vw,60px) 60px; }
+    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:.18em; font-size:11px; font-weight:800; }
+    h1 { margin:10px 0 9px; font-size:clamp(32px,5vw,48px); line-height:1.05; letter-spacing:-.045em; }
+    .intro { color:var(--muted); max-width:650px; line-height:1.6; font-size:14px; margin:0 0 28px; }
+    .workspace { padding:clamp(18px,3vw,30px); border:1px solid var(--line); border-radius:20px; background:rgba(21,25,35,.88); box-shadow:0 25px 80px rgba(0,0,0,.22); }
+    .dropzone {
+      min-height:220px; display:grid; place-items:center; text-align:center; padding:25px;
+      border:1px dashed rgba(140,244,206,.43); border-radius:15px;
+      background:linear-gradient(145deg,rgba(140,244,206,.045),rgba(158,168,255,.035));
+      transition:background .18s,border-color .18s;
+    }
+    .dropzone.dragover { background:rgba(140,244,206,.1); border-color:var(--accent); }
+    .upload-icon { font-size:32px; color:var(--accent); margin-bottom:10px; }
+    .drop-title { font-size:16px; font-weight:750; }
+    .drop-copy { margin:7px 0 16px; color:var(--muted); font-size:12px; }
+    .button {
+      border:0; border-radius:9px; padding:11px 16px; background:var(--accent); color:#08130f;
+      font-weight:800; cursor:pointer; transition:filter .18s,transform .18s;
+    }
+    .button:hover:not(:disabled) { filter:brightness(1.06); transform:translateY(-1px); }
+    .button:disabled { opacity:.48; cursor:not-allowed; }
+    .button.secondary { background:var(--panel-raised); color:var(--text); border:1px solid var(--line); }
+    .button.secondary:hover:not(:disabled) { border-color:rgba(140,244,206,.5); color:var(--accent); }
+    .file-input { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .file-summary { display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-top:16px; padding:15px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.025); }
+    .file-summary.visible { display:flex; }
+    .file-name { font-size:13px; font-weight:700; overflow-wrap:anywhere; }
+    .file-size { margin-top:4px; color:var(--muted); font-size:11px; }
+    .actions { display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
+    .status { min-height:22px; margin:16px 0 0; color:var(--muted); font-size:12px; }
+    .status.error { color:var(--danger); }
+    progress { display:none; width:100%; height:8px; margin-top:8px; appearance:none; border:0; border-radius:99px; overflow:hidden; background:#2a3040; }
+    progress.visible { display:block; }
+    progress::-webkit-progress-bar { background:#2a3040; }
+    progress::-webkit-progress-value { background:var(--accent); border-radius:99px; }
+    progress::-moz-progress-bar { background:var(--accent); border-radius:99px; }
+    .privacy { display:flex; align-items:flex-start; gap:10px; margin-top:17px; color:#9da4b2; font-size:11px; line-height:1.55; }
+    .privacy span:first-child { color:var(--accent); }
+    .result { display:none; margin-top:30px; }
+    .result.visible { display:block; }
+    .result-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; margin-bottom:14px; }
+    .result-title { font-size:17px; font-weight:750; }
+    .result-meta { color:var(--muted); font-size:11px; margin-top:4px; }
+    .preview { display:grid; gap:18px; justify-items:center; padding:18px; border:1px solid var(--line); border-radius:14px; background:#0d1018; }
+    .preview-page { width:min(100%,650px); background:white; box-shadow:0 10px 35px rgba(0,0,0,.35); }
+    .preview-page img { width:100%; height:auto; display:block; }
+    .preview-page figcaption { background:#151923; color:#c3c8d2; padding:8px 11px; font-size:10px; }
+    .limitations { margin:13px 0 0; color:#858c99; font-size:11px; line-height:1.55; }
+    @media(max-width:600px) {
+      .topbar { height:62px; } .top-note { display:none; }
+      main { padding-top:30px; } .dropzone { min-height:190px; }
+      .file-summary { align-items:flex-start; } .actions { width:100%; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*:before,*:after { transition:none !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark" aria-hidden="true">✦</span><span>CASE EVIDENCE PACKAGE</span></div>
+    <div class="top-note">PDF CONVERTER</div>
+  </header>
 
+  <main>
+    <div class="eyebrow">Document tools</div>
+    <h1>PDF to HTML</h1>
+    <p class="intro">Turn a PDF into a standalone HTML file with the original pages preserved as printable sheets, ready to open in a browser or keep with your case package.</p>
+
+    <section class="workspace" aria-label="Convert a PDF">
+      <div class="dropzone" id="dropzone">
+        <div>
+          <div class="upload-icon" aria-hidden="true">⇧</div>
+          <div class="drop-title">Drop a PDF here</div>
+          <p class="drop-copy">or choose a file from your device</p>
+          <button class="button secondary" id="choose-file" type="button">Choose PDF</button>
+        </div>
+      </div>
+      <input class="file-input" id="file-input" type="file" accept="application/pdf,.pdf">
+      <div class="file-summary" id="file-summary">
+        <div><div class="file-name" id="file-name"></div><div class="file-size" id="file-size"></div></div>
+        <div class="actions">
+          <button class="button secondary" id="clear-file" type="button">Choose another</button>
+          <button class="button" id="convert" type="button">Convert to HTML</button>
+        </div>
+      </div>
+      <div class="status" id="status" role="status" aria-live="polite">Select a PDF to get started.</div>
+      <progress id="progress" max="1" value="0" aria-label="Conversion progress"></progress>
+      <div class="privacy"><span aria-hidden="true">●</span><span>Your PDF is processed in this browser and is not uploaded. Conversion uses Mozilla PDF.js loaded from a public CDN.</span></div>
+    </section>
+
+    <section class="result" id="result" aria-labelledby="result-title">
+      <div class="result-head">
+        <div><div class="result-title" id="result-title">HTML preview</div><div class="result-meta" id="result-meta"></div></div>
+        <a class="button" id="download" download="converted-document.html">Download HTML</a>
+      </div>
+      <div class="preview" id="preview"></div>
+      <p class="limitations">The exported file preserves each page visually as an image. Text and form fields from the PDF are not editable in this first version.</p>
+    </section>
+  </main>
+
+  <script type="module">
+    const PDFJS_VERSION = '6.3.289';
+    const PDFJS_MODULE = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@' + PDFJS_VERSION + '/build/pdf.mjs';
+    const PDFJS_WORKER = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@' + PDFJS_VERSION + '/build/pdf.worker.mjs';
+
+    const fileInput = document.getElementById('file-input');
+    const chooseButton = document.getElementById('choose-file');
+    const clearButton = document.getElementById('clear-file');
+    const convertButton = document.getElementById('convert');
+    const fileSummary = document.getElementById('file-summary');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const dropzone = document.getElementById('dropzone');
+    const status = document.getElementById('status');
+    const progress = document.getElementById('progress');
+    const result = document.getElementById('result');
+    const resultMeta = document.getElementById('result-meta');
+    const preview = document.getElementById('preview');
+    const download = document.getElementById('download');
+
+    let selectedFile = null;
+    let downloadUrl = null;
+    let busy = false;
+
+    function formatBytes(bytes) {
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function setStatus(message, isError = false) {
+      status.textContent = message;
+      status.classList.toggle('error', isError);
+    }
+
+    function setFile(file) {
+      if (!file) return;
+      if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
+        setStatus('Please choose a PDF file.', true);
+        return;
+      }
+      selectedFile = file;
+      fileName.textContent = file.name;
+      fileSize.textContent = formatBytes(file.size);
+      fileSummary.classList.add('visible');
+      dropzone.hidden = true;
+      convertButton.disabled = false;
+      result.classList.remove('visible');
+      setStatus('Ready to convert.');
+    }
+
+    function resetFile() {
+      if (busy) return;
+      selectedFile = null;
+      fileInput.value = '';
+      fileSummary.classList.remove('visible');
+      dropzone.hidden = false;
+      result.classList.remove('visible');
+      preview.replaceChildren();
+      progress.classList.remove('visible');
+      progress.value = 0;
+      if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+      downloadUrl = null;
+      download.removeAttribute('href');
+      setStatus('Select a PDF to get started.');
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
+    }
+
+    function buildHtml(title, pages) {
+      const pageMarkup = pages.map((page, index) =>
+        '<article class="page"><img src="' + page.dataUrl + '" alt="Page ' + (index + 1) + ' of ' + escapeHtml(title) + '"></article>'
+      ).join('\n');
+      return '<!doctype html>\n' +
+        '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+        '<title>' + escapeHtml(title) + ' — Converted PDF</title><style>' +
+        '*{box-sizing:border-box}html{background:#e8e9ec}body{margin:0;padding:24px 12px;background:#e8e9ec;color:#161616;font-family:Arial,sans-serif}' +
+        '.page{width:min(8.5in,100%);margin:0 auto 24px;background:#fff;box-shadow:0 5px 24px rgba(0,0,0,.18);break-after:page;page-break-after:always}' +
+        '.page:last-child{break-after:auto;page-break-after:auto}.page img{display:block;width:100%;height:auto}' +
+        '@media print{html,body{background:#fff}.page{width:100%;margin:0;box-shadow:none;break-after:page;page-break-after:always}.page:last-child{break-after:auto;page-break-after:auto}}' +
+        '</style></head><body>' + pageMarkup + '</body></html>';
+    }
+
+    async function convertPdf() {
+      if (!selectedFile || busy) return;
+      busy = true;
+      convertButton.disabled = true;
+      chooseButton.disabled = true;
+      clearButton.disabled = true;
+      result.classList.remove('visible');
+      preview.replaceChildren();
+      progress.classList.add('visible');
+      progress.value = 0;
+      progress.max = 1;
+      setStatus('Loading the PDF converter…');
+
+      let pdfDocument;
+      try {
+        const pdfjsLib = await import(PDFJS_MODULE);
+        pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+        const bytes = new Uint8Array(await selectedFile.arrayBuffer());
+        pdfDocument = await pdfjsLib.getDocument({ data: bytes }).promise;
+        const pages = [];
+        progress.max = pdfDocument.numPages;
+        setStatus('Converting ' + pdfDocument.numPages + ' page' + (pdfDocument.numPages === 1 ? '' : 's') + '…');
+
+        for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber += 1) {
+          const page = await pdfDocument.getPage(pageNumber);
+          const initialViewport = page.getViewport({ scale: 1 });
+          const scale = Math.min(2, 1800 / Math.max(initialViewport.width, initialViewport.height));
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.ceil(viewport.width);
+          canvas.height = Math.ceil(viewport.height);
+          const context = canvas.getContext('2d', { alpha: false });
+          context.fillStyle = '#ffffff';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          await page.render({ canvas, canvasContext: context, viewport }).promise;
+          const dataUrl = canvas.toDataURL('image/png');
+          pages.push({ dataUrl });
+
+          const image = document.createElement('img');
+          image.src = dataUrl;
+          image.alt = 'Page ' + pageNumber + ' of ' + selectedFile.name;
+          const figure = document.createElement('figure');
+          figure.className = 'preview-page';
+          const caption = document.createElement('figcaption');
+          caption.textContent = 'Page ' + pageNumber;
+          figure.append(image, caption);
+          preview.appendChild(figure);
+
+          progress.value = pageNumber;
+          setStatus('Converted page ' + pageNumber + ' of ' + pdfDocument.numPages + '…');
+          page.cleanup();
+        }
+
+        const html = buildHtml(selectedFile.name.replace(/\.pdf$/i, ''), pages);
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+        downloadUrl = URL.createObjectURL(blob);
+        download.href = downloadUrl;
+        download.download = selectedFile.name.replace(/\.pdf$/i, '') + '.html';
+        resultMeta.textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's') + ' · ' + formatBytes(blob.size) + ' HTML';
+        result.classList.add('visible');
+        setStatus('Conversion complete. Preview the pages or download the HTML file.');
+      } catch (error) {
+        console.error('PDF conversion failed:', error);
+        let message = 'Could not convert this PDF. Try another file.';
+        if (error && error.name === 'PasswordException') message = 'This PDF is password-protected. Remove its password and try again.';
+        else if (error && /worker/i.test(error.message || '')) message = 'The PDF engine could not start. Check your connection and reload this page.';
+        setStatus(message, true);
+      } finally {
+        if (pdfDocument) await pdfDocument.destroy();
+        busy = false;
+        convertButton.disabled = !selectedFile;
+        chooseButton.disabled = false;
+        clearButton.disabled = false;
+        progress.classList.remove('visible');
+      }
+    }
+
+    chooseButton.addEventListener('click', () => fileInput.click());
+    clearButton.addEventListener('click', resetFile);
+    convertButton.addEventListener('click', convertPdf);
+    fileInput.addEventListener('change', () => setFile(fileInput.files[0]));
+
+    for (const eventName of ['dragenter', 'dragover']) {
+      dropzone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+    }
+    for (const eventName of ['dragleave', 'drop']) {
+      dropzone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropzone.classList.remove('dragover');
+      });
+    }
+    dropzone.addEventListener('drop', (event) => setFile(event.dataTransfer.files[0]));
+  </script>
+</body>
+</html>
