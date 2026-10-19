@@ -97,7 +97,7 @@
   <main>
     <div class="eyebrow">Document tools</div>
     <h1>PDF to HTML</h1>
-    <p class="intro">Turn a PDF into a standalone HTML file with the original pages preserved as printable sheets, ready to open in a browser or keep with your case package.</p>
+    <p class="intro">Turn a PDF into a standalone HTML file that preserves the original page appearance and adds editable inputs over detected blank lines and empty boxes.</p>
 
     <section class="workspace" aria-label="Convert a PDF">
       <div class="dropzone" id="dropzone">
@@ -127,7 +127,7 @@
         <a class="button" id="download" download="converted-document.html">Download HTML</a>
       </div>
       <div class="preview" id="preview"></div>
-      <p class="limitations">The exported file preserves each page visually as an image. Text and form fields from the PDF are not editable in this first version.</p>
+      <p class="limitations">The page artwork stays visually faithful. Detected blank lines and empty boxes become editable fields; existing printed text remains part of the page image.</p>
     </section>
   </main>
 
@@ -203,16 +203,196 @@
       })[char]);
     }
 
+    function escapeAttribute(value) {
+      return escapeHtml(value).replace(/\`/g, '&#96;');
+    }
+
+    function multiplyMatrices(left, right) {
+      return [
+        left[0] * right[0] + left[2] * right[1],
+        left[1] * right[0] + left[3] * right[1],
+        left[0] * right[2] + left[2] * right[3],
+        left[1] * right[2] + left[3] * right[3],
+        left[0] * right[4] + left[2] * right[5] + left[4],
+        left[1] * right[4] + left[3] * right[5] + left[5]
+      ];
+    }
+
+    function mapPoint(matrix, x, y) {
+      return { x: matrix[0] * x + matrix[2] * y + matrix[4], y: matrix[1] * x + matrix[3] * y + matrix[5] };
+    }
+
+    function makeRectField(rect, pageWidth, pageHeight, type = 'textarea') {
+      const left = Math.min(rect.x1, rect.x2);
+      const top = Math.min(rect.y1, rect.y2);
+      const width = Math.abs(rect.x2 - rect.x1);
+      const height = Math.abs(rect.y2 - rect.y1);
+      if (width < 1 || height < 1) return null;
+      return { type, x: left, y: top, width, height, pageWidth, pageHeight, value: '' };
+    }
+
+    function findTextAndLineFields(pdfjsLib, page, viewport, textContent) {
+      const items = [];
+      const textFields = [];
+      for (const item of textContent.items) {
+        if (!item.str || !item.str.trim()) continue;
+        const matrix = pdfjsLib.Util.transform(viewport.transform, item.transform);
+        const height = Math.hypot(matrix[2], matrix[3]);
+        const width = Math.max(1, item.width * viewport.scale);
+        const entry = {
+          text: item.str,
+          x: matrix[4],
+          y: matrix[5] - height * 0.88,
+          width,
+          height: Math.max(height, 12)
+        };
+        items.push(entry);
+
+        const matches = item.str.matchAll(/_{3,}/g);
+        for (const match of matches) {
+          const ratioStart = match.index / item.str.length;
+          const ratioWidth = match[0].length / item.str.length;
+          const field = makeRectField({
+            x1: entry.x + entry.width * ratioStart,
+            y1: entry.y,
+            x2: entry.x + entry.width * (ratioStart + ratioWidth),
+            y2: entry.y + entry.height * 1.25
+          }, viewport.width, viewport.height, 'line');
+          if (field && field.width >= 18) textFields.push(field);
+        }
+      }
+
+      const pageTextBounds = items.filter((item) => !/^_+$/.test(item.text.trim()));
+      const unoccupied = (rect) => {
+        const area = rect.width * rect.height;
+        return !pageTextBounds.some((item) => {
+          const overlapWidth = Math.max(0, Math.min(rect.x + rect.width, item.x + item.width) - Math.max(rect.x, item.x));
+          const overlapHeight = Math.max(0, Math.min(rect.y + rect.height, item.y + item.height) - Math.max(rect.y, item.y));
+          return (overlapWidth * overlapHeight) / area > 0.08;
+        });
+      };
+
+      return { items, textFields: textFields.filter(unoccupied), unoccupied };
+    }
+
+    async function findEmptyBoxFields(pdfjsLib, page, viewport, textInfo) {
+      const annotations = await page.getAnnotations({ intent: 'display' });
+      const fields = [];
+      for (const annotation of annotations) {
+        if (annotation.subtype !== 'Widget' || annotation.fieldType !== 'Tx' || String(annotation.fieldValue || '').trim()) continue;
+        const rect = viewport.convertToViewportRectangle(annotation.rect);
+        const field = makeRectField({ x1: rect[0], y1: rect[1], x2: rect[2], y2: rect[3] }, viewport.width, viewport.height, 'textarea');
+        if (field && field.width >= 28 && field.height >= 14) fields.push(field);
+      }
+
+      const operatorList = await page.getOperatorList({ intent: 'display' });
+      const OPS = pdfjsLib.OPS;
+      let ctm = [1, 0, 0, 1, 0, 0];
+      const stack = [];
+      const viewMatrix = viewport.transform;
+      const pathCandidates = [];
+
+      function addPdfRect(x, y, width, height) {
+        const matrix = multiplyMatrices(viewMatrix, ctm);
+        const points = [
+          mapPoint(matrix, x, y),
+          mapPoint(matrix, x + width, y),
+          mapPoint(matrix, x, y + height),
+          mapPoint(matrix, x + width, y + height)
+        ];
+        const xs = points.map((point) => point.x);
+        const ys = points.map((point) => point.y);
+        pathCandidates.push({
+          x: Math.min(...xs), y: Math.min(...ys),
+          width: Math.max(...xs) - Math.min(...xs),
+          height: Math.max(...ys) - Math.min(...ys)
+        });
+      }
+
+      for (let index = 0; index < operatorList.fnArray.length; index += 1) {
+        const operation = operatorList.fnArray[index];
+        const args = operatorList.argsArray[index] || [];
+        if (operation === OPS.save) {
+          stack.push(ctm.slice());
+        } else if (operation === OPS.restore) {
+          ctm = stack.pop() || [1, 0, 0, 1, 0, 0];
+        } else if (operation === OPS.transform && args.length >= 6) {
+          ctm = multiplyMatrices(ctm, args.slice(0, 6));
+        } else if (operation === OPS.constructPath) {
+          const pathOps = args[0] || [];
+          const coordinates = args[1] || [];
+          let coordinateIndex = 0;
+          for (const pathOperation of pathOps) {
+            if (pathOperation === OPS.rectangle) {
+              const x = coordinates[coordinateIndex];
+              const y = coordinates[coordinateIndex + 1];
+              const width = coordinates[coordinateIndex + 2];
+              const height = coordinates[coordinateIndex + 3];
+              coordinateIndex += 4;
+              if ([x, y, width, height].every(Number.isFinite)) addPdfRect(x, y, width, height);
+            } else if (pathOperation === OPS.moveTo || pathOperation === OPS.lineTo) {
+              coordinateIndex += 2;
+            } else if (pathOperation === OPS.curveTo) {
+              coordinateIndex += 6;
+            } else if (pathOperation === OPS.curveTo2 || pathOperation === OPS.curveTo3) {
+              coordinateIndex += 4;
+            }
+          }
+        }
+      }
+
+      const deduped = [];
+      for (const rect of pathCandidates) {
+        if (rect.width < 42 || rect.height < 16 || rect.width > viewport.width * 0.92 || rect.height > viewport.height * 0.55) continue;
+        const field = makeRectField({ x1: rect.x, y1: rect.y, x2: rect.x + rect.width, y2: rect.y + rect.height }, viewport.width, viewport.height, 'textarea');
+        if (!field || !textInfo.unoccupied(field)) continue;
+        const duplicate = deduped.some((other) => {
+          const overlapW = Math.max(0, Math.min(field.x + field.width, other.x + other.width) - Math.max(field.x, other.x));
+          const overlapH = Math.max(0, Math.min(field.y + field.height, other.y + other.height) - Math.max(field.y, other.y));
+          return overlapW * overlapH / Math.min(field.width * field.height, other.width * other.height) > 0.82;
+        });
+        if (!duplicate) deduped.push(field);
+      }
+
+      for (const field of fields) {
+        const duplicate = deduped.some((other) => {
+          const overlapW = Math.max(0, Math.min(field.x + field.width, other.x + other.width) - Math.max(field.x, other.x));
+          const overlapH = Math.max(0, Math.min(field.y + field.height, other.y + other.height) - Math.max(field.y, other.y));
+          return overlapW * overlapH / Math.min(field.width * field.height, other.width * other.height) > 0.82;
+        });
+        if (!duplicate) deduped.push(field);
+      }
+      return deduped;
+    }
+
+    function fieldMarkup(field, index, pageNumber) {
+      const left = (field.x / field.pageWidth) * 100;
+      const top = (field.y / field.pageHeight) * 100;
+      const width = (field.width / field.pageWidth) * 100;
+      const height = (field.height / field.pageHeight) * 100;
+      const label = 'Page ' + pageNumber + ', blank ' + (index + 1);
+      const style = 'left:' + left.toFixed(4) + '%;top:' + top.toFixed(4) + '%;width:' + width.toFixed(4) + '%;height:' + height.toFixed(4) + '%;';
+      if (field.type === 'line') {
+        return '<input class="fillable line" type="text" aria-label="' + escapeAttribute(label) + '" value="' + escapeAttribute(field.value) + '" style="' + style + '">';
+      }
+      return '<textarea class="fillable" aria-label="' + escapeAttribute(label) + '" style="' + style + '">' + escapeHtml(field.value) + '</textarea>';
+    }
+
     function buildHtml(title, pages) {
-      const pageMarkup = pages.map((page, index) =>
-        '<article class="page"><img src="' + page.dataUrl + '" alt="Page ' + (index + 1) + ' of ' + escapeHtml(title) + '"></article>'
-      ).join('\n');
+      const pageMarkup = pages.map((page, index) => {
+        const fields = page.fields.map((field, fieldIndex) => fieldMarkup(field, fieldIndex, index + 1)).join('');
+        return '<article class="page"><div class="sheet" style="aspect-ratio:' + page.width + '/' + page.height + '">' +
+          '<img src="' + page.dataUrl + '" alt="Page ' + (index + 1) + ' of ' + escapeAttribute(title) + '">' + fields +
+          '</div></article>';
+      }).join('\n');
       return '<!doctype html>\n' +
         '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
         '<title>' + escapeHtml(title) + ' — Converted PDF</title><style>' +
         '*{box-sizing:border-box}html{background:#e8e9ec}body{margin:0;padding:24px 12px;background:#e8e9ec;color:#161616;font-family:Arial,sans-serif}' +
         '.page{width:min(8.5in,100%);margin:0 auto 24px;background:#fff;box-shadow:0 5px 24px rgba(0,0,0,.18);break-after:page;page-break-after:always}' +
-        '.page:last-child{break-after:auto;page-break-after:auto}.page img{display:block;width:100%;height:auto}' +
+        '.page:last-child{break-after:auto;page-break-after:auto}.sheet{position:relative;width:100%;overflow:hidden;background:#fff}.sheet>img{position:absolute;inset:0;width:100%;height:100%;display:block}' +
+        '.fillable{position:absolute;z-index:1;min-width:0;min-height:0;padding:1px 3px;color:#171717;font:12px Arial,sans-serif;background:rgba(255,255,255,.96);border:1px solid #62727b;border-radius:2px}' +
+        '.fillable.line{border:0;border-bottom:1px solid #29363b;border-radius:0}textarea.fillable{resize:none}' +
         '@media print{html,body{background:#fff}.page{width:100%;margin:0;box-shadow:none;break-after:page;page-break-after:always}.page:last-child{break-after:auto;page-break-after:auto}}' +
         '</style></head><body>' + pageMarkup + '</body></html>';
     }
@@ -245,6 +425,12 @@
           const initialViewport = page.getViewport({ scale: 1 });
           const scale = Math.min(2, 1800 / Math.max(initialViewport.width, initialViewport.height));
           const viewport = page.getViewport({ scale });
+          const [textContent, annotations] = await Promise.all([
+            page.getTextContent(),
+            page.getAnnotations({ intent: 'display' })
+          ]);
+          const textInfo = findTextAndLineFields(pdfjsLib, page, viewport, textContent);
+          const fields = await findEmptyBoxFields(pdfjsLib, page, viewport, textInfo);
           const canvas = document.createElement('canvas');
           canvas.width = Math.ceil(viewport.width);
           canvas.height = Math.ceil(viewport.height);
@@ -253,20 +439,40 @@
           context.fillRect(0, 0, canvas.width, canvas.height);
           await page.render({ canvas, canvasContext: context, viewport }).promise;
           const dataUrl = canvas.toDataURL('image/png');
-          pages.push({ dataUrl });
+          const pageData = { dataUrl, width: canvas.width, height: canvas.height, fields };
+          pages.push(pageData);
 
+          const figure = document.createElement('figure');
+          figure.className = 'preview-page';
+          const sheet = document.createElement('div');
+          sheet.className = 'preview-sheet';
+          sheet.style.aspectRatio = canvas.width + ' / ' + canvas.height;
           const image = document.createElement('img');
           image.src = dataUrl;
           image.alt = 'Page ' + pageNumber + ' of ' + selectedFile.name;
-          const figure = document.createElement('figure');
-          figure.className = 'preview-page';
+          sheet.appendChild(image);
+
+          fields.forEach((field, fieldIndex) => {
+            const fieldElement = document.createElement(field.type === 'line' ? 'input' : 'textarea');
+            fieldElement.className = 'fillable' + (field.type === 'line' ? ' line' : '');
+            fieldElement.setAttribute('aria-label', 'Page ' + pageNumber + ', blank ' + (fieldIndex + 1));
+            if (field.type === 'line') fieldElement.type = 'text';
+            const left = (field.x / field.pageWidth) * 100;
+            const top = (field.y / field.pageHeight) * 100;
+            const width = (field.width / field.pageWidth) * 100;
+            const height = (field.height / field.pageHeight) * 100;
+            fieldElement.style.cssText = 'left:' + left + '%;top:' + top + '%;width:' + width + '%;height:' + height + '%;';
+            fieldElement.addEventListener('input', () => { field.value = fieldElement.value; });
+            sheet.appendChild(fieldElement);
+          });
+
           const caption = document.createElement('figcaption');
-          caption.textContent = 'Page ' + pageNumber;
-          figure.append(image, caption);
+          caption.textContent = 'Page ' + pageNumber + ' · ' + fields.length + ' fillable blank' + (fields.length === 1 ? '' : 's');
+          figure.append(sheet, caption);
           preview.appendChild(figure);
 
           progress.value = pageNumber;
-          setStatus('Converted page ' + pageNumber + ' of ' + pdfDocument.numPages + '…');
+          setStatus('Converted page ' + pageNumber + ' of ' + pdfDocument.numPages + ' · ' + fields.length + ' blank' + (fields.length === 1 ? '' : 's') + ' detected.');
           page.cleanup();
         }
 
