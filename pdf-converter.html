@@ -269,16 +269,26 @@
       }
 
       const pageTextBounds = items.filter((item) => !/^_+$/.test(item.text.trim()));
-      const unoccupied = (rect) => {
+      const overlappingText = (rect) => {
         const area = rect.width * rect.height;
-        return !pageTextBounds.some((item) => {
+        return pageTextBounds.filter((item) => {
           const overlapWidth = Math.max(0, Math.min(rect.x + rect.width, item.x + item.width) - Math.max(rect.x, item.x));
           const overlapHeight = Math.max(0, Math.min(rect.y + rect.height, item.y + item.height) - Math.max(rect.y, item.y));
-          return (overlapWidth * overlapHeight) / area > 0.08;
+          return (overlapWidth * overlapHeight) / area > 0.04;
         });
       };
+      const unoccupied = (rect) => overlappingText(rect).length === 0;
+      const emptyBoxArea = (rect) => {
+        const labels = overlappingText(rect);
+        if (!labels.length) return rect;
+        if (!labels.every((item) => item.y + item.height <= rect.y + rect.height * 0.42)) return null;
+        const top = Math.max(...labels.map((item) => item.y + item.height)) + 3;
+        const bottom = rect.y + rect.height - 3;
+        if (bottom - top < 16) return null;
+        return { ...rect, y: top, height: bottom - top };
+      };
 
-      return { items, textFields: textFields.filter(unoccupied), unoccupied };
+      return { items, textFields: textFields.filter(unoccupied), unoccupied, emptyBoxArea };
     }
 
     async function findEmptyBoxFields(pdfjsLib, page, viewport, textInfo) {
@@ -353,8 +363,9 @@
       const deduped = [];
       for (const rect of pathCandidates) {
         if (rect.width < 42 || rect.height < 16 || rect.width > viewport.width * 0.92 || rect.height > viewport.height * 0.55) continue;
-        const field = makeRectField({ x1: rect.x, y1: rect.y, x2: rect.x + rect.width, y2: rect.y + rect.height }, viewport.width, viewport.height, 'textarea');
-        if (!field || !textInfo.unoccupied(field)) continue;
+        const rawField = makeRectField({ x1: rect.x, y1: rect.y, x2: rect.x + rect.width, y2: rect.y + rect.height }, viewport.width, viewport.height, 'textarea');
+        const field = rawField && textInfo.emptyBoxArea(rawField);
+        if (!field) continue;
         const duplicate = deduped.some((other) => {
           const overlapW = Math.max(0, Math.min(field.x + field.width, other.x + other.width) - Math.max(field.x, other.x));
           const overlapH = Math.max(0, Math.min(field.y + field.height, other.y + other.height) - Math.max(field.y, other.y));
@@ -492,9 +503,10 @@
         downloadUrl = URL.createObjectURL(blob);
         download.href = downloadUrl;
         download.download = convertedTitle + '.html';
-        resultMeta.textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's') + ' · ' + formatBytes(blob.size) + ' HTML';
+        const fieldCount = pages.reduce((total, page) => total + page.fields.length, 0);
+        resultMeta.textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's') + ' · ' + fieldCount + ' fillable blank' + (fieldCount === 1 ? '' : 's') + ' · ' + formatBytes(blob.size) + ' HTML';
         result.classList.add('visible');
-        setStatus('Conversion complete. Preview the pages or download the HTML file.');
+        setStatus('Conversion complete. Review the detected blanks, fill any fields, then download the HTML file.');
       } catch (error) {
         console.error('PDF conversion failed:', error);
         let message = 'Could not convert this PDF. Try another file.';
