@@ -3425,6 +3425,7 @@ setInterval(renumberPages, 10000);
       fileSummary.classList.remove('visible');
       dropzone.hidden = false;
       result.classList.remove('visible');
+      result.hidden = true;
       emptyState.hidden = false;
       preview.replaceChildren();
       progress.classList.remove('visible');
@@ -3738,6 +3739,7 @@ setInterval(renumberPages, 10000);
         const fieldCount = pages.reduce((total, page) => total + page.fields.length, 0);
         resultMeta.textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's') + ' · ' + fieldCount + ' fillable blank' + (fieldCount === 1 ? '' : 's') + ' · ' + formatBytes(blob.size) + ' HTML';
         result.classList.add('visible');
+        result.hidden = false;
         emptyState.hidden = true;
         setStatus('PDF pages loaded. Fill detected fields, then print or download the HTML form.');
       } catch (error) {
