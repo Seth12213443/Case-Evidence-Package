@@ -77,7 +77,11 @@
     .result-meta { color:var(--muted); font-size:11px; margin-top:4px; }
     .preview { display:grid; gap:18px; justify-items:center; padding:18px; border:1px solid var(--line); border-radius:14px; background:#0d1018; }
     .preview-page { width:min(100%,650px); background:white; box-shadow:0 10px 35px rgba(0,0,0,.35); }
-    .preview-page img { width:100%; height:auto; display:block; }
+    .preview-sheet { position:relative; width:100%; overflow:hidden; background:#fff; }
+    .preview-sheet > img { position:absolute; inset:0; width:100%; height:100%; display:block; }
+    .fillable { position:absolute; z-index:1; min-width:0; min-height:0; padding:1px 3px; color:#171717; font:12px Arial,sans-serif; background:rgba(255,255,255,.96); border:1px solid #62727b; border-radius:2px; }
+    .fillable.line { border:0; border-bottom:1px solid #29363b; border-radius:0; }
+    textarea.fillable { resize:none; }
     .preview-page figcaption { background:#151923; color:#c3c8d2; padding:8px 11px; font-size:10px; }
     .limitations { margin:13px 0 0; color:#858c99; font-size:11px; line-height:1.55; }
     @media(max-width:600px) {
@@ -154,6 +158,8 @@
     let selectedFile = null;
     let downloadUrl = null;
     let busy = false;
+    let convertedPages = [];
+    let convertedTitle = '';
 
     function formatBytes(bytes) {
       if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
@@ -204,7 +210,7 @@
     }
 
     function escapeAttribute(value) {
-      return escapeHtml(value).replace(/\`/g, '&#96;');
+      return escapeHtml(value);
     }
 
     function multiplyMatrices(left, right) {
@@ -319,6 +325,9 @@
         } else if (operation === OPS.transform && args.length >= 6) {
           ctm = multiplyMatrices(ctm, args.slice(0, 6));
         } else if (operation === OPS.constructPath) {
+          const paintOperation = operatorList.fnArray[index + 1];
+          const isOutlined = [OPS.stroke, OPS.closeStroke, OPS.fillStroke, OPS.closeFillStroke].includes(paintOperation);
+          if (!isOutlined) continue;
           const pathOps = args[0] || [];
           const coordinates = args[1] || [];
           let coordinateIndex = 0;
@@ -405,6 +414,8 @@
       clearButton.disabled = true;
       result.classList.remove('visible');
       preview.replaceChildren();
+      convertedPages = [];
+      convertedTitle = '';
       progress.classList.add('visible');
       progress.value = 0;
       progress.max = 1;
@@ -425,10 +436,7 @@
           const initialViewport = page.getViewport({ scale: 1 });
           const scale = Math.min(2, 1800 / Math.max(initialViewport.width, initialViewport.height));
           const viewport = page.getViewport({ scale });
-          const [textContent, annotations] = await Promise.all([
-            page.getTextContent(),
-            page.getAnnotations({ intent: 'display' })
-          ]);
+          const textContent = await page.getTextContent();
           const textInfo = findTextAndLineFields(pdfjsLib, page, viewport, textContent);
           const fields = await findEmptyBoxFields(pdfjsLib, page, viewport, textInfo);
           const canvas = document.createElement('canvas');
@@ -476,12 +484,14 @@
           page.cleanup();
         }
 
-        const html = buildHtml(selectedFile.name.replace(/\.pdf$/i, ''), pages);
+        convertedPages = pages;
+        convertedTitle = selectedFile.name.replace(/\.pdf$/i, '');
+        const html = buildHtml(convertedTitle, convertedPages);
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         if (downloadUrl) URL.revokeObjectURL(downloadUrl);
         downloadUrl = URL.createObjectURL(blob);
         download.href = downloadUrl;
-        download.download = selectedFile.name.replace(/\.pdf$/i, '') + '.html';
+        download.download = convertedTitle + '.html';
         resultMeta.textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's') + ' · ' + formatBytes(blob.size) + ' HTML';
         result.classList.add('visible');
         setStatus('Conversion complete. Preview the pages or download the HTML file.');
@@ -504,6 +514,19 @@
     chooseButton.addEventListener('click', () => fileInput.click());
     clearButton.addEventListener('click', resetFile);
     convertButton.addEventListener('click', convertPdf);
+    download.addEventListener('click', (event) => {
+      if (!convertedPages.length) return;
+      event.preventDefault();
+      const file = new Blob([buildHtml(convertedTitle, convertedPages)], { type: 'text/html;charset=utf-8' });
+      const temporaryUrl = URL.createObjectURL(file);
+      const link = document.createElement('a');
+      link.href = temporaryUrl;
+      link.download = convertedTitle + '.html';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(temporaryUrl), 1000);
+    });
     fileInput.addEventListener('change', () => setFile(fileInput.files[0]));
 
     for (const eventName of ['dragenter', 'dragover']) {
