@@ -1,139 +1,280 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b12">
-  <title>PDF to HTML Converter</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #090b12;
-      --panel: #151923;
-      --panel-raised: #1c2230;
-      --line: rgba(255,255,255,.12);
-      --text: #f4f5f8;
-      --muted: #a5a9b5;
-      --accent: #8cf4ce;
-      --danger: #ffaaa7;
-      font-family: Inter, "Segoe UI", system-ui, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; min-height: 100vh; color: var(--text);
-      background: radial-gradient(ellipse at 80% 0%, rgba(73,112,126,.2), transparent 38rem), var(--bg);
-    }
-    button, input { font: inherit; }
-    .topbar {
-      height: 72px; display:flex; align-items:center; justify-content:space-between;
-      padding:0 clamp(20px,5vw,76px); border-bottom:1px solid rgba(255,255,255,.07);
-      background:rgba(9,11,18,.72);
-    }
-    .brand { display:flex; align-items:center; gap:12px; font-weight:750; letter-spacing:.03em; font-size:13px; }
-    .mark { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; background:var(--accent); color:#08120f; font-size:17px; }
-    .top-note { color:var(--muted); font-size:12px; }
-    main { width:min(1040px,100%); margin:0 auto; padding:44px clamp(20px,5vw,60px) 60px; }
-    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:.18em; font-size:11px; font-weight:800; }
-    h1 { margin:10px 0 9px; font-size:clamp(32px,5vw,48px); line-height:1.05; letter-spacing:-.045em; }
-    .intro { color:var(--muted); max-width:650px; line-height:1.6; font-size:14px; margin:0 0 28px; }
-    .workspace { padding:clamp(18px,3vw,30px); border:1px solid var(--line); border-radius:20px; background:rgba(21,25,35,.88); box-shadow:0 25px 80px rgba(0,0,0,.22); }
-    .dropzone {
-      min-height:220px; display:grid; place-items:center; text-align:center; padding:25px;
-      border:1px dashed rgba(140,244,206,.43); border-radius:15px;
-      background:linear-gradient(145deg,rgba(140,244,206,.045),rgba(158,168,255,.035));
-      transition:background .18s,border-color .18s;
-    }
-    .dropzone.dragover { background:rgba(140,244,206,.1); border-color:var(--accent); }
-    .upload-icon { font-size:32px; color:var(--accent); margin-bottom:10px; }
-    .drop-title { font-size:16px; font-weight:750; }
-    .drop-copy { margin:7px 0 16px; color:var(--muted); font-size:12px; }
-    .button {
-      border:0; border-radius:9px; padding:11px 16px; background:var(--accent); color:#08130f;
-      font-weight:800; cursor:pointer; transition:filter .18s,transform .18s;
-    }
-    .button:hover:not(:disabled) { filter:brightness(1.06); transform:translateY(-1px); }
-    .button:disabled { opacity:.48; cursor:not-allowed; }
-    .button.secondary { background:var(--panel-raised); color:var(--text); border:1px solid var(--line); }
-    .button.secondary:hover:not(:disabled) { border-color:rgba(140,244,206,.5); color:var(--accent); }
-    .file-input { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-    .file-summary { display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-top:16px; padding:15px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.025); }
-    .file-summary.visible { display:flex; }
-    .file-name { font-size:13px; font-weight:700; overflow-wrap:anywhere; }
-    .file-size { margin-top:4px; color:var(--muted); font-size:11px; }
-    .actions { display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
-    .status { min-height:22px; margin:16px 0 0; color:var(--muted); font-size:12px; }
-    .status.error { color:var(--danger); }
-    progress { display:none; width:100%; height:8px; margin-top:8px; appearance:none; border:0; border-radius:99px; overflow:hidden; background:#2a3040; }
-    progress.visible { display:block; }
-    progress::-webkit-progress-bar { background:#2a3040; }
-    progress::-webkit-progress-value { background:var(--accent); border-radius:99px; }
-    progress::-moz-progress-bar { background:var(--accent); border-radius:99px; }
-    .privacy { display:flex; align-items:flex-start; gap:10px; margin-top:17px; color:#9da4b2; font-size:11px; line-height:1.55; }
-    .privacy span:first-child { color:var(--accent); }
-    .result { display:none; margin-top:30px; }
-    .result.visible { display:block; }
-    .result-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; margin-bottom:14px; }
-    .result-title { font-size:17px; font-weight:750; }
-    .result-meta { color:var(--muted); font-size:11px; margin-top:4px; }
-    .preview { display:grid; gap:18px; justify-items:center; padding:18px; border:1px solid var(--line); border-radius:14px; background:#0d1018; }
-    .preview-page { width:min(100%,650px); background:white; box-shadow:0 10px 35px rgba(0,0,0,.35); }
-    .preview-sheet { position:relative; width:100%; overflow:hidden; background:#fff; }
-    .preview-sheet > img { position:absolute; inset:0; width:100%; height:100%; display:block; }
-    .fillable { position:absolute; z-index:1; min-width:0; min-height:0; padding:1px 3px; color:#171717; font:12px Arial,sans-serif; background:rgba(255,255,255,.96); border:1px solid #62727b; border-radius:2px; }
-    .fillable.line { border:0; border-bottom:1px solid #29363b; border-radius:0; }
-    textarea.fillable { resize:none; }
-    .preview-page figcaption { background:#151923; color:#c3c8d2; padding:8px 11px; font-size:10px; }
-    .limitations { margin:13px 0 0; color:#858c99; font-size:11px; line-height:1.55; }
-    @media(max-width:600px) {
-      .topbar { height:62px; } .top-note { display:none; }
-      main { padding-top:30px; } .dropzone { min-height:190px; }
-      .file-summary { align-items:flex-start; } .actions { width:100%; }
-    }
-    @media(prefers-reduced-motion:reduce) { *,*:before,*:after { transition:none !important; } }
-  </style>
-</head>
-<body>
-  <header class="topbar">
-    <div class="brand"><span class="mark" aria-hidden="true">✦</span><span>CASE EVIDENCE PACKAGE</span></div>
-    <div class="top-note">PDF CONVERTER</div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PDF Form Workspace</title><style>
+ /* Global Styles */
+ body {
+ font-family: "Times New Roman", Times, serif;
+ margin: 0;
+ padding: 0;
+ color: #000;
+ background-color: #f0f0f0;
+ }
+ 
+ /* Interactive Input Styling */
+ .page input[type="text"], .page textarea {
+ font-family: "Times New Roman", Times, serif;
+ font-size: 14px;
+ border: none;
+ background: transparent;
+ width: 100%;
+ box-sizing: border-box;
+ outline: none;
+ padding: 4px 0;
+ resize: none;
+ overflow: hidden;
+ text-overflow: clip;
+ }
+ 
+ .page textarea {
+ height: calc(100% - 20px);
+ line-height: 1.5;
+ overflow-wrap: anywhere;
+ }
+ .page .block-box textarea {
+	 height: auto;
+	 min-height: 24px;
+	 flex 1 1 auto;
+	 overflow-y: hidden;
+	 overflow-x: hiddem;
+ }
+
+ /* Printable Page Setup */
+ .page {
+ background-color: #fff;
+ width: 8.5in;
+ height: 11in;
+ margin: 20px auto;
+ padding: 0.5in;
+ box-sizing: border-box;
+ position: relative;
+ box-shadow: 0 0 10px rgba(0,0,0,0.1);
+ page-break-after: always;
+ display: flex;
+ flex-direction: column;
+ }
+
+ /* Universal Header */
+ .header-title {
+ text-align: center;
+ font-size: 20px;
+ font-weight: bold;
+ text-decoration: underline;
+ margin-bottom: 15px;
+ text-transform: uppercase;
+ }
+
+ .header-meta {
+ display: flex;
+ justify-content: space-between;
+ font-size: 14px;
+ line-height: 1.3;
+ margin-bottom: 20px;
+ }
+ 
+ .header-meta table {
+ width: 100%;
+ border-collapse: collapse;
+ }
+ 
+ .header-meta td {
+ border: none;
+ padding: 2px 0;
+ }
+
+ /* Tables & Grids */
+ table.grid-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin-bottom: 15px;
+ }
+
+ table.grid-table td {
+ border: 1.5px solid #000;
+ padding: 8px;
+ vertical-align: top;
+ font-size: 13px;
+ }
+
+ /* Fillable Blocks */
+ .block-box {
+ border: 1.5px solid #000;
+ margin-bottom: 12px;
+ padding: 8px;
+ box-sizing: border-box;
+ font-size: 13px;
+ flex-grow: 1;
+ display: flex;
+ flex-direction: column;
+ }
+ 
+ .block-box label {
+ font-weight: bold;
+ display: block;
+ margin-bottom: 4px;
+ }
+
+ .row-container {
+ display: flex;
+ gap: 12px;
+ width: 100%;
+ }
+ 
+ .row-container .block-box {
+ flex: 1;
+ }
+
+ /* Specific Elements */
+ .photo-space {
+ border: 1.5px solid #000;
+ flex-grow: 1;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-weight: bold;
+ color: #555;
+ margin-bottom: 15px;
+ background: #fafafa;
+ border-style: dashed;
+ cursor: pointer;
+ position: relative;
+}
+
+/* Make sure images fit inside the box */
+.photo-space img {
+ max-width: 100%;
+ max-height: 100%;
+ object-fit: contain;
+ display: block;
+}
+
+/* Hide the placeholder text when an image is present */
+.upload-text.hidden {
+ display: none;
+}
+ 
+ .sketch-space {
+ border: 1.5px solid #000;
+ flex-grow: 1;
+ margin-bottom: 15px;
+ background: #fff;
+ }
+
+ /* Footer */
+ .page-footer {
+ font-size: 13px;
+ text-align: right;
+ margin-top: auto;
+ padding-top: 10px;
+ }
+
+ /* Print Override */
+ @media print {
+ body {
+ background-color: #fff;
+ }
+ .page {
+ margin: 0;
+ box-shadow: none;
+ page-break-after: always;
+ width: 8.5in;
+ height: 11in;
+ outline: none !important;
+ box-shadow: none !important;
+ }
+ }
+
+	 /* Target the specific broken boxes by their label text */
+.block-box:has(> label:contains("Team Members")) textarea,
+.block-box:has(> label:contains("Legal Authority")) textarea,
+.block-box:has(> label:contains("Temperature")) textarea {
+    /* Override the broken calc() height */
+    height: 60px !important; 
+    min-height: 60px !important;
+    max-height: none !important;
+}
+ 
+
+/* PDF workspace shell using the source.html paper form language */
+.workspace-header{min-height:64px;padding:10px 24px;background:#222;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.2);font-family:Arial,sans-serif}
+.workspace-brand{display:flex;align-items:baseline;gap:12px}.workspace-brand strong{letter-spacing:.04em}.workspace-brand span{font-size:12px;color:#ccc}
+.workspace-header-actions{display:flex;gap:8px}
+.workspace-layout{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:calc(100vh - 64px)}
+.workspace-sidebar{background:#222;color:#fff;padding:20px;box-shadow:2px 0 5px rgba(0,0,0,.2);font-family:Arial,sans-serif}
+.workspace-sidebar h2{font-size:18px;margin:0 0 18px}.tool-section{border-top:1px solid #555;padding:16px 0}.tool-section h3{font-size:13px;margin:0 0 8px}.tool-section p,.workspace-note{font-size:12px;line-height:1.5;color:#ccc}
+.workspace-button{border:0;border-radius:4px;background:#00bcd4;color:#fff;padding:10px 12px;font-weight:700;font-family:Arial,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.workspace-button.secondary{background:#3a3a3a;border:1px solid #666}.workspace-button:disabled{opacity:.5;cursor:not-allowed}.workspace-button.full{width:100%;margin:4px 0}
+.file-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.file-summary{display:none;margin-top:12px}.file-summary.visible{display:block}.file-name{display:block;overflow-wrap:anywhere;font-size:12px}.file-size,.result-meta{font-size:11px;color:#666;margin-top:4px}.workspace-sidebar .file-size{color:#bbb}
+.tool-actions{margin-top:10px}.status{min-height:34px;color:#ccc;font-size:12px;line-height:1.45;margin-top:12px}.status.error{color:#ff9b9b}
+progress{display:none;width:100%;height:8px;margin-top:8px}progress.visible{display:block}
+#main-content{min-width:0;padding:22px 16px 40px;margin:0;background:#f0f0f0}
+.empty-workspace{min-height:65vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#222;font-family:"Times New Roman",Times,serif}
+.empty-workspace h1{margin:8px 0;font-size:28px}.empty-workspace p{max-width:560px;line-height:1.5}
+.empty-icon{font-size:42px;color:#555}.dropzone{margin-top:18px;width:min(560px,100%);min-height:130px;border:2px dashed #888;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#444;background:#fafafa;padding:18px;text-align:center}.dropzone.dragover{background:#e4f7fa;border-color:#00a4b8}
+.result{display:none}.result.visible{display:block}.result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 auto 16px;max-width:8.5in;font-family:"Times New Roman",Times,serif}.result-head h1{margin:0;font-size:22px}
+.preview{display:flex;flex-direction:column;align-items:center;gap:20px}
+.page.pdf-page{width:min(8.5in,100%);height:auto;min-height:0;padding:0;margin:0 auto;background:#fff;box-shadow:0 0 10px rgba(0,0,0,.1);display:block;break-after:page;page-break-after:always}
+.pdf-page .preview-sheet{position:relative;width:100%;overflow:hidden;background:#fff}.pdf-page .preview-sheet>img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pdf-page figcaption{font:12px "Times New Roman",Times,serif;text-align:right;padding:5px 8px;color:#333}
+.preview-page{width:min(8.5in,100%);background:#fff}
+.fillable{position:absolute;z-index:2;min-width:0;min-height:0;padding:1px 2px;color:#000;font:14px "Times New Roman",Times,serif;background:rgba(255,255,255,.82);border:0;border-radius:0;outline:none;box-sizing:border-box}
+.fillable.line{border-bottom:1px solid #000}.fillable:focus{background:rgba(255,255,255,.96);outline:1px dotted #555}
+textarea.fillable{resize:none;overflow:auto;overflow-wrap:anywhere}
+.limitations{max-width:8.5in;margin:14px auto;color:#555;font-size:12px}
+@media(max-width:760px){.workspace-layout{grid-template-columns:1fr}.workspace-sidebar{position:static}.workspace-header{position:static;flex-wrap:wrap}.workspace-brand span{display:none}}
+@media print{body{background:#fff}.workspace-header,.workspace-sidebar,.empty-workspace,.result-head,.limitations,.preview-page figcaption{display:none!important}#main-content{padding:0;margin:0}.result{display:block!important}.page.pdf-page{width:100%;margin:0;box-shadow:none;break-after:page;page-break-after:always}.pdf-page:last-child{break-after:auto;page-break-after:auto}}
+</style></head><body>
+  <header class="workspace-header no-print">
+    <div class="workspace-brand"><strong>Case Evidence Package</strong><span>PDF form workspace</span></div>
+    <div class="workspace-header-actions">
+      <button class="workspace-button secondary" id="dark-mode-toggle" type="button">🌙 Dark Mode</button>
+      <button class="workspace-button" id="btn-print" type="button">🖨️ Print PDF</button>
+    </div>
   </header>
 
-  <main>
-    <div class="eyebrow">Document tools</div>
-    <h1>PDF to HTML</h1>
-    <p class="intro">Turn a PDF into a standalone HTML file that preserves the original page appearance and adds editable inputs over detected blank lines and empty boxes.</p>
-
-    <section class="workspace" aria-label="Convert a PDF">
-      <div class="dropzone" id="dropzone">
-        <div>
-          <div class="upload-icon" aria-hidden="true">⇧</div>
-          <div class="drop-title">Drop a PDF here</div>
-          <p class="drop-copy">or choose a file from your device</p>
-          <button class="button secondary" id="choose-file" type="button">Choose PDF</button>
+  <div class="workspace-layout">
+    <aside class="workspace-sidebar no-print" aria-label="PDF workspace controls">
+      <h2>Case Tools</h2>
+      <section class="tool-section">
+        <h3>Upload a form</h3>
+        <p>Choose a PDF to replace the empty workspace with its pages.</p>
+        <button class="workspace-button secondary full" id="choose-file" type="button">Choose PDF</button>
+        <input class="file-input" id="file-input" type="file" accept="application/pdf,.pdf">
+        <div class="file-summary" id="file-summary">
+          <div><strong class="file-name" id="file-name"></strong><div class="file-size" id="file-size"></div></div>
+          <div class="tool-actions">
+            <button class="workspace-button secondary full" id="clear-file" type="button">Choose another PDF</button>
+            <button class="workspace-button full" id="convert" type="button" disabled>Load PDF pages</button>
+          </div>
         </div>
-      </div>
-      <input class="file-input" id="file-input" type="file" accept="application/pdf,.pdf">
-      <div class="file-summary" id="file-summary">
-        <div><div class="file-name" id="file-name"></div><div class="file-size" id="file-size"></div></div>
-        <div class="actions">
-          <button class="button secondary" id="clear-file" type="button">Choose another</button>
-          <button class="button" id="convert" type="button">Convert to HTML</button>
-        </div>
-      </div>
-      <div class="status" id="status" role="status" aria-live="polite">Select a PDF to get started.</div>
-      <progress id="progress" max="1" value="0" aria-label="Conversion progress"></progress>
-      <div class="privacy"><span aria-hidden="true">●</span><span>Your PDF is processed in this browser and is not uploaded. Conversion uses Mozilla PDF.js loaded from a public CDN.</span></div>
-    </section>
+        <div class="status" id="status" role="status" aria-live="polite">Select a PDF to begin.</div>
+        <progress id="progress" max="1" value="0" aria-label="Conversion progress"></progress>
+      </section>
+      <section class="tool-section no-print">
+        <h3>Page actions</h3>
+        <button class="workspace-button secondary full" id="print-workspace" type="button">Print filled pages</button>
+        <button class="workspace-button secondary full" id="clear-workspace" type="button">Clear loaded PDF</button>
+      </section>
+      <p class="workspace-note">PDF pages keep their original appearance. Detected blank lines and boxes become editable fields. Your PDF stays in this browser.</p>
+    </aside>
 
-    <section class="result" id="result" aria-labelledby="result-title">
-      <div class="result-head">
-        <div><div class="result-title" id="result-title">HTML preview</div><div class="result-meta" id="result-meta"></div></div>
-        <a class="button" id="download" download="converted-document.html">Download HTML</a>
-      </div>
-      <div class="preview" id="preview"></div>
-      <p class="limitations">The page artwork stays visually faithful. Detected blank lines and empty boxes become editable fields; existing printed text remains part of the page image.</p>
-    </section>
-  </main>
+    <main id="main-content">
+      <section class="empty-workspace" id="empty-state">
+        <div class="empty-icon">▤</div>
+        <h1>PDF form workspace</h1>
+        <p>Upload a PDF to replace the empty workspace with printable pages styled like Case Evidence Package.</p>
+        <div class="dropzone" id="dropzone">
+          <strong>Drop a PDF here</strong>
+          <span>or use Choose PDF in the Case Tools panel</span>
+        </div>
+      </section>
+      <section class="result" id="result" aria-labelledby="result-title">
+        <div class="result-head no-print">
+          <div><h1 id="result-title">Filled PDF pages</h1><div class="result-meta" id="result-meta"></div></div>
+          <a class="workspace-button" id="download" download="converted-document.html">Download HTML</a>
+        </div>
+        <div class="preview" id="preview"></div>
+        <p class="limitations no-print">Type directly over the detected blank areas, then print or download this HTML form.</p>
+      </section>
+    </main>
+  </div>
 
   <script type="module">
     const PDFJS_VERSION = '6.3.289';
@@ -151,6 +292,7 @@
     const status = document.getElementById('status');
     const progress = document.getElementById('progress');
     const result = document.getElementById('result');
+    const emptyState = document.getElementById('empty-state');
     const resultMeta = document.getElementById('result-meta');
     const preview = document.getElementById('preview');
     const download = document.getElementById('download');
@@ -184,7 +326,8 @@
       dropzone.hidden = true;
       convertButton.disabled = false;
       result.classList.remove('visible');
-      setStatus('Ready to convert.');
+      emptyState.hidden = false;
+      setStatus('Ready to load the PDF.');
     }
 
     function resetFile() {
@@ -194,6 +337,7 @@
       fileSummary.classList.remove('visible');
       dropzone.hidden = false;
       result.classList.remove('visible');
+      emptyState.hidden = false;
       preview.replaceChildren();
       progress.classList.remove('visible');
       progress.value = 0;
@@ -462,7 +606,7 @@
           pages.push(pageData);
 
           const figure = document.createElement('figure');
-          figure.className = 'preview-page';
+          figure.className = 'page pdf-page preview-page';
           const sheet = document.createElement('div');
           sheet.className = 'preview-sheet';
           sheet.style.aspectRatio = canvas.width + ' / ' + canvas.height;
@@ -506,7 +650,8 @@
         const fieldCount = pages.reduce((total, page) => total + page.fields.length, 0);
         resultMeta.textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's') + ' · ' + fieldCount + ' fillable blank' + (fieldCount === 1 ? '' : 's') + ' · ' + formatBytes(blob.size) + ' HTML';
         result.classList.add('visible');
-        setStatus('Conversion complete. Review the detected blanks, fill any fields, then download the HTML file.');
+        emptyState.hidden = true;
+        setStatus('PDF pages loaded. Fill detected fields, then print or download the HTML form.');
       } catch (error) {
         console.error('PDF conversion failed:', error);
         let message = 'Could not convert this PDF. Try another file.';
@@ -524,6 +669,12 @@
     }
 
     chooseButton.addEventListener('click', () => fileInput.click());
+    document.getElementById('btn-print').addEventListener('click', () => window.print());
+    document.getElementById('print-workspace').addEventListener('click', () => window.print());
+    document.getElementById('clear-workspace').addEventListener('click', resetFile);
+    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
     clearButton.addEventListener('click', resetFile);
     convertButton.addEventListener('click', convertPdf);
     download.addEventListener('click', (event) => {
@@ -555,5 +706,4 @@
     }
     dropzone.addEventListener('drop', (event) => setFile(event.dataTransfer.files[0]));
   </script>
-</body>
-</html>
+</body></html>
