@@ -221,7 +221,7 @@
 /* PDF upload controls for the source.html form workspace */
 #pdf-controls{width:min(8.5in,calc(100% - 24px));margin:24px auto;padding:20px;background:#fff;box-shadow:0 0 10px rgba(0,0,0,.1);font-family:"Times New Roman",Times,serif}
 #empty-state{text-align:center}.pdf-start-title{font-size:20px;font-weight:bold;text-decoration:underline;text-transform:uppercase}
-#empty-state p{font-size:14px;line-height:1.4}.dropzone{margin:18px auto;padding:20px;border:2px dashed #888;background:#fafafa;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+#empty-state p{font-size:14px;line-height:1.4}.dropzone{position:relative;margin:18px auto;padding:20px;border:2px dashed #888;background:#fafafa;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer}.dropzone .pdf-file-input{position:absolute;inset:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}
 .dropzone.dragover{background:#edf8f9;border-color:#00aebf}.pdf-file-input{position:fixed;left:-10000px;width:1px;height:1px;opacity:0;overflow:hidden}.dropzone:focus-visible,.pdf-actions label:focus-visible{outline:3px solid #00aebf;outline-offset:3px}
 .file-summary{display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.file-summary.visible{display:flex}
 #download{display:none}#file-name{overflow-wrap:anywhere}#file-size{font-size:12px;color:#555;margin-top:4px}.pdf-actions{display:flex;gap:7px;flex-wrap:wrap}
@@ -241,13 +241,13 @@
   <div id="empty-state">
     <div class="pdf-start-title">Case Evidence Package</div>
     <p>Upload a PDF to replace the original page templates with your document pages.</p>
-    <label class="dropzone" id="dropzone" for="file-input"><strong>Drop a PDF here</strong><span>or choose one below</span></label>
+    <label class="dropzone" id="dropzone"><strong>Drop a PDF here</strong><span>or choose one below</span><input id="file-input" class="pdf-file-input" type="file" accept="application/pdf,.pdf" aria-label="Choose a PDF file"></label>
   </div>
-  <input id="file-input" class="pdf-file-input" type="file" accept="application/pdf,.pdf">
   <div class="file-summary" id="file-summary">
     <div><strong id="file-name"></strong><div id="file-size"></div></div>
     <div class="pdf-actions">
-      <label id="choose-file" for="file-input" tabindex="0" role="button">Choose PDF</label>
+      <label id="choose-file" for="file-input-choose" tabindex="0" role="button">Choose PDF</label>
+      <input id="file-input-choose" class="pdf-file-input" type="file" accept="application/pdf,.pdf" aria-label="Choose a PDF file">
       <button id="clear-file" type="button">Reset</button>
       <button id="convert" type="button" disabled>Load PDF pages</button>
       <button id="print-workspace" type="button">Print</button>
@@ -3371,6 +3371,7 @@ setInterval(renumberPages, 10000);
 
     const fileInput = document.getElementById('file-input');
     const chooseButton = document.getElementById('choose-file');
+    const chooseFileInput = document.getElementById('file-input-choose');
     const clearButton = document.getElementById('clear-file');
     const convertButton = document.getElementById('convert');
     const fileSummary = document.getElementById('file-summary');
@@ -3423,6 +3424,7 @@ setInterval(renumberPages, 10000);
       if (busy) return;
       selectedFile = null;
       fileInput.value = '';
+      chooseFileInput.value = '';
       convertButton.disabled = true;
       fileSummary.classList.remove('visible');
       dropzone.hidden = false;
@@ -3763,7 +3765,7 @@ setInterval(renumberPages, 10000);
       }
     }
 
-    chooseButton.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); fileInput.click(); } });
+    chooseButton.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); chooseFileInput.click(); } });
     document.getElementById('print-workspace').addEventListener('click', () => window.print());
     document.getElementById('clear-workspace').addEventListener('click', resetFile);
     clearButton.addEventListener('click', resetFile);
@@ -3782,6 +3784,7 @@ setInterval(renumberPages, 10000);
       setTimeout(() => URL.revokeObjectURL(temporaryUrl), 1000);
     });
     fileInput.addEventListener('change', () => setFile(fileInput.files[0]));
+    chooseFileInput.addEventListener('change', () => setFile(chooseFileInput.files[0]));
 
     for (const eventName of ['dragenter', 'dragover']) {
       dropzone.addEventListener(eventName, (event) => {
