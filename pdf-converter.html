@@ -613,7 +613,7 @@
             <div class="menu-section">
               <div class="menu-label">Add Page</div>
               <select class="menu-select" id="page-template-select" disabled><option value="">Built-in templates removed</option></select>
-              <button class="menu-action template-action" id="add-selected-page-btn">Add Page (PDF only)</button>
+              <button class="menu-action template-action" id="add-selected-page-btn" disabled>Templates removed</button>
             </div>
 
             <div class="mini-divider"></div>
@@ -3414,6 +3414,7 @@ setInterval(renumberPages, 10000);
       dropzone.hidden = true;
       convertButton.disabled = false;
       result.classList.remove('visible');
+      result.hidden = true;
       emptyState.hidden = false;
       setStatus('Ready to load the PDF.');
     }
