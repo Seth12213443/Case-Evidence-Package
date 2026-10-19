@@ -408,12 +408,12 @@
       return '<!doctype html>\n' +
         '<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
         '<title>' + escapeHtml(title) + ' — Converted PDF</title><style>' +
-        '*{box-sizing:border-box}html{background:#e8e9ec}body{margin:0;padding:24px 12px;background:#e8e9ec;color:#161616;font-family:Arial,sans-serif}' +
-        '.page{width:min(8.5in,100%);margin:0 auto 24px;background:#fff;box-shadow:0 5px 24px rgba(0,0,0,.18);break-after:page;page-break-after:always}' +
+        '*{box-sizing:border-box}html{background:#f0f0f0}body{margin:0;padding:20px 0;background:#f0f0f0;color:#000;font-family:"Times New Roman",Times,serif}' +
+        '.page{width:min(8.5in,100%);margin:20px auto;background:#fff;box-shadow:0 0 10px rgba(0,0,0,.1);break-after:page;page-break-after:always}' +
         '.page:last-child{break-after:auto;page-break-after:auto}.sheet{position:relative;width:100%;overflow:hidden;background:#fff}.sheet>img{position:absolute;inset:0;width:100%;height:100%;display:block}' +
-        '.fillable{position:absolute;z-index:1;min-width:0;min-height:0;padding:1px 3px;color:#171717;font:12px Arial,sans-serif;background:rgba(255,255,255,.96);border:1px solid #62727b;border-radius:2px}' +
-        '.fillable.line{border:0;border-bottom:1px solid #29363b;border-radius:0}textarea.fillable{resize:none}' +
-        '@media print{html,body{background:#fff}.page{width:100%;margin:0;box-shadow:none;break-after:page;page-break-after:always}.page:last-child{break-after:auto;page-break-after:auto}}' +
+        '.fillable{position:absolute;z-index:1;min-width:0;min-height:0;padding:2px 3px;color:#000;font:14px "Times New Roman",Times,serif;line-height:1.25;background:transparent;border:0;border-radius:0;outline:none}' +
+        '.fillable.line{padding:1px 0;border:0;border-bottom:1px solid #000}textarea.fillable{resize:none;overflow:auto;overflow-wrap:anywhere}.fillable:focus-visible{background:rgba(255,255,255,.88);outline:1px dotted #555;outline-offset:-1px}' +
+        '@media print{html,body{background:#fff}body{padding:0}.page{width:100%;margin:0;box-shadow:none;break-after:page;page-break-after:always}.page:last-child{break-after:auto;page-break-after:auto}.fillable:focus-visible{outline:none;background:transparent}}' +
         '</style></head><body>' + pageMarkup + '</body></html>';
     }
 
