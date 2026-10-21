@@ -23,7 +23,7 @@
             document.head.appendChild(link);
         });
     </script>
- <title>Case Evidence Package v11</title>
+ <title>Case Evidence Package v12</title>
  <style>
  /* Global Styles */
  body {
@@ -5003,14 +5003,14 @@ setInterval(renumberPages, 10000);
             onmouseover="this.style.backgroundColor='rgba(50, 50, 50, 0.9)'"
             onmouseout="this.style.backgroundColor='rgba(0, 0, 0, 0.8)'"
         >
-          v11 • Updated 2026-13-09
+          v12 • Updated 2026-13-09
         </button>
 
         <!-- The Popup Bubble -->
         <div id="version-bubble" class="bubble-content">
             <span class="close-btn" onclick="document.getElementById('version-bubble').classList.remove('show')">&times;</span>
             <p style="margin: 0; color: #333; font-size: 14px; line-height: 1.4;">
-                Update Version 11<br>
+                Update Version 12<br>
 				Fixed Page number issue, all page numbers SHOULD update every 10 seconds, if they do not press update page numbers on the tool bar.
 				Added Profiles.
             </p>
@@ -5149,6 +5149,39 @@ setInterval(renumberPages, 10000);
 </script>
 
 
+
+<script>
+function autoShrinkTextarea(textarea) {
+    const maxFontSize = 14;
+    const minFontSize = 7;
+
+    // Start at the normal font size
+    let fontSize = maxFontSize;
+    textarea.style.fontSize = fontSize + "px";
+
+    // Shrink until the text fits or reaches the minimum size
+    while (
+        (textarea.scrollHeight > textarea.clientHeight + 1 ||
+         textarea.scrollWidth > textarea.clientWidth + 1) &&
+        fontSize > minFontSize
+    ) {
+        fontSize -= 0.5;
+        textarea.style.fontSize = fontSize + "px";
+    }
+}
+
+function setupAutoShrink() {
+    document.querySelectorAll(".page textarea").forEach(textarea => {
+        autoShrinkTextarea(textarea);
+
+        textarea.addEventListener("input", () => {
+            autoShrinkTextarea(textarea);
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", setupAutoShrink);
+</script>
 
 
 
